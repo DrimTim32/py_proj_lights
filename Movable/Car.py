@@ -1,20 +1,6 @@
 import pygame
 
 
-def angle(A):
-    A = list(A)
-    if A[0] == 0 and A[1] == 0:
-        return 0
-    if A[0] == 0 and A[1] >= 1:
-        return -90
-    if A == [1, 1]:
-        return -45
-    if A == [0, -1]:
-        return 90
-    # TODO : more angles?
-    return 0
-
-
 class Car(pygame.sprite.Sprite):
     image = None
     speed = 2
@@ -29,20 +15,6 @@ class Car(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.location = location
         self.rect.topleft = location
-        self.lastRotation = 0
-
-    def rotate(self, vector):
-        """ Rotates image depending on move vector
-        >>> rotate([0,1])
-        rotates to the west
-        >>> rotate([0,-1])
-        rotates to the north
-        """
-        if vector == (0, 0):
-            return
-        self.image = pygame.transform.rotate(self.image, -self.lastRotation)
-        self.lastRotation = angle(vector)
-        self.image = pygame.transform.rotate(self.image, self.lastRotation)
 
     def move(self, vector):
         """ Moves a car by vector. Care with [1,1] """
