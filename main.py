@@ -1,7 +1,7 @@
 import pygame
 from Structures.Road import Road
 from Movable.Car import Car
-
+from Structures.CrossRoad import CrossRoad
 # consts
 windowSize = (800, 600)
 
@@ -20,7 +20,8 @@ def main():
     screen = pygame.display.set_mode(windowSize)
     done = False
     car = Car((10, 10))
-    road = Road(10)
+    cross = [CrossRoad(), CrossRoad()]
+    road = Road(10, cross[0], cross[1])
     roads = [road]
     movable = [car]
     toRender = [car]
