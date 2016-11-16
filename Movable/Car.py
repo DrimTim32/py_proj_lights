@@ -18,6 +18,14 @@ class Car(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.location = location
         self.rect.topleft = location
+        self.angle = 0
+
+    def rotate(self, angle):
+        loc = self.rect.topleft
+        self.image = pygame.transform.rotate(Car.image, angle)
+        self.image.set_colorkey((255, 255, 255))  # tlo
+        self.rect = self.image.get_rect()
+        self.rect.topleft = loc
 
     def move(self, vector):
         """ Moves a car by vector. Care with [1,1] """

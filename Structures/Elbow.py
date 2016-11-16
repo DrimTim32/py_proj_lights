@@ -15,6 +15,7 @@ class Elbow(Structure):
         ratio = 0.55
         super(Elbow, self).__init__(position, ratio * size, ratio * size)
         self.structures = []
+        """list[Structures.Structure.Structure]"""
         self.initStructures(size, dir1, dir2)
 
         """:type : list[Structures.Structure.Structure]"""
@@ -25,19 +26,24 @@ class Elbow(Structure):
         road1 = Road(roadLen, None, None, self.position, dir1)
         road2 = Road(roadLen, None, None,
                      [self.position[0] + roadLen, self.position[1] + turnHeight], dir2)
-        turn = Turn([self.position[0] + roadLen, self.position[1]], turnHeight, road1, road2)
-        road1.connected[1] = turn
-        road2.connected[0] = turn
+        turn = Turn([self.position[0] + roadLen, self.position[1]], turnHeight, road2, road1)
+        road1.connected[0] = turn
+        road2.connected[1] = turn
         self.structures.append(road1)
-        self.structures.append(turn)
         self.structures.append(road2)
+        self.structures.append(turn)
 
     def render(self, screen):
         for struct in self.structures:
             struct.render(screen)
 
     def register(self, movable, dir: int):
-        pass
+        assert 0 <= dir <= 1
+        if dir == 0:
+            self.structures[0].register(movable, dir)
+        if dir == 2:
+            self.structures[1].register(movable, dir)
 
     def update(self):
-        pass
+        for str in self.structures:
+            str.update()

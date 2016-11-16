@@ -23,7 +23,7 @@ def main():
     car = Car((0, 10))
     # road = Road(300, None,None,[30,30])
     road = Elbow([0, 200], 300, 0, 3)
-
+    road.register(car, 0)
     roads = [road]
     movable = [car]
     toRender = [road]
@@ -46,7 +46,7 @@ def main():
 
         for c in toRender:
             c.render(screen)
-
+        pygame.draw.circle(screen, (0, 0, 255), road.structures[1].rect.topleft, 3)
         pygame.time.Clock().tick(30)
         pygame.display.flip()
 

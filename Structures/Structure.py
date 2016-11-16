@@ -16,8 +16,6 @@ class Structure(pygame.sprite.Sprite):
 
     def update(self):
         super().update()
-        pass
-
 
 class Directions:
     Right = 0
