@@ -2,6 +2,7 @@ import pygame
 from Structures.Road import Road
 from Movable.Car import Car
 from Structures.CrossRoad import CrossRoad
+from Structures.Elbow import Elbow
 # consts
 windowSize = (800, 600)
 
@@ -19,12 +20,15 @@ def main():
 
     screen = pygame.display.set_mode(windowSize)
     done = False
-    car = Car((10, 10))
-    cross = [CrossRoad(), CrossRoad()]
-    road = Road(10, cross[0], cross[1])
+    car = Car((0, 10))
+    # road = Road(300, None,None,[30,30])
+    road = Elbow([0, 200], 300, 0, 3)
+
     roads = [road]
     movable = [car]
-    toRender = [car]
+    toRender = [road]
+    """list[Structures.Elbow.Elbow]"""
+    road.register(car, 1)
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
@@ -32,16 +36,16 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
 
+        screen.fill(Colors.gray)
         # update everything
         for road in roads:
             road.update()
         for mov in movable:
             mov.update()
         # move/color etc.
-        screen.fill(Colors.gray)
 
         for c in toRender:
-            screen.blit(c.image, c.rect)
+            c.render(screen)
 
         pygame.time.Clock().tick(30)
         pygame.display.flip()

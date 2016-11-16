@@ -2,6 +2,9 @@ import pygame
 
 
 class Car(pygame.sprite.Sprite):
+    """
+    :type image: pygame.Image
+    """
     image = None
     speed = 2
 
@@ -20,7 +23,6 @@ class Car(pygame.sprite.Sprite):
         """ Moves a car by vector. Care with [1,1] """
         if vector[0] == 0 and vector[1] == 0:
             return
-        self.rotate(vector)
         # temporary solution
         self.rect.move_ip(vector[0], vector[1])
 
