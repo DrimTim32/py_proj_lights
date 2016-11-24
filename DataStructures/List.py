@@ -6,7 +6,7 @@ class Node:
 
     @property
     def next(self):
-        return None if self._next is None or self._next[0] is None else self._next
+        return self._next
 
     @next.setter
     def next(self, value):
@@ -38,10 +38,8 @@ class List:
 
     @staticmethod
     def doBfs(current):
-        print("Current = {0}".format(current.data))
+        if current is None or current.next is None:
+            raise StopIteration
         yield current
-        if current.next is None:
-            return []
         for node in current.next:
-            yield node
             yield from List.doBfs(node)

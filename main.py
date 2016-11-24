@@ -17,21 +17,26 @@ def main():
 
     screen = pygame.display.set_mode(windowSize)
     done = False
-    road = Road()
-    while not done:
+    road = Road([100, 100])
+    i = 1
+    while i < 10000:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-
+        if i % 10 == 0 and i % 3 != 0:
+            road.addCar()
         screen.fill(Colors.gray)
-        road.render(screen, [0, 0])
         # update everything
+        road.render(screen)
+        # print("Printing list data:")
+        road.printList()
+        road.refresh()
         # move/color etc.
-        pygame.time.Clock().tick(30)
+        pygame.time.Clock().tick(15)
         pygame.display.flip()
-
+        i +=1
 
 if __name__ == "__main__":
     main()
