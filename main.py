@@ -1,6 +1,9 @@
 import pygame
-from Structures.Road import Road, RoadNode
+import sys
+from Drawing import Map
+
 # consts
+
 windowSize = (800, 600)
 
 
@@ -16,27 +19,19 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
+    map = Map()
     done = False
-    road = Road([100, 100])
-    i = 1
-    while i < 10000:
+    while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-        if i % 10 == 0 and i % 3 != 0:
-            road.addCar()
-        screen.fill(Colors.gray)
-        # update everything
-        road.render(screen)
-        # print("Printing list data:")
-        road.printList()
-        road.refresh()
-        # move/color etc.
+        map.prepare(screen)
+        map.draw(screen)
         pygame.time.Clock().tick(15)
         pygame.display.flip()
-        i +=1
+    sys.exit()
 
 if __name__ == "__main__":
     main()
