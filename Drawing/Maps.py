@@ -33,8 +33,8 @@ def draw_line(screen, point1: Position, point2: Position, color=BLACK):
     pygame.draw.line(screen, color, [point1.x, point1.y], [point2.x, point2.y])
 
 
-def draw_car(screen, position: Position):
-    pygame.draw.circle(screen, BLUE, [position.x, position.y], Map.carRadius)
+def draw_car(screen, position: Position, color=BLUE):
+    pygame.draw.circle(screen, color, [position.x, position.y], Map.carRadius)
 
 
 class Road:
@@ -53,6 +53,16 @@ class Road:
     def width(self):
         return (len(self.first) + len(self.second)) * Map.blockSize
 
+    def get_first_indexes(self):
+        for i in range(len(self.first)):
+            for q in range(len(self.first[i])):
+                yield (i, q)
+
+    def get_second_indexes(self):
+        for i in range(len(self.second)):
+            for q in range(len(self.second[i])):
+                yield (i, q)
+
 
 # noinspection PyAttributeOutsideInit
 class Map:
@@ -63,10 +73,13 @@ class Map:
 
     def __init__(self):
         self.topleft = [50, 50]
-        self.top = Road([[[1] * 10] * 3, [[1] * 10] * 1])
-        self.left = Road([[[1] * 10] * 1, [[1] * 10] * 1])
-        self.down = Road([[[1] * 10] * 0, [[1] * 10] * 0])
-        self.right = Road([[[1] * 10] * 1, [[1] * 10] * 1])
+        base = [1, 1,0 , 0, 0, 0]
+        base_reversed = [1, 1, 1, 0, 0, 0]
+        multiplier = 1
+        self.top = Road([[base * 1] * 2, [base_reversed * 1] * 1])
+        self.down = Road([[base * 1] * 2, [base_reversed * 1] * 1])
+        self.left = Road([[base * 1] * 2, [base_reversed * 1] * 2])
+        self.right = Road([[base * 1] * 2, [base_reversed * 1] *2])
         self.offsetLeft = self.left.length + Map.constOffset
         self.offsetTop = Map.constOffset
         self.offsetMiddle = max(len(self.left.first) * Map.blockSize, len(self.right.first) * Map.blockSize)
@@ -79,23 +92,23 @@ class Map:
         self.top_end_right = top_start_right + Position(0, self.top.length)
         self.topPoints = ((self.top_start_left, top_end_left), (top_start_right, self.top_end_right))
 
-        left_start_up = top_end_left.copy()
-        left_end_up = left_start_up + Position(-self.left.length, 0)
-        left_start_down = left_start_up + Position(0, self.left.width)
-        left_end_down = left_end_up + Position(0, self.left.width)
-        self.leftPoints = ((left_start_up, left_end_up), (left_start_down, left_end_down))
+        self.left_start_up = top_end_left.copy()
+        left_end_up = self.left_start_up + Position(-self.left.length, 0)
+        left_start_down = self.left_start_up + Position(0, self.left.width)
+        self.left_end_down = left_end_up + Position(0, self.left.width)
+        self.leftPoints = ((self.left_start_up, left_end_up), (left_start_down, self.left_end_down))
 
-        right_start_up = self.top_end_right.copy()
-        right_end_up = right_start_up + Position(self.right.length, 0)
-        right_start_down = right_start_up + Position(0, self.right.width)
-        right_end_down = right_end_up + Position(0, self.right.width)
-        self.rightPoints = ((right_start_up, right_end_up), (right_start_down, right_end_down))
+        right_end_up = self.top_end_right.copy()
+        self.right_start_up = right_end_up + Position(self.right.length, 0)
+        right_start_down = self.right_start_up + Position(0, self.right.width)
+        self.right_end_down = right_end_up + Position(0, self.right.width)
+        self.rightPoints = ((self.right_start_up, right_end_up), (right_start_down, self.right_end_down))
 
-        down_start_left = left_start_down.copy()
-        down_end_left = down_start_left + Position(0, self.down.length)
-        down_start_right = right_start_down.copy()
-        down_end_right = down_start_right + Position(0, self.down.length)
-        self.downPoints = ((down_start_left, down_end_left), (down_start_right, down_end_right))
+        self.down_start_left = left_start_down.copy()
+        down_end_left =  self.down_start_left + Position(0, self.down.length)
+        down_start_right = self.right_end_down.copy()
+        self.down_end_right = down_start_right + Position(0, self.down.length)
+        self.downPoints = ((self.down_start_left, down_end_left), (down_start_right, self.down_end_right))
 
     def seal(self, screen):
         directions = []
@@ -116,28 +129,76 @@ class Map:
 
     def draw_cars(self, screen):
         # draw top left
-        for i in range(len(self.top.first)):
-            for q in range(len(self.top.first[i])):
-                if self.top.first[i][q] != 0:
-                    draw_car(screen, self.car_top_position(i, q))
-        # draw top right
-        for i in range(len(self.top.second)):
-            for q in range(len(self.top.second[i])):
-                if self.top.second[i][q] != 0:
-                    draw_car(screen, self.car_top_position2(i, q))
-        # draw left top
-        for i in range(len(self.left.first)):
-            for q in range(len(self.left.first[i])):
-                if self.left.first[i][q] != 0:
-                    pass
+        [draw_car(screen, self.car_top_position1(i, q))
+         for (i, q) in self.top.get_first_indexes() if
+         self.top.first[i][q] != 0]
 
-    def car_top_position(self, i: int, q: int):
+        # draw top right
+        [draw_car(screen, self.car_top_position2(i, q), RED)
+         for (i, q) in self.top.get_second_indexes() if
+         self.top.second[i][q] != 0]
+
+        # draw left top
+        [draw_car(screen, self.car_left_position1(i, q))
+         for (i, q) in self.left.get_first_indexes() if
+         self.left.first[i][q] != 0]
+
+        # draw left bottom
+        [draw_car(screen, self.car_left_position2(i, q), RED)
+         for (i, q) in self.left.get_second_indexes() if
+         self.left.second[i][q] != 0]
+
+        # draw right top
+        [draw_car(screen, self.car_right_position1(i, q))
+         for (i, q) in self.right.get_first_indexes() if
+         self.right.first[i][q] != 0]
+
+        # draw right bottom
+        [draw_car(screen, self.car_right_position2(i, q), RED)
+         for (i, q) in self.right.get_second_indexes() if
+         self.right.second[i][q] != 0]
+
+        # draw right top
+        [draw_car(screen, self.car_down_position1(i, q))
+         for (i, q) in self.down.get_first_indexes() if
+         self.down.first[i][q] != 0]
+
+        # draw right bottom
+        [draw_car(screen, self.car_down_position2(i, q), RED)
+         for (i, q) in self.down.get_second_indexes() if
+         self.down.second[i][q] != 0]
+
+    def car_top_position1(self, i: int, q: int):
         const = int(Map.blockSize * sqrt(2) / 3)
-        return self.top_start_left + Position(const + i * Map.blockSize, const + q * Map.blockSize)
+        return self.top_end_right - Position(const + i * Map.blockSize, const + q * Map.blockSize)
 
     def car_top_position2(self, i: int, q: int):
         const = int(Map.blockSize * sqrt(2) / 3)
-        return self.top_end_right - Position(const + i * Map.blockSize, const + q * Map.blockSize)
+        return self.top_start_left + Position(const + i * Map.blockSize, const + q * Map.blockSize)
+
+    def car_left_position1(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.left_start_up - Position(const + q * Map.blockSize, -i * Map.blockSize - const)
+
+    def car_left_position2(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.left_end_down + Position(const + q * Map.blockSize, -i * Map.blockSize - const)
+
+    def car_right_position1(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.right_end_down + Position(const + q * Map.blockSize, -i * Map.blockSize - const)
+
+    def car_right_position2(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.right_start_up - Position(const + q * Map.blockSize, -i * Map.blockSize - const)
+
+    def car_down_position1(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.down_start_left + Position(const + i * Map.blockSize, const + q * Map.blockSize)
+
+    def car_down_position2(self, i: int, q: int):
+        const = int(Map.blockSize * sqrt(2) / 3)
+        return self.down_end_right - Position(const + i * Map.blockSize, const + q * Map.blockSize)
 
     @staticmethod
     def draw_seals(screen, directions):
