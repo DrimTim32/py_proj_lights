@@ -1,5 +1,6 @@
-import pygame
 from math import sqrt
+
+import pygame
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -73,13 +74,13 @@ class Map:
 
     def __init__(self):
         self.topleft = [50, 50]
-        base = [1, 1,0 , 0, 0, 0]
+        base = [1, 1, 0, 0, 0, 0]
         base_reversed = [1, 1, 1, 0, 0, 0]
         multiplier = 1
         self.top = Road([[base * 1] * 2, [base_reversed * 1] * 1])
         self.down = Road([[base * 1] * 2, [base_reversed * 1] * 1])
         self.left = Road([[base * 1] * 2, [base_reversed * 1] * 2])
-        self.right = Road([[base * 1] * 2, [base_reversed * 1] *2])
+        self.right = Road([[base * 1] * 2, [base_reversed * 1] * 2])
         self.offsetLeft = self.left.length + Map.constOffset
         self.offsetTop = Map.constOffset
         self.offsetMiddle = max(len(self.left.first) * Map.blockSize, len(self.right.first) * Map.blockSize)
@@ -105,7 +106,7 @@ class Map:
         self.rightPoints = ((self.right_start_up, right_end_up), (right_start_down, self.right_end_down))
 
         self.down_start_left = left_start_down.copy()
-        down_end_left =  self.down_start_left + Position(0, self.down.length)
+        down_end_left = self.down_start_left + Position(0, self.down.length)
         down_start_right = self.right_end_down.copy()
         self.down_end_right = down_start_right + Position(0, self.down.length)
         self.downPoints = ((self.down_start_left, down_end_left), (down_start_right, self.down_end_right))

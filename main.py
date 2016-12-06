@@ -1,6 +1,8 @@
-import pygame
 import sys
-from Drawing import Map
+
+import pygame
+
+from Simulation import Game
 
 # consts
 
@@ -19,19 +21,22 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
-    map = Map()
+    game = Game(screen)
     done = False
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-        map.prepare(screen)
-        map.draw(screen)
+
+        game.update()
+
         pygame.time.Clock().tick(15)
         pygame.display.flip()
     sys.exit()
+
 
 if __name__ == "__main__":
     main()
