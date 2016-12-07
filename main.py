@@ -33,7 +33,7 @@ def main():
 
         game.update()
 
-        pygame.time.Clock().tick(15)
+        pygame.time.Clock().tick(1)
         pygame.display.flip()
     sys.exit()
 
