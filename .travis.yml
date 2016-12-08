@@ -12,5 +12,5 @@ install:
  - python setup.py install
 # command to run tests
 script:
-  python ./Tests/all_tests.py
+  python Tests/all_tests.py
 sudo : false
