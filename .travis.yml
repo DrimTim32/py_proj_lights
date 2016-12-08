@@ -1,4 +1,5 @@
 language: python
+sudo: required
 python:
   - 3.4
 # command to install dependencies
@@ -15,3 +16,5 @@ branches:
 before_install:
  - chmod -R 777 Simulation
  - chmod -R +x Tests/all_tests.py
+ - sudo apt-get build-dep python-pygame
+ - sudo apt-get install python-dev
