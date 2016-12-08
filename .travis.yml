@@ -1,9 +1,14 @@
 language: python
 python:
-  - "3.5"
+  - 3.4
 # command to install dependencies
-install: "pip install -r requirements.txt"
-script: python3 ./Tests/all_tests.py
+install:
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - coverage run --source=py_proj_lights Tests/all_tests.py
+after_success:
+  - coveralls
 branches:
   only:
     - malin-development
