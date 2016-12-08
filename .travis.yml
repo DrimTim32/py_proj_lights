@@ -7,3 +7,5 @@ script: Tests/all_tests.py
 branches:
   only:
     - malin-development
+before_install:
+ - chmod +x Tests/all_tests.py
