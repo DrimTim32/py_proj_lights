@@ -70,17 +70,16 @@ class Map:
     blockSize = 15
     minimumOffset = 100
     constOffset = 30
-    carRadius = int(blockSize / 3)
+    carRadius = int(blockSize / 2)
 
     def __init__(self):
         self.topleft = [50, 50]
-        base = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        base_reversed = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        multiplier = 1
-        self.top = Road([[base * 1] * 2, [base_reversed * 1] * 1])
-        self.bottom = Road([[base * 1] * 2, [base_reversed * 1] * 1])
-        self.left = Road([[base * 1] * 2, [base_reversed * 1] * 2])
-        self.right = Road([[base * 1] * 2, [base_reversed * 1] * 2])
+        base = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        base_reversed = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.top = Road([[base.copy(), base.copy()], [base_reversed.copy(), base_reversed.copy()]])
+        self.bottom = Road([[base.copy(), base.copy()], [base_reversed.copy(), base_reversed.copy()]])
+        self.left = Road([[base.copy(), base.copy()], [base_reversed.copy(), base_reversed.copy()]])
+        self.right = Road([[base.copy(), base.copy()], [base_reversed.copy(), base_reversed.copy()]])
         self.offsetLeft = self.left.length + Map.constOffset
         self.offsetTop = Map.constOffset
         self.offsetMiddle = max(len(self.left.first) * Map.blockSize, len(self.right.first) * Map.blockSize)
@@ -128,54 +127,34 @@ class Map:
         self.seal(screen)
         self.draw_cars(screen)
 
+    def draw_cars_on_road(self, screen, position1, position2, line):
+        [draw_car(screen, position1(i, q))
+         for (i, q) in line.get_first_indexes() if
+         line.first[i][q] != 0]
+
+        [draw_car(screen, position2(i, q), RED)
+         for (i, q) in line.get_second_indexes() if
+         line.second[i][q] != 0]
+
     def draw_cars(self, screen):
-        # draw top left
-        [draw_car(screen, self.car_top_position1(i, q))
-         for (i, q) in self.top.get_first_indexes() if
-         self.top.first[i][q] != 0]
+        self.draw_cars_on_road(screen, self.car_top_position1, self.car_top_position2, self.top)
+        self.draw_cars_on_road(screen, self.car_left_position1, self.car_left_position2, self.left)
+        self.draw_cars_on_road(screen, self.car_right_position1, self.car_right_position2, self.right)
+        self.draw_cars_on_road(screen, self.car_down_position1, self.car_down_position2, self.bottom)
 
-        # draw top right
-        [draw_car(screen, self.car_top_position2(i, q), RED)
-         for (i, q) in self.top.get_second_indexes() if
-         self.top.second[i][q] != 0]
+    @staticmethod
+    def car_top_movement_vector(i, q):
 
-        # draw left top
-        [draw_car(screen, self.car_left_position1(i, q))
-         for (i, q) in self.left.get_first_indexes() if
-         self.left.first[i][q] != 0]
-
-        # draw left bottom
-        [draw_car(screen, self.car_left_position2(i, q), RED)
-         for (i, q) in self.left.get_second_indexes() if
-         self.left.second[i][q] != 0]
-
-        # draw right top
-        [draw_car(screen, self.car_right_position1(i, q))
-         for (i, q) in self.right.get_first_indexes() if
-         self.right.first[i][q] != 0]
-
-        # draw right bottom
-        [draw_car(screen, self.car_right_position2(i, q), RED)
-         for (i, q) in self.right.get_second_indexes() if
-         self.right.second[i][q] != 0]
-
-        # draw right top
-        [draw_car(screen, self.car_down_position1(i, q))
-         for (i, q) in self.bottom.get_first_indexes() if
-         self.bottom.first[i][q] != 0]
-
-        # draw right bottom
-        [draw_car(screen, self.car_down_position2(i, q), RED)
-         for (i, q) in self.bottom.get_second_indexes() if
-         self.bottom.second[i][q] != 0]
+        const = int(Map.blockSize * sqrt(2) / 3)
+        leftOffset = const if i == 0 else i * (const + Map.blockSize)
+        rightOffset = const if q == 0 else q * (const + Map.blockSize)
+        return Position(leftOffset, rightOffset)
 
     def car_top_position1(self, i: int, q: int):
-        const = int(Map.blockSize * sqrt(2) / 3)
-        return self.top_end_right - Position(const + i * Map.blockSize, const + q * Map.blockSize)
+        return self.top_end_right - Map.car_top_movement_vector(i, q)
 
     def car_top_position2(self, i: int, q: int):
-        const = int(Map.blockSize * sqrt(2) / 3)
-        return self.top_start_left + Position(const + i * Map.blockSize, const + q * Map.blockSize)
+        return self.top_start_left + Map.car_top_movement_vector(i, q)
 
     def car_left_position1(self, i: int, q: int):
         const = int(Map.blockSize * sqrt(2) / 3)
