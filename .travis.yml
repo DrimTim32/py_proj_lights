@@ -1,7 +1,7 @@
 language: python
 sudo: required
 python:
-  - 3.5
+  - 3.4
 # command to install dependencies
 install:
   - pip install -r requirements.txt
@@ -11,5 +11,6 @@ install:
  - pip install -r requirements.txt
  - python setup.py install
 # command to run tests
-script: pytest
+script:
+  python ./Tests/all_tests.py
 sudo : false
