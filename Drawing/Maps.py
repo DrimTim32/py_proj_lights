@@ -1,5 +1,6 @@
-import pygame
 from math import sqrt
+
+import pygame
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -73,13 +74,13 @@ class Map:
 
     def __init__(self):
         self.topleft = [50, 50]
-        base = [1, 1,0 , 0, 0, 0]
-        base_reversed = [1, 1, 1, 0, 0, 0]
+        base = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        base_reversed = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         multiplier = 1
         self.top = Road([[base * 1] * 2, [base_reversed * 1] * 1])
-        self.down = Road([[base * 1] * 2, [base_reversed * 1] * 1])
+        self.bottom = Road([[base * 1] * 2, [base_reversed * 1] * 1])
         self.left = Road([[base * 1] * 2, [base_reversed * 1] * 2])
-        self.right = Road([[base * 1] * 2, [base_reversed * 1] *2])
+        self.right = Road([[base * 1] * 2, [base_reversed * 1] * 2])
         self.offsetLeft = self.left.length + Map.constOffset
         self.offsetTop = Map.constOffset
         self.offsetMiddle = max(len(self.left.first) * Map.blockSize, len(self.right.first) * Map.blockSize)
@@ -105,9 +106,9 @@ class Map:
         self.rightPoints = ((self.right_start_up, right_end_up), (right_start_down, self.right_end_down))
 
         self.down_start_left = left_start_down.copy()
-        down_end_left =  self.down_start_left + Position(0, self.down.length)
+        down_end_left = self.down_start_left + Position(0, self.bottom.length)
         down_start_right = self.right_end_down.copy()
-        self.down_end_right = down_start_right + Position(0, self.down.length)
+        self.down_end_right = down_start_right + Position(0, self.bottom.length)
         self.downPoints = ((self.down_start_left, down_end_left), (down_start_right, self.down_end_right))
 
     def seal(self, screen):
@@ -118,7 +119,7 @@ class Map:
             directions.append([self.rightPoints[0][0], self.rightPoints[1][0]])
         if self.top.length <= 0:
             directions.append([self.topPoints[0][0], self.topPoints[1][0]])
-        if self.down.length <= 0:
+        if self.bottom.length <= 0:
             directions.append([self.downPoints[0][0], self.downPoints[1][0]])
         self.draw_seals(screen, directions)
 
@@ -160,13 +161,13 @@ class Map:
 
         # draw right top
         [draw_car(screen, self.car_down_position1(i, q))
-         for (i, q) in self.down.get_first_indexes() if
-         self.down.first[i][q] != 0]
+         for (i, q) in self.bottom.get_first_indexes() if
+         self.bottom.first[i][q] != 0]
 
         # draw right bottom
         [draw_car(screen, self.car_down_position2(i, q), RED)
-         for (i, q) in self.down.get_second_indexes() if
-         self.down.second[i][q] != 0]
+         for (i, q) in self.bottom.get_second_indexes() if
+         self.bottom.second[i][q] != 0]
 
     def car_top_position1(self, i: int, q: int):
         const = int(Map.blockSize * sqrt(2) / 3)
