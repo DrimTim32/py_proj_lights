@@ -3,9 +3,10 @@ python:
   - "3.5"
 # command to install dependencies
 install: "pip install -r requirements.txt"
-script: Tests/all_tests.py
+script: python3 ./Tests/all_tests.py
 branches:
   only:
     - malin-development
 before_install:
- - chmod +x Tests/all_tests.py
+ - chmod -R 777 Simulation
+ - chmod -R +x Tests/all_tests.py
