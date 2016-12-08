@@ -6,7 +6,7 @@ from Simulation import Game
 
 # consts
 
-windowSize = (800, 600)
+windowSize = (1000, 800)
 
 
 class Colors:
