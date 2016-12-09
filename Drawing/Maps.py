@@ -1,38 +1,6 @@
-from math import sqrt
-from .DataStructures.Position import Position
+from Drawing.DataStructures import *
+from Drawing.drawing_consts import *
 import pygame
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
-
-class Road:
-    def __init__(self, array):
-        self.first = array[0]
-        self.second = array[1]
-
-    def __len__(self):
-        return 0 if len(self.first) == 0 else len(self.first[0]) * (Map.blockSize + Map.carOffset)
-
-    @property
-    def length(self):
-        return self.__len__()
-
-    @property
-    def width(self):
-        return (len(self.first) + len(self.second)) * Map.blockSize
-
-    def get_first_indexes(self):
-        for i in range(len(self.first)):
-            for q in range(len(self.first[i])):
-                yield (i, q)
-
-    def get_second_indexes(self):
-        for i in range(len(self.second)):
-            for q in range(len(self.second[i])):
-                yield (i, q)
 
 
 def draw_line(screen, point1: Position, point2: Position, color=BLACK):
@@ -40,17 +8,11 @@ def draw_line(screen, point1: Position, point2: Position, color=BLACK):
 
 
 def draw_car(screen, position: Position, color=BLUE):
-    pygame.draw.circle(screen, color, [position.x, position.y], Map.carRadius)
+    pygame.draw.circle(screen, color, [position.x, position.y], CAR_RADIUS)
 
 
 # noinspection PyAttributeOutsideInit
 class Map:
-    blockSize = 15
-    minimumOffset = 100
-    constOffset = 30
-    carRadius = int(blockSize / 2)
-    carOffset = int(blockSize * sqrt(2) / 4)
-
     def __init__(self):
         self.topleft = [50, 50]
         base = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -62,8 +24,8 @@ class Map:
         self.right = Road([[base.copy(), base.copy(), base.copy()], [base_reversed.copy(), base_reversed.copy()]])
         self.maxYOffset = int(max(self.left.width, self.right.width) / 2)
         self.maxXOffset = int(max(self.top.width, self.bottom.width) / 2)
-        self.middle = Position(Map.constOffset + self.left.length + self.maxYOffset,
-                               Map.constOffset + self.top.length + self.maxXOffset)
+        self.middle = Position(CONST_OFFSET + self.left.length + self.maxYOffset,
+                               CONST_OFFSET + self.top.length + self.maxXOffset)
         self.calculate_points()
 
     def calculate_points(self):
@@ -110,12 +72,12 @@ class Map:
         self.seal(screen)
         self.draw_cars(screen)
 
-    def draw_cars_on_road(self, screen, outsideDir, insideDir, line):
-        [draw_car(screen, outsideDir(i, q))
+    def draw_cars_on_road(self, screen, outside_dir, inside_dir, line):
+        [draw_car(screen, outside_dir(i, q))
          for (i, q) in line.get_first_indexes() if
          line.first[i][q] != 0]
 
-        [draw_car(screen, insideDir(i, q), RED)
+        [draw_car(screen, inside_dir(i, q), RED)
          for (i, q) in line.get_second_indexes() if
          line.second[i][q] != 0]
 
@@ -151,8 +113,8 @@ class Map:
 
     @staticmethod
     def car_down_movement_vector(i, q):
-        left_offset = Map.carOffset if i == 0 else i * (Map.carOffset + Map.blockSize)
-        right_offset = Map.carOffset if q == 0 else q * (Map.carOffset + Map.blockSize)
+        left_offset = CAR_OFFSET if i == 0 else i * (CAR_OFFSET + BLOCK_SIZE)
+        right_offset = CAR_OFFSET if q == 0 else q * (CAR_OFFSET + BLOCK_SIZE)
         return Position(left_offset, right_offset)
 
     @staticmethod
@@ -186,4 +148,4 @@ class Map:
 
     @staticmethod
     def get_length(direction):
-        return 0 if len(direction[0]) == 0 else len(direction[0][0]) * Map.blockSize
+        return 0 if len(direction[0]) == 0 else len(direction[0][0]) * BLOCK_SIZE
