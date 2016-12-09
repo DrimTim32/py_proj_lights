@@ -1,10 +1,10 @@
 language: python
-sudo: required
 python:
   - 3.4
 branches:
   only:
     - malin
     - bartek
+    - malin-development
 script:
     - python setup.py test
