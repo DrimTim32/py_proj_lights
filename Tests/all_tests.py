@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-from Drawing.tests import *
+from build.lib.Drawing.Maps import Position
 import pytest
-def f():
-    raise SystemExit(1)
+
 
 def test_mytest():
-    with pytest.raises(SystemExit):
-        f()
+    p = Position(0,1)
+test_mytest()

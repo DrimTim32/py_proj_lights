@@ -8,6 +8,6 @@ branches:
 before_install:
     - pip install -r requirements-tests.txt
 install:
-    - python setup.py
+    - python setup.py install
 script:
     - python Tests/all_tests.py
