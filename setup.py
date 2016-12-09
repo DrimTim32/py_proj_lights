@@ -19,6 +19,6 @@ setup(
     author='',
     author_email='',
     description='',
-    test_suite=my_test_suite(),
+    test_suite='setup.my_test_suite',
     tests_require=['pytest']
 )

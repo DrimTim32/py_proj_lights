@@ -1,1 +1,1 @@
-from .test_Position import TestUM
+from .test_Position import *
