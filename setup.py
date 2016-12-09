@@ -8,6 +8,8 @@ def my_test_suite():
     return test_suite
 
 with open("requirements-tests.txt", 'r') as f:
+    test_requirements = f.read().split('\n')
+with open("requirements.txt", 'r') as f:
     requirements = f.read().split('\n')
 
 setup(
@@ -20,6 +22,6 @@ setup(
     author_email='',
     description='',
     test_suite='setup.my_test_suite',
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest',]
+    setup_requires=requirements,
+    tests_require=test_requirements
 )
