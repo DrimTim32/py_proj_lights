@@ -5,5 +5,8 @@ python:
 branches:
   only:
     - malin-development
+before_install:
+  - ls
+  
 script:
   python Tests/all_tests.py
