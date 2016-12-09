@@ -18,10 +18,7 @@ setup(
     license='',
     author='',
     author_email='',
-    description='',
-    install_requires=[
-        "pygame"
-    ],
+    description='',  
     test_suite='tests',
     tests_require=['pytest']
 )
