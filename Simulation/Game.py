@@ -16,13 +16,10 @@ class Game:
         self.update_view()
 
     def update_out(self):
-        print('ss')
         for road in self.out_roads:
             for lane in road:
-                print(lane)
                 for i in range(len(lane) - 1, 0, -1):
                     lane[i] = lane[i - 1]
-                print(lane)
                 lane[0] = self.pull_car(self.out_roads.index(road) - 1)
 
     def update_in(self):
