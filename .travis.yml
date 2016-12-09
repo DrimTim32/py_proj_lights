@@ -2,12 +2,11 @@ language: python
 sudo: required
 python:
   - 3.4
-# command to install dependencies
-# command to run tests
-# command to install dependencies
+branches:
+  only:
+    - malin-development
 install:
- - sudo apt-get install python-pygame
- - python setup.py install
+ - sudo apt-get install python-pygame 
 # command to run tests
 script:
   python Tests/all_tests.py
