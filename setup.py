@@ -1,16 +1,27 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
+
+import unittest
+
+def my_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    return test_suite
 
 with open("requirements-tests.txt", 'r') as f:
     requirements = f.read().split('\n')
 
 setup(
     name='py_proj_lights',
-    version='1.0.0',
-    packages=['Drawing', 'Simulation'],
-    url='https://github.com/DrimTim32/py_proj_lights',
+    version='1.0',
+    packages= find_packages(),
+    url='',
     license='',
     author='',
     author_email='',
     description='',
-    install_requires=requirements
+    install_requires=[
+        "pygame"
+    ],
+    test_suite='tests',
+    tests_require=['pytest']
 )

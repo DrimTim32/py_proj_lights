@@ -6,6 +6,4 @@ branches:
   only:
     - malin-development
 install:
-    - python setup.py -q install
-script:
-    - python Tests/all_tests.py
+    - python setup.py test
