@@ -8,7 +8,7 @@ class Game:
         self.map = Map()
         self.screen = screen
         self.out_roads = [self.map.top.first, self.map.right.first,
-                          self.map.bottom.first, self.map.left.first]
+                          self.map.down.first, self.map.left.first]
 
     def update(self):
         self.update_out()
@@ -23,7 +23,7 @@ class Game:
                 lane[0] = self.pull_car(self.out_roads.index(road) - 1)
 
     def update_in(self):
-        in_roads = [self.map.top.second, self.map.right.second, self.map.bottom.second, self.map.left.second]
+        in_roads = [self.map.top.second, self.map.right.second, self.map.down.second, self.map.left.second]
         for road in in_roads:
             direction = in_roads.index(road)
             for lane in road:

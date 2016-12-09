@@ -6,5 +6,6 @@ branches:
   only:
     - malin
     - bartek
+    - malin-development
 script:
     - python setup.py test
