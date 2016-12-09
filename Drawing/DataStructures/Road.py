@@ -1,11 +1,14 @@
 from Drawing.drawing_consts import *
+
+
 class Road:
     def __init__(self, array):
         self.first = array[0]
         self.second = array[1]
 
     def __len__(self):
-        return 0 if len(self.first) == 0 else len(self.first[0]) * (BLOCK_SIZE + CAR_OFFSET)
+        return 0 if len(self.first) == 0 else len(self.first[0]) * (
+        BLOCK_SIZE + CAR_OFFSET)
 
     @property
     def length(self):
@@ -13,7 +16,7 @@ class Road:
 
     @property
     def width(self):
-        return (len(self.first) + len(self.second)) * Map.BLOCK_SIZE
+        return (len(self.first) + len(self.second)) * BLOCK_SIZE
 
     def get_first_indexes(self):
         for i in range(len(self.first)):
