@@ -1,5 +1,5 @@
 from math import sqrt
-
+from .DataStructures.Position import Position
 import pygame
 
 BLACK = (0, 0, 0)
@@ -7,43 +7,6 @@ WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-
-
-class Position:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-    def __ne__(self, other):
-        return not (self == other)
-    def __eq__(self, other):
-        return self is other or (self.x == other.x and self.y == other.y)
-
-    def __add__(self, other):
-        return Position(self.x + other.x, self.y + other.y)
-
-    def __str__(self):
-        return "Position ({0},{1})".format(self.x, self.y)
-
-    def __getitem__(self, item):
-        return self.x if item == 0 else self.y
-
-    def __sub__(self, other):
-        return Position(self.x - other.x, self.y - other.y)
-
-    def copy(self):
-        return Position(self.x, self.y)
-
-    def __neg__(self):
-        return Position(-self.x, -self.y)
-
-
-def draw_line(screen, point1: Position, point2: Position, color=BLACK):
-    pygame.draw.line(screen, color, [point1.x, point1.y], [point2.x, point2.y])
-
-
-def draw_car(screen, position: Position, color=BLUE):
-    pygame.draw.circle(screen, color, [position.x, position.y], Map.carRadius)
-
 
 class Road:
     def __init__(self, array):
@@ -70,6 +33,14 @@ class Road:
         for i in range(len(self.second)):
             for q in range(len(self.second[i])):
                 yield (i, q)
+
+
+def draw_line(screen, point1: Position, point2: Position, color=BLACK):
+    pygame.draw.line(screen, color, [point1.x, point1.y], [point2.x, point2.y])
+
+
+def draw_car(screen, position: Position, color=BLUE):
+    pygame.draw.circle(screen, color, [position.x, position.y], Map.carRadius)
 
 
 # noinspection PyAttributeOutsideInit

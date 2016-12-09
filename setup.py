@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-with open("requirements.txt", 'r') as f:
+with open("requirements-tests.txt", 'r') as f:
     requirements = f.read().split('\n')
 
 setup(
@@ -12,4 +12,5 @@ setup(
     author='',
     author_email='',
     description='',
+    install_requires=requirements
 )
