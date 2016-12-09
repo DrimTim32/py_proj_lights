@@ -1,0 +1,10 @@
+language: python
+sudo: required
+python:
+  - 3.4
+branches:
+  only:
+    - malin
+    - bartek
+script:
+    - python setup.py test
