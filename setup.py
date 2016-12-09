@@ -18,7 +18,7 @@ setup(
     license='',
     author='',
     author_email='',
-    description='',  
-    test_suite='tests',
+    description='',
+    test_suite=my_test_suite(),
     tests_require=['pytest']
 )
