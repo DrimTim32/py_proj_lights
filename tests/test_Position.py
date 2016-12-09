@@ -9,4 +9,3 @@ def smtp():
 def test_ehlo(smtp):
     response, msg = smtp.ehlo()
     assert response == 250
-    assert 0 # for demo purposes

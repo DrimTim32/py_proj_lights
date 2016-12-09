@@ -20,5 +20,6 @@ setup(
     author_email='',
     description='',
     test_suite='setup.my_test_suite',
-    tests_require=['pytest']
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest',]
 )
