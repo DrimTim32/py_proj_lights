@@ -5,9 +5,7 @@ python:
 branches:
   only:
     - malin-development
-before_install:
-    - pip install -r requirements-tests.txt
 install:
-    - python setup.py install
+    - python setup.py -q install
 script:
     - python Tests/all_tests.py

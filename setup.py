@@ -12,5 +12,4 @@ setup(
     author='',
     author_email='',
     description='',
-    install_requires=requirements
 )

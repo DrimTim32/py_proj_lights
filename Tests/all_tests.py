@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from build.lib.Drawing.Maps import Position
+from Drawing.Maps import Position
 import pytest
 
 
