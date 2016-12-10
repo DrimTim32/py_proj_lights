@@ -23,14 +23,6 @@ def test_substraction(a: int, b: int, c: int, d: int):
 def test_negation(a: int, b: int):
     assert -Position(a, b) == Position(-a, -b)
 
-
-@pytest.mark.parametrize("a", (0, 1, 2, 3, 4, 5))
-@pytest.mark.parametrize("b", (0, 6, 7, 8, 11, 8))
-def test_get_item(a: int, b: int):
-    assert Position(a, b)[0] == a
-    assert Position(a, b)[1] == b
-
-
 @pytest.mark.parametrize("a", (0, 1, 2, 3, 4, 5))
 @pytest.mark.parametrize("b", (0, 6, 7, 8, 11, 8))
 def test_copy(a: int, b: int):

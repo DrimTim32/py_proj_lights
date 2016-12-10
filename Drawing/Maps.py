@@ -1,7 +1,8 @@
 """
 This module contains class Map and two methods for drawing (line and car)
 """
-from Drawing.DataStructures import Position, Road
+from Drawing.DataStructures import Position, Road, RoadSizeVector
+from Drawing.DataStructures import get_empty_road
 from Drawing.drawing_consts import *
 import pygame
 
@@ -27,19 +28,20 @@ class Map:
     """
     Map class, used to draw crossroads
     """
+    defaultVectors = [
+        RoadSizeVector(12, 2, 2),  # top
+        RoadSizeVector(12, 2, 2),  # left
+        RoadSizeVector(12, 2, 2),  # bottom
+        RoadSizeVector(12, 2, 2),  # right
+    ]
 
-    def __init__(self):
+    def __init__(self, vectors=defaultVectors):
         self.topleft = [50, 50]
-        base = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        base_reversed = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.roads = {
-            "top": Road([[base.copy(), base.copy()],
-                         [base_reversed.copy(), base_reversed.copy()]]),
-            "bottom": Road([[base.copy()], [base_reversed.copy()]]),
-            "left": Road([[base.copy(), base.copy()],
-                          [base_reversed.copy(), base_reversed.copy()]]),
-            "right": Road([[base.copy(), base.copy(), base.copy()],
-                           [base_reversed.copy(), base_reversed.copy()]])
+            "top": get_empty_road(vectors[0]),
+            "bottom": get_empty_road(vectors[1]),
+            "left": get_empty_road(vectors[2]),
+            "right": get_empty_road(vectors[3])
         }
         self.max_y_offset = int(max(self.left.width, self.right.width) / 2)
         self.max_x_offset = int(max(self.top.width, self.bottom.width) / 2)

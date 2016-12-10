@@ -1,1 +1,1 @@
-from .test_Position import *
+from tests.Drawing.test_Position import *
