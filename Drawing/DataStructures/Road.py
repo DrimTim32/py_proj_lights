@@ -1,13 +1,7 @@
 from Drawing.drawing_consts import *
+from collections import namedtuple
 
-
-class RoadSizeVector:
-    def __init__(self, len, inside_direction_count=1,
-                 outsize_direction_count=1):
-        self.len = len
-        self.inside_direction_count = inside_direction_count
-        self.outsize_direction_count = outsize_direction_count
-
+RoadSizeVector = namedtuple('RoadSizeVector',['len','inside_direction_count','outsize_direction_count'])
 
 def get_empty_road(sizeVector: RoadSizeVector):
     zero_count = sizeVector.inside_direction_count
@@ -30,8 +24,7 @@ class Road:
         self.second = array[1]
 
     def __len__(self):
-        return 0 if len(self.first) == 0 else len(self.first[0]) * (
-            BLOCK_SIZE + CAR_OFFSET)
+        return 0 if len(self.first) == 0 else len(self.first[0])
 
     @property
     def length(self):
@@ -39,7 +32,7 @@ class Road:
 
     @property
     def width(self):
-        return (len(self.first) + len(self.second)) * BLOCK_SIZE
+        return (len(self.first) + len(self.second))
 
     def get_first_indexes(self):
         for i in range(len(self.first)):
