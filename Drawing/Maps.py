@@ -38,10 +38,10 @@ class Map:
     Map class, used to draw crossroads
     """
     defaultVectors = [
-        RoadSizeVector(5, 2, 1),  # top
-        RoadSizeVector(7, 1, 1),  # left
-        RoadSizeVector(9, 3, 1),  # bottom
-        RoadSizeVector(3, 3, 2)  # right
+        RoadSizeVector(5, 2, 2),  # top
+        RoadSizeVector(5, 2, 2),  # left
+        RoadSizeVector(5, 2, 2),  # bottom
+        RoadSizeVector(5, 2, 2)  # right
     ]
 
     def __init__(self, vectors=defaultVectors):
