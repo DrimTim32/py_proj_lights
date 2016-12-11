@@ -32,6 +32,48 @@ MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
 PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])
 
 
+class _PointsCalculator:
+    @staticmethod
+    def __calculate_top_points(middle: Position, top, offset: MaxOffset):
+        top_end_left = middle - Position(int(top.width / 2) * BLOCK_SIZE, offset.y)
+        top_start_left = top_end_left - Position(0, top.length * LENGTH_MULTIPLIER)
+        top_end_right = top_start_left + Position(top.width * BLOCK_SIZE, 0)
+        top_start_right = top_end_right + Position(0, top.length * LENGTH_MULTIPLIER)
+        return RoadPointsGroup(PointsPair(top_start_right, top_end_right), PointsPair(top_start_left, top_end_left))
+
+    @staticmethod
+    def __calculate_left_points(middle: Position, left, offset: MaxOffset):
+        left_start_up = middle - Position(offset.x, int(left.width / 2) * BLOCK_SIZE)
+        left_end_up = left_start_up + Position(-left.length * LENGTH_MULTIPLIER, 0)
+        left_start_down = left_end_up + Position(0, left.width * BLOCK_SIZE)
+        left_end_down = left_start_up + Position(0, left.width * BLOCK_SIZE)
+        return RoadPointsGroup(PointsPair(left_start_up, left_end_up), PointsPair(left_start_down, left_end_down))
+
+    @staticmethod
+    def __calculate_down_points(middle: Position, down, offset: MaxOffset):
+        down_start_left = middle + Position(-int(down.width / 2) * BLOCK_SIZE, offset.y)
+        down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
+        down_start_right = down_end_left + Position(down.width * BLOCK_SIZE, 0)
+        down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
+        return RoadPointsGroup(PointsPair(down_start_left, down_end_left), PointsPair(down_start_right, down_end_right))
+
+    @staticmethod
+    def __calculate_right_points(middle: Position, right, offset: MaxOffset):
+        right_end_up = middle + Position(offset.x, -(int(right.width / 2) * BLOCK_SIZE))
+        right_start_up = right_end_up + Position(right.length * LENGTH_MULTIPLIER, 0)
+        right_start_down = right_end_up + Position(0, right.width * BLOCK_SIZE)
+        right_end_down = right_start_up + Position(0, right.width * BLOCK_SIZE)
+        return RoadPointsGroup(PointsPair(right_start_down, right_end_down), PointsPair(right_start_up, right_end_up))
+
+    @staticmethod
+    def calculate_points(middle, roads, offset):
+        top_points = _PointsCalculator.__calculate_top_points(middle, roads["top"], offset)
+        left_points = _PointsCalculator.__calculate_left_points(middle, roads["left"], offset)
+        down_points = _PointsCalculator.__calculate_down_points(middle, roads["bottom"], offset)
+        right_points = _PointsCalculator.__calculate_right_points(middle, roads["right"], offset)
+        return PointsQuadruple(top_points, left_points, down_points, right_points)
+
+
 # noinspection PyAttributeOutsideInit
 class Map:
     """
@@ -51,56 +93,14 @@ class Map:
             "left": get_empty_road(vectors[1]),
             "right": get_empty_road(vectors[3])
         }
-        self.offset = MaxOffset(
+        self.__offset = MaxOffset(
             int(max(self.top.width * BLOCK_SIZE, self.bottom.width * BLOCK_SIZE) / 2),
             int(max(self.left.width * BLOCK_SIZE, self.right.width * BLOCK_SIZE) / 2))
-        self.middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.offset.y,
-                               CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.offset.x)
-        self.calculate_points()
+        self.__middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.__offset.y,
+                                 CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.__offset.x)
+        self.points = _PointsCalculator.calculate_points(self.__middle,self.roads,self.__offset)
 
-    def calculate_top_points(self):
-        multiplier = LENGTH_MULTIPLIER
-        top_end_left = self.middle - Position(int(self.top.width / 2) * BLOCK_SIZE, self.offset.y)
-        top_start_left = top_end_left - Position(0, self.top.length * multiplier)
-        top_end_right = top_start_left + Position(self.top.width * BLOCK_SIZE, 0)
-        top_start_right = top_end_right + Position(0, self.top.length * multiplier)
-        return RoadPointsGroup(PointsPair(top_start_right, top_end_right), PointsPair(top_start_left, top_end_left))
-
-    def calculate_left_points(self):
-        mpl = LENGTH_MULTIPLIER
-        left_start_up = self.middle - Position(self.offset.x, int(self.left.width / 2) * BLOCK_SIZE)
-        left_end_up = left_start_up + Position(-self.left.length * mpl, 0)
-        left_start_down = left_end_up + Position(0, self.left.width * BLOCK_SIZE)
-        left_end_down = left_start_up + Position(0, self.left.width * BLOCK_SIZE)
-        return RoadPointsGroup(PointsPair(left_start_up, left_end_up), PointsPair(left_start_down, left_end_down))
-
-    def calculate_down_points(self):
-        multiplier = LENGTH_MULTIPLIER
-        down_start_left = self.middle + Position(-int(self.bottom.width / 2) * BLOCK_SIZE, self.offset.y)
-        down_end_left = down_start_left + Position(0, self.bottom.length * multiplier)
-        down_start_right = down_end_left + Position(self.bottom.width * BLOCK_SIZE, 0)
-        down_end_right = down_start_right - Position(0, self.bottom.length * multiplier)
-
-        return RoadPointsGroup(
-            PointsPair(down_start_left, down_end_left),
-            PointsPair(down_start_right, down_end_right))
-
-    def calculate_right_points(self):
-        multiplier = LENGTH_MULTIPLIER
-        right_end_up = self.middle + Position(self.offset.x, -(int(self.right.width / 2) * BLOCK_SIZE))
-        right_start_up = right_end_up + Position(self.right.length * multiplier, 0)
-        right_start_down = right_end_up + Position(0, self.right.width * BLOCK_SIZE)
-        right_end_down = right_start_up + Position(0, self.right.width * BLOCK_SIZE)
-        return RoadPointsGroup(PointsPair(right_start_down, right_end_down), PointsPair(right_start_up, right_end_up))
-
-    def calculate_points(self):
-        top_points = self.calculate_top_points()
-        left_points = self.calculate_left_points()
-        down_points = self.calculate_down_points()
-        right_points = self.calculate_right_points()
-        self.points = PointsQuadruple(top_points, left_points, down_points, right_points)
-
-    def seal(self, screen):
+    def __seal(self, screen):
         """
         Draws intervals between every two adjacent roads.
         """
@@ -119,28 +119,19 @@ class Map:
 
     def draw(self, screen):
         self.draw_directions(screen, [self.points.top, self.points.right, self.points.left, self.points.down])
-        self.seal(screen)
-        self.draw_cars(screen)
+        self.__seal(screen)
+        self.__draw_cars(screen)
 
-    @staticmethod
-    def draw_cars_on_road(screen, outside_dir, inside_dir, line):
-        for (i, q) in line.get_first_indexes():
-            if line.first[i][q] != 0:
-                draw_car(screen, outside_dir(i, q))
-        for (i, q) in line.get_second_indexes():
-            if line.second[i][q] != 0:
-                draw_car(screen, inside_dir(i, q), RED)
+    def __draw_cars(self, screen):
+        self.__draw_cars_on_road(screen, self.__car_top_outside_direction, self.car_top_inside_direction, self.top)
+        self.__draw_cars_on_road(screen, self.car_left_outside_direction, self.car_left_inside_direction, self.left)
+        self.__draw_cars_on_road(screen, self.car_right_outside_direction, self.car_right_inside_direction, self.right)
+        self.__draw_cars_on_road(screen, self.__car_down_outside_direction, self.car_down_inside_direction, self.bottom)
 
-    def draw_cars(self, screen):
-        self.draw_cars_on_road(screen, self.car_top_outside_direction, self.car_top_inside_direction, self.top)
-        self.draw_cars_on_road(screen, self.car_left_outside_direction, self.car_left_inside_direction, self.left)
-        self.draw_cars_on_road(screen, self.car_right_outside_direction, self.car_right_inside_direction, self.right)
-        self.draw_cars_on_road(screen, self.car_down_outside_direction, self.car_down_inside_direction, self.bottom)
-
-    def car_top_outside_direction(self, i: int, q: int):
+    def __car_top_outside_direction(self, i: int, q: int):
         return self.points.top.outside.start + Map.up_movement_vector(i, q)
 
-    def car_down_outside_direction(self, i: int, q: int):
+    def __car_down_outside_direction(self, i: int, q: int):
         return self.points.down.outside.start + Map.down_movement_vector(i, q)
 
     def car_left_outside_direction(self, i: int, q: int):
@@ -232,3 +223,12 @@ class Map:
     @staticmethod
     def get_length(direction):
         return 0 if len(direction[0]) == 0 else len(direction[0][0]) * BLOCK_SIZE
+
+    @staticmethod
+    def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
+        for (i, q) in line.get_first_indexes():
+            if line.first[i][q] != 0:
+                draw_car(screen, outside_dir(i, q))
+        for (i, q) in line.get_second_indexes():
+            if line.second[i][q] != 0:
+                draw_car(screen, inside_dir(i, q), RED)
