@@ -233,12 +233,11 @@ class Map:
         pygame.display.set_caption("Game")
         screen.fill(WHITE)
 
-
     @staticmethod
     def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
-        for (i, q) in line.get_first_indexes():
+        for (i, q) in line.first_indexes:
             if line.first[i][q] != 0:
                 draw_car(screen, outside_dir(i, q))
-        for (i, q) in line.get_second_indexes():
+        for (i, q) in line.second_indexes:
             if line.second[i][q] != 0:
                 draw_car(screen, inside_dir(i, q), RED)
