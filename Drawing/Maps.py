@@ -32,7 +32,7 @@ MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
 PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])
 
 
-class _PointsCalculator:
+class _MapPointsCalculator:
     @staticmethod
     def __calculate_top_points(middle: Position, top, offset: MaxOffset):
         top_end_left = middle - Position(int(top.width / 2) * BLOCK_SIZE, offset.y)
@@ -67,11 +67,59 @@ class _PointsCalculator:
 
     @staticmethod
     def calculate_points(middle, roads, offset):
-        top_points = _PointsCalculator.__calculate_top_points(middle, roads["top"], offset)
-        left_points = _PointsCalculator.__calculate_left_points(middle, roads["left"], offset)
-        down_points = _PointsCalculator.__calculate_down_points(middle, roads["bottom"], offset)
-        right_points = _PointsCalculator.__calculate_right_points(middle, roads["right"], offset)
+        top_points = _MapPointsCalculator.__calculate_top_points(middle, roads["top"], offset)
+        left_points = _MapPointsCalculator.__calculate_left_points(middle, roads["left"], offset)
+        down_points = _MapPointsCalculator.__calculate_down_points(middle, roads["down"], offset)
+        right_points = _MapPointsCalculator.__calculate_right_points(middle, roads["right"], offset)
         return PointsQuadruple(top_points, left_points, down_points, right_points)
+
+
+class _MapVectorsCalculator:
+    def __init__(self, points):
+        self.__points = points
+
+    def car_top_outside_direction(self, i: int, q: int):
+        return self.__points.top.outside.start + _MapVectorsCalculator.up_movement_vector(i, q)
+
+    def car_down_outside_direction(self, i: int, q: int):
+        return self.__points.down.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
+
+    def car_left_outside_direction(self, i: int, q: int):
+        return self.__points.left.outside.start + _MapVectorsCalculator.left_movement_vector(i, q)
+
+    def car_right_outside_direction(self, i: int, q: int):
+        return self.__points.right.outside.start + _MapVectorsCalculator.right_movement_vector(i, q)
+
+    def car_top_inside_direction(self, i: int, q: int):
+        return self.__points.top.inside.start + _MapVectorsCalculator.down_movement_vector(i, q)
+
+    def car_down_inside_direction(self, i: int, q: int):
+        return self.__points.down.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
+
+    def car_left_inside_direction(self, i: int, q: int):
+        return self.__points.left.inside.start + _MapVectorsCalculator.right_movement_vector(i, q)
+
+    def car_right_inside_direction(self, i: int, q: int):
+        return self.__points.right.inside.start + _MapVectorsCalculator.left_movement_vector(i, q)
+
+    @staticmethod
+    def down_movement_vector(i, q):
+        left_offset = CAR_OFFSET if i == 0 else i * (CAR_OFFSET + BLOCK_SIZE)
+        right_offset = CAR_OFFSET if q == 0 else q * (CAR_OFFSET + BLOCK_SIZE)
+        return Position(left_offset, right_offset)
+
+    @staticmethod
+    def up_movement_vector(i, q):
+        return - _MapVectorsCalculator.down_movement_vector(i, q)
+
+    @staticmethod
+    def left_movement_vector(i, q):
+        p = _MapVectorsCalculator.down_movement_vector(q, i)
+        return Position(-p.x, p.y)
+
+    @staticmethod
+    def right_movement_vector(i, q):
+        return -_MapVectorsCalculator.left_movement_vector(i, q)
 
 
 # noinspection PyAttributeOutsideInit
@@ -79,26 +127,32 @@ class Map:
     """
     Map class, used to draw crossroads
     """
-    defaultVectors = [
+    __defaultVectors = [
         RoadSizeVector(5, 2, 2),  # top
         RoadSizeVector(5, 2, 2),  # left
         RoadSizeVector(5, 2, 2),  # bottom
         RoadSizeVector(5, 2, 2)  # right
     ]
 
-    def __init__(self, vectors=defaultVectors):
+    def __init__(self, vectors=__defaultVectors):
         self.roads = {
             "top": get_empty_road(vectors[0]),
-            "bottom": get_empty_road(vectors[2]),
+            "down": get_empty_road(vectors[2]),
             "left": get_empty_road(vectors[1]),
             "right": get_empty_road(vectors[3])
         }
         self.__offset = MaxOffset(
-            int(max(self.top.width * BLOCK_SIZE, self.bottom.width * BLOCK_SIZE) / 2),
+            int(max(self.top.width * BLOCK_SIZE, self.down.width * BLOCK_SIZE) / 2),
             int(max(self.left.width * BLOCK_SIZE, self.right.width * BLOCK_SIZE) / 2))
         self.__middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.__offset.y,
                                  CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.__offset.x)
-        self.points = _PointsCalculator.calculate_points(self.__middle,self.roads,self.__offset)
+        self.points = _MapPointsCalculator.calculate_points(self.__middle, self.roads, self.__offset)
+        self._vector_calculator = _MapVectorsCalculator(self.points)
+
+    def draw(self, screen):
+        self.draw_directions(screen, [self.points.top, self.points.right, self.points.left, self.points.down])
+        self.__seal(screen)
+        self.__draw_cars(screen)
 
     def __seal(self, screen):
         """
@@ -113,45 +167,23 @@ class Map:
                 [self.points.right[0][0], self.points.right[1][0]])
         if self.top.length <= 0:
             directions.append([self.points.top[0][0], self.points.top[1][0]])
-        if self.bottom.length <= 0:
+        if self.down.length <= 0:
             directions.append([self.points.down[0][0], self.points.down[1][0]])
         self.draw_seals(screen, directions)
 
-    def draw(self, screen):
-        self.draw_directions(screen, [self.points.top, self.points.right, self.points.left, self.points.down])
-        self.__seal(screen)
-        self.__draw_cars(screen)
-
     def __draw_cars(self, screen):
-        self.__draw_cars_on_road(screen, self.__car_top_outside_direction, self.car_top_inside_direction, self.top)
-        self.__draw_cars_on_road(screen, self.car_left_outside_direction, self.car_left_inside_direction, self.left)
-        self.__draw_cars_on_road(screen, self.car_right_outside_direction, self.car_right_inside_direction, self.right)
-        self.__draw_cars_on_road(screen, self.__car_down_outside_direction, self.car_down_inside_direction, self.bottom)
-
-    def __car_top_outside_direction(self, i: int, q: int):
-        return self.points.top.outside.start + Map.up_movement_vector(i, q)
-
-    def __car_down_outside_direction(self, i: int, q: int):
-        return self.points.down.outside.start + Map.down_movement_vector(i, q)
-
-    def car_left_outside_direction(self, i: int, q: int):
-        return self.points.left.outside.start + Map.left_movement_vector(i, q)
-
-    def car_right_outside_direction(self, i: int, q: int):
-        return self.points.right.outside.start + Map.right_movement_vector(i,
-                                                                           q)
-
-    def car_top_inside_direction(self, i: int, q: int):
-        return self.points.top.inside.start + Map.down_movement_vector(i, q)
-
-    def car_down_inside_direction(self, i: int, q: int):
-        return self.points.down.inside.start + Map.up_movement_vector(i, q)
-
-    def car_left_inside_direction(self, i: int, q: int):
-        return self.points.left.inside.start + Map.right_movement_vector(i, q)
-
-    def car_right_inside_direction(self, i: int, q: int):
-        return self.points.right.inside.start + Map.left_movement_vector(i, q)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_top_outside_direction,
+                                 self._vector_calculator.car_top_inside_direction, self.top)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_left_outside_direction,
+                                 self._vector_calculator.car_left_inside_direction, self.left)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_right_outside_direction,
+                                 self._vector_calculator.car_right_inside_direction, self.right)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_down_outside_direction,
+                                 self._vector_calculator.car_down_inside_direction, self.down)
 
     @property
     def top(self):
@@ -178,31 +210,12 @@ class Map:
         self.roads["left"] = data
 
     @property
-    def bottom(self):
-        return self.roads["bottom"]
+    def down(self):
+        return self.roads["down"]
 
-    @bottom.setter
-    def bottom(self, data):
-        self.roads["bottom"] = data
-
-    @staticmethod
-    def down_movement_vector(i, q):
-        left_offset = CAR_OFFSET if i == 0 else i * (CAR_OFFSET + BLOCK_SIZE)
-        right_offset = CAR_OFFSET if q == 0 else q * (CAR_OFFSET + BLOCK_SIZE)
-        return Position(left_offset, right_offset)
-
-    @staticmethod
-    def up_movement_vector(i, q):
-        return - Map.down_movement_vector(i, q)
-
-    @staticmethod
-    def left_movement_vector(i, q):
-        p = Map.down_movement_vector(q, i)
-        return Position(-p.x, p.y)
-
-    @staticmethod
-    def right_movement_vector(i, q):
-        return -Map.left_movement_vector(i, q)
+    @down.setter
+    def down(self, data):
+        self.roads["down"] = data
 
     @staticmethod
     def draw_seals(screen, directions):
@@ -220,9 +233,6 @@ class Map:
         pygame.display.set_caption("Game")
         screen.fill(WHITE)
 
-    @staticmethod
-    def get_length(direction):
-        return 0 if len(direction[0]) == 0 else len(direction[0][0]) * BLOCK_SIZE
 
     @staticmethod
     def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
