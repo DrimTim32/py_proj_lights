@@ -82,7 +82,7 @@ class _MapVectorsCalculator:
         return self.__points.top.outside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
     def car_down_outside_direction(self, i: int, q: int):
-        return self.__points.down.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
+        return self.__points.bottom.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
     def car_left_outside_direction(self, i: int, q: int):
         return self.__points.left.outside.start + _MapVectorsCalculator.left_movement_vector(i, q)
@@ -94,7 +94,7 @@ class _MapVectorsCalculator:
         return self.__points.top.inside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
     def car_down_inside_direction(self, i: int, q: int):
-        return self.__points.down.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
+        return self.__points.bottom.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
     def car_left_inside_direction(self, i: int, q: int):
         return self.__points.left.inside.start + _MapVectorsCalculator.right_movement_vector(i, q)
@@ -142,7 +142,7 @@ class Map:
             "right": get_empty_road(vectors[3])
         }
         self.__offset = MaxOffset(
-            int(max(self.top.width * BLOCK_SIZE, self.down.width * BLOCK_SIZE) / 2),
+            int(max(self.top.width * BLOCK_SIZE, self.bottom.width * BLOCK_SIZE) / 2),
             int(max(self.left.width * BLOCK_SIZE, self.right.width * BLOCK_SIZE) / 2))
         self.__middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.__offset.y,
                                  CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.__offset.x)
@@ -167,7 +167,7 @@ class Map:
                 [self.points.right[0][0], self.points.right[1][0]])
         if self.top.length <= 0:
             directions.append([self.points.top[0][0], self.points.top[1][0]])
-        if self.down.length <= 0:
+        if self.bottom.length <= 0:
             directions.append([self.points.down[0][0], self.points.down[1][0]])
         self.draw_seals(screen, directions)
 
@@ -183,7 +183,7 @@ class Map:
                                  self._vector_calculator.car_right_inside_direction, self.right)
         self.__draw_cars_on_road(screen,
                                  self._vector_calculator.car_down_outside_direction,
-                                 self._vector_calculator.car_down_inside_direction, self.down)
+                                 self._vector_calculator.car_down_inside_direction, self.bottom)
 
     @property
     def top(self):
@@ -210,11 +210,11 @@ class Map:
         self.roads["left"] = data
 
     @property
-    def down(self):
+    def bottom(self):
         return self.roads["down"]
 
-    @down.setter
-    def down(self, data):
+    @bottom.setter
+    def bottom(self, data):
         self.roads["down"] = data
 
     @staticmethod
