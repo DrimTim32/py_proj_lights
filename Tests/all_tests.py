@@ -1,1 +1,0 @@
-from Drawing.tests import *
