@@ -82,7 +82,7 @@ class _MapVectorsCalculator:
         return self.__points.top.outside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
     def car_down_outside_direction(self, i: int, q: int):
-        return self.__points.bottom.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
+        return self.__points.down.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
     def car_left_outside_direction(self, i: int, q: int):
         return self.__points.left.outside.start + _MapVectorsCalculator.left_movement_vector(i, q)
@@ -94,7 +94,7 @@ class _MapVectorsCalculator:
         return self.__points.top.inside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
     def car_down_inside_direction(self, i: int, q: int):
-        return self.__points.bottom.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
+        return self.__points.down.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
     def car_left_inside_direction(self, i: int, q: int):
         return self.__points.left.inside.start + _MapVectorsCalculator.right_movement_vector(i, q)
