@@ -2,7 +2,6 @@
 This module contains class Map and two methods for drawing (line and car)
 """
 from collections import namedtuple
-from typing import List
 import pygame
 
 from Drawing.DataStructures import Position, RoadSizeVector
@@ -10,7 +9,7 @@ from Drawing.DataStructures import get_empty_road
 from Drawing.drawing_consts import *
 
 
-def draw_line(screen, point1: Position, point2: Position, color=BLACK):
+def draw_line(screen, point1, point2, color=BLACK):
     """
     Draws line between two points on the screen using selected color
     :return: None
@@ -18,7 +17,7 @@ def draw_line(screen, point1: Position, point2: Position, color=BLACK):
     pygame.draw.line(screen, color, [point1.x, point1.y], [point2.x, point2.y])
 
 
-def draw_car(screen, position: Position, color=BLUE):
+def draw_car(screen, position, color=BLUE):
     """
     Draws car in selected color and position
     :return: None
@@ -34,7 +33,7 @@ PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right']
 
 class _MapPointsCalculator:
     @staticmethod
-    def __calculate_top_points(middle: Position, top, offset: MaxOffset):
+    def __calculate_top_points(middle, top, offset):
         top_end_left = middle - Position(int(top.width / 2) * WIDTH_MULTIPLIER, offset.y)
         top_start_left = top_end_left - Position(0, top.length * LENGTH_MULTIPLIER)
         top_end_right = top_start_left + Position(top.width * WIDTH_MULTIPLIER, 0)
@@ -43,7 +42,7 @@ class _MapPointsCalculator:
         return RoadPointsGroup(PointsPair(top_start_right, top_end_right), PointsPair(top_start_left, top_end_left))
 
     @staticmethod
-    def __calculate_left_points(middle: Position, left, offset: MaxOffset):
+    def __calculate_left_points(middle, left, offset):
         left_start_up = middle - Position(offset.x, int(left.width / 2) * WIDTH_MULTIPLIER)
         left_end_up = left_start_up + Position(-left.length * LENGTH_MULTIPLIER, 0)
         left_start_down = left_end_up + Position(0, left.width * WIDTH_MULTIPLIER)
@@ -52,7 +51,7 @@ class _MapPointsCalculator:
         return RoadPointsGroup(PointsPair(left_start_up, left_end_up), PointsPair(left_start_down, left_end_down))
 
     @staticmethod
-    def __calculate_down_points(middle: Position, down, offset: MaxOffset):
+    def __calculate_down_points(middle, down, offset):
         down_start_left = middle + Position(-int(down.width / 2) * WIDTH_MULTIPLIER, offset.y)
         down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
         down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
@@ -61,7 +60,7 @@ class _MapPointsCalculator:
         return RoadPointsGroup(PointsPair(down_start_left, down_end_left), PointsPair(down_start_right, down_end_right))
 
     @staticmethod
-    def __calculate_right_points(middle: Position, right, offset: MaxOffset):
+    def __calculate_right_points(middle, right, offset):
         right_end_up = middle + Position(offset.x, -(int(right.width / 2) * WIDTH_MULTIPLIER))
         right_start_up = right_end_up + Position(right.length * LENGTH_MULTIPLIER, 0)
         right_start_down = right_end_up + Position(0, right.width * WIDTH_MULTIPLIER)
@@ -85,7 +84,7 @@ class _MapVectorsCalculator:
     def __init__(self, points):
         self.__points = points
 
-    def car_top_outside_direction(self, i: int, q: int):
+    def car_top_outside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -93,7 +92,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.top.outside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
-    def car_down_outside_direction(self, i: int, q: int):
+    def car_down_outside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -101,7 +100,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.down.outside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
-    def car_left_outside_direction(self, i: int, q: int):
+    def car_left_outside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -109,7 +108,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.left.outside.start + _MapVectorsCalculator.left_movement_vector(i, q)
 
-    def car_right_outside_direction(self, i: int, q: int):
+    def car_right_outside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -117,7 +116,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.right.outside.start + _MapVectorsCalculator.right_movement_vector(i, q)
 
-    def car_top_inside_direction(self, i: int, q: int):
+    def car_top_inside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -125,7 +124,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.top.inside.start + _MapVectorsCalculator.down_movement_vector(i, q)
 
-    def car_down_inside_direction(self, i: int, q: int):
+    def car_down_inside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -133,7 +132,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.down.inside.start + _MapVectorsCalculator.up_movement_vector(i, q)
 
-    def car_left_inside_direction(self, i: int, q: int):
+    def car_left_inside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -141,7 +140,7 @@ class _MapVectorsCalculator:
         """
         return self.__points.left.inside.start + _MapVectorsCalculator.right_movement_vector(i, q)
 
-    def car_right_inside_direction(self, i: int, q: int):
+    def car_right_inside_direction(self, i, q):
         """
         :param i: int
         :param q: int
@@ -279,7 +278,7 @@ class Map:
             draw_line(screen, direction[0], direction[1])
 
     @staticmethod
-    def __generate_board(roads_vectors: List[RoadSizeVector]):
+    def __generate_board(roads_vectors):
         """
         :type roads_vectors : List[RoadSizeVector]
         :return: returns list for middle part of crossroad
