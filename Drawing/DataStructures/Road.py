@@ -1,4 +1,3 @@
-from Drawing.drawing_consts import *
 from collections import namedtuple
 
 RoadSizeVector = namedtuple('RoadSizeVector', ['len', 'inside_direction_count', 'outsize_direction_count'])
