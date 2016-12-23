@@ -1,10 +1,13 @@
-from Drawing.drawing_consts import *
 from collections import namedtuple
 
 RoadSizeVector = namedtuple('RoadSizeVector', ['len', 'inside_direction_count', 'outsize_direction_count'])
 
 
-def get_empty_road(size_vector: RoadSizeVector):
+def get_empty_road(size_vector):
+    """
+    :type size_vector : RoadSizeVector
+    :return:
+    """
     zero_count = size_vector.inside_direction_count
     one_count = size_vector.outsize_direction_count
     length = size_vector.len
