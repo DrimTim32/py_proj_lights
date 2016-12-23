@@ -2,7 +2,6 @@
 All consts important for drawing map and cars.
 In the name of 'Namespaces are one honking great idea -- let's do more of those!' rule
 """
-from math import sqrt
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)

@@ -1,5 +1,5 @@
 from Drawing import Map, Position
-from Drawing.drawing_consts import *
+
 from Drawing import RoadSizeVector
 def test_points_calculation():
     top_vector = RoadSizeVector(5,2,1)
