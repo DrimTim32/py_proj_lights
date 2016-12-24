@@ -2,6 +2,7 @@ import sys
 
 import pygame
 
+from Drawing import Renderer
 from Simulation import Game
 
 # consts
@@ -21,7 +22,8 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
-    game = Game(screen)
+    game = Game()
+    renderer = Renderer(screen)
     done = False
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
@@ -31,7 +33,8 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
 
-        game.update()
+        render_list = game.update()
+        renderer.render(render_list)
 
         pygame.time.Clock().tick(1)
         pygame.display.flip()
