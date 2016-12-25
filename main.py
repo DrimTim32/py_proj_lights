@@ -37,7 +37,7 @@ def main():
                 done = True
 
         curr_time = clock()
-        if curr_time - prev_update_time > 1:
+        if curr_time - prev_update_time > 0.2:
             prev_update_time = curr_time
             render_list = game.update()
 
