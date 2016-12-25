@@ -1,4 +1,5 @@
 import sys
+from time import clock
 
 import pygame
 
@@ -24,7 +25,9 @@ def main():
     screen = pygame.display.set_mode(windowSize)
     game = Game()
     renderer = Renderer(screen)
+    prev_update_time = clock()
     done = False
+    render_list = [game.map]
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
@@ -33,10 +36,14 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
 
-        render_list = game.update()
+        curr_time = clock()
+        if curr_time - prev_update_time > 1:
+            prev_update_time = curr_time
+            render_list = game.update()
+
         renderer.render(render_list)
 
-        pygame.time.Clock().tick(1)
+        pygame.time.Clock().tick(60)
         pygame.display.flip()
     sys.exit()
 

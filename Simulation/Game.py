@@ -40,7 +40,8 @@ class Game:
         print('car_pushed ', direction)
 
     def __generate_car(self, direction):
-        return random.choice([0 for _ in range(direction + 3)] + [1])
+        return random.choice([0, 0, 0, 0, 1]) if direction == 0 else 0
+        # return random.choice([0 for _ in range(direction + 3)] + [1])
 
     def __is_green(self, source=0, destination=0):
         return True
