@@ -34,7 +34,7 @@ PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right']
 class _MapPointsCalculator:
     @staticmethod
     def __calculate_top_points(middle, top, offset):
-        top_end_left = middle - Position(int(top.width / 2) * WIDTH_MULTIPLIER, offset.y)
+        top_end_left = middle - Position((top.width*WIDTH_MULTIPLIER) // 2 , offset.y)
         top_start_left = top_end_left - Position(0, top.length * LENGTH_MULTIPLIER)
         top_end_right = top_start_left + Position(top.width * WIDTH_MULTIPLIER, 0)
         top_start_right = top_end_right + Position(0, top.length * LENGTH_MULTIPLIER)
@@ -43,7 +43,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_left_points(middle, left, offset):
-        left_start_up = middle - Position(offset.x, int(left.width / 2) * WIDTH_MULTIPLIER)
+        left_start_up = middle - Position(offset.x, (left.width*WIDTH_MULTIPLIER) // 2 )
         left_end_up = left_start_up + Position(-left.length * LENGTH_MULTIPLIER, 0)
         left_start_down = left_end_up + Position(0, left.width * WIDTH_MULTIPLIER)
         left_end_down = left_start_up + Position(0, left.width * WIDTH_MULTIPLIER)
@@ -52,7 +52,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_down_points(middle, down, offset):
-        down_start_left = middle + Position(-int(down.width / 2) * WIDTH_MULTIPLIER, offset.y)
+        down_start_left = middle + Position(-(down.width* WIDTH_MULTIPLIER) // 2 , offset.y)
         down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
         down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
         down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
@@ -61,7 +61,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_right_points(middle, right, offset):
-        right_end_up = middle + Position(offset.x, -(int(right.width / 2) * WIDTH_MULTIPLIER))
+        right_end_up = middle + Position(offset.x, -(right.width* WIDTH_MULTIPLIER) // 2)
         right_start_up = right_end_up + Position(right.length * LENGTH_MULTIPLIER, 0)
         right_start_down = right_end_up + Position(0, right.width * WIDTH_MULTIPLIER)
         right_end_down = right_start_up + Position(0, right.width * WIDTH_MULTIPLIER)
@@ -179,7 +179,6 @@ class Map:
         RoadSizeVector(5, 2, 2),  # bottom
         RoadSizeVector(5, 2, 2)  # right
     ]
-
     def __init__(self, vectors=__defaultVectors):
         self.roads = {
             "top": get_empty_road(vectors[0]),
@@ -194,6 +193,7 @@ class Map:
         self.__middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.__offset.y,
                                  CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.__offset.x)
         self.points = _MapPointsCalculator.calculate_points(self.__middle, self.roads, self.__offset)
+        """:type : PointsQuadruple"""
         self._vector_calculator = _MapVectorsCalculator(self.points)
 
     def draw(self, screen):
