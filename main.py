@@ -5,6 +5,7 @@ import pygame
 
 from Drawing import Renderer
 from Simulation import CarRandomGenerator
+from Simulation import FixedLightsManager
 from Simulation import Game
 
 # consts
@@ -25,7 +26,8 @@ def main():
 
     screen = pygame.display.set_mode(windowSize)
     car_generator = CarRandomGenerator()
-    game = Game(car_generator)
+    lights_manager = FixedLightsManager()
+    game = Game(car_generator, lights_manager)
     renderer = Renderer(screen)
     prev_update_time = clock()
     done = False

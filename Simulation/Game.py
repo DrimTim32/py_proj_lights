@@ -5,8 +5,9 @@ from Simulation.Intersection import *
 
 
 class Game:
-    def __init__(self, car_generator):
+    def __init__(self, car_generator, lights_manager):
         self.car_generator = car_generator
+        self.lights_manager = lights_manager
         self.map = Map([
             RoadSizeVector(8, 2, 3),  # top
             RoadSizeVector(8, 2, 2),  # left
@@ -44,12 +45,9 @@ class Game:
         for direction in range(len(self.in_roads)):
             road = self.in_roads[direction]
             for lane in road:
-                if self.__is_green():
+                if self.lights_manager.is_green():
                     if lane[-1] == 1:
                         self.intersection.push_car(direction, road.index(lane))
                     for i in range(len(lane) - 1, 0, -1):
                         lane[i] = lane[i - 1]
                     lane[0] = self.car_generator.generate(direction, road.index(lane))
-
-    def __is_green(self, source=0, destination=0):
-        return True
