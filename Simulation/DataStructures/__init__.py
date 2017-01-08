@@ -1,0 +1,1 @@
+from .IntersectionProperties import *
