@@ -4,3 +4,6 @@ class FixedLightsManager:
 
     def is_green(self, direction, lane):
         return True
+
+    def update(self):
+        pass

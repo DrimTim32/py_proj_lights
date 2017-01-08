@@ -29,6 +29,7 @@ class Game:
                          self.map.bottom.second, self.map.left.second]
 
     def update(self):
+        self.lights_manager.update()
         self.__update_out()
         self.__update_in()
         return [self.map]
@@ -45,7 +46,7 @@ class Game:
         for direction in range(len(self.in_roads)):
             road = self.in_roads[direction]
             for lane in road:
-                if self.lights_manager.is_green():
+                if self.lights_manager.is_green(direction, lane):
                     if lane[-1] == 1:
                         self.intersection.push_car(direction, road.index(lane))
                     for i in range(len(lane) - 1, 0, -1):
