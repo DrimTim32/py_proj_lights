@@ -4,6 +4,7 @@ from time import clock
 import pygame
 
 from Drawing import Renderer
+from Simulation import CarRandomGenerator
 from Simulation import Game
 
 # consts
@@ -23,7 +24,8 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
-    game = Game()
+    car_generator = CarRandomGenerator()
+    game = Game(car_generator)
     renderer = Renderer(screen)
     prev_update_time = clock()
     done = False

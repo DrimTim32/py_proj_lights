@@ -1,3 +1,6 @@
-from collections import namedtuple
+class Car:
+    def __init__(self, source, turn_direction):
+        self.source = source
+        self.turn_direction = turn_direction
 
-Car = namedtuple('Car', ['source', 'destination'])
+        self.destination = (self.source + self.turn_direction) % 3  # tylko dla 4-skrzyzowania

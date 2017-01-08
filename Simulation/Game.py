@@ -1,5 +1,3 @@
-import random
-
 from Drawing.DataStructures.Road import RoadSizeVector
 from Drawing.Maps import Map
 from Simulation.DataStructures.IntersectionProperties import *
@@ -7,16 +5,17 @@ from Simulation.Intersection import *
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, car_generator):
+        self.car_generator = car_generator
         self.map = Map([
-            RoadSizeVector(8, 2, 2),  # top
+            RoadSizeVector(8, 2, 3),  # top
             RoadSizeVector(8, 2, 2),  # left
             RoadSizeVector(8, 2, 2),  # bottom
             RoadSizeVector(8, 2, 2)  # right
         ])
 
         dimensions = IntersectionProperties([
-            DirectionProperties(2, 2),  # top
+            DirectionProperties(2, 3),  # top
             DirectionProperties(2, 2),  # left
             DirectionProperties(2, 2),  # bottom
             DirectionProperties(2, 2)  # right
@@ -50,11 +49,7 @@ class Game:
                         self.intersection.push_car(direction, road.index(lane))
                     for i in range(len(lane) - 1, 0, -1):
                         lane[i] = lane[i - 1]
-                    lane[0] = self.__generate_car(direction, road.index(lane))
-
-    def __generate_car(self, direction, lane=0):
-        return random.choice([0, 0, 0, 0, 1]) if direction == 0 else 0
-        # return random.choice([0 for _ in range(direction + 3)] + [1])
+                    lane[0] = self.car_generator.generate(direction, road.index(lane))
 
     def __is_green(self, source=0, destination=0):
         return True
