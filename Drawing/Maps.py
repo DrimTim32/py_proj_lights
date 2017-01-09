@@ -75,7 +75,7 @@ class _MapPointsCalculator:
         """
         top_points = _MapPointsCalculator.__calculate_top_points(middle, roads["top"], offset)
         left_points = _MapPointsCalculator.__calculate_left_points(middle, roads["left"], offset)
-        down_points = _MapPointsCalculator.__calculate_down_points(middle, roads["down"], offset)
+        down_points = _MapPointsCalculator.__calculate_down_points(middle, roads["bottom"], offset)
         right_points = _MapPointsCalculator.__calculate_right_points(middle, roads["right"], offset)
         return PointsQuadruple(top_points, left_points, down_points, right_points)
 
@@ -174,9 +174,9 @@ class Map:
     Map class, used to draw crossroads
     """
 
-    def __init__(self, vectors, roads):
+    def __init__(self, intersection, roads):
         self.roads = roads
-        self.board = self.__generate_board(vectors)
+        self.board = intersection.array
         self.__offset = MaxOffset(
             int(max(self.top.width * WIDTH_MULTIPLIER, self.bottom.width * WIDTH_MULTIPLIER) / 2),
             int(max(self.left.width * WIDTH_MULTIPLIER, self.right.width * WIDTH_MULTIPLIER) / 2))
@@ -234,55 +234,22 @@ class Map:
     def top(self):
         return self.roads["top"]
 
-    @top.setter
-    def top(self, data):
-        self.roads["top"] = data
-
     @property
     def right(self):
         return self.roads["right"]
-
-    @right.setter
-    def right(self, data):
-        self.roads["right"] = data
 
     @property
     def left(self):
         return self.roads["left"]
 
-    @left.setter
-    def left(self, data):
-        self.roads["left"] = data
-
     @property
     def bottom(self):
-        return self.roads["down"]
-
-    @bottom.setter
-    def bottom(self, data):
-        self.roads["down"] = data
+        return self.roads["bottom"]
 
     @staticmethod
     def draw_seals(screen, directions):
         for direction in directions:
             draw_line(screen, direction[0], direction[1])
-
-    @staticmethod
-    def __generate_board(roads_vectors):
-        """
-        :type roads_vectors : List[RoadSizeVector]
-        :return: returns list for middle part of crossroad
-        :rtype List[[int]]
-        """
-        left_right_max = max(roads_vectors[1].out_lanes_count + roads_vectors[1].in_lanes_count,
-                             roads_vectors[3].out_lanes_count + roads_vectors[3].in_lanes_count,
-                             )
-        top_down_max = max(roads_vectors[0].out_lanes_count + roads_vectors[0].in_lanes_count,
-                           roads_vectors[2].out_lanes_count + roads_vectors[2].in_lanes_count,
-                           )
-        return [
-                   [0] * top_down_max
-               ] * left_right_max
 
     @staticmethod
     def draw_directions(screen, directions):
