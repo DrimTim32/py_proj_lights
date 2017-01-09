@@ -1,6 +1,6 @@
+from DataStructures.Road import *
 from Drawing.Maps import create_map_painter
 from Simulation.Intersection import *
-from Simulation.Road import *
 
 
 class Game:
@@ -29,6 +29,10 @@ class Game:
                           self.bottom.out_lanes, self.right.out_lanes]
         self.in_roads = [self.top.in_lanes, self.left.in_lanes,
                          self.bottom.in_lanes, self.right.in_lanes]
+
+    @property
+    def points(self):
+        return [self.top, self.left, self.bottom, self.right]
 
     @property
     def points(self):

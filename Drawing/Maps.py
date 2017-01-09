@@ -4,7 +4,7 @@ This module contains class Map and two methods for drawing (line and car)
 import pygame
 from collections import namedtuple
 
-from Drawing.DataStructures import Position
+from DataStructures import Position
 from Drawing.drawing_consts import *
 
 
@@ -62,7 +62,6 @@ class _MapPointsCalculator:
         down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
         down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
         down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
-
         return RoadPointsGroup(PointsPair(down_start_left, down_end_left), PointsPair(down_start_right, down_end_right))
 
     @staticmethod
@@ -184,7 +183,7 @@ def create_map_painter(intersection, roads):
     :param roads: Road definitions top,left,right,bottom
     :type roads: dict[str,RoadSizeVector]
     """
-    roads = roads
+
     board = intersection.array
 
     __offset = MaxOffset(
@@ -194,8 +193,11 @@ def create_map_painter(intersection, roads):
     __middle = Position(CONST_OFFSET + roads["left"].length * LENGTH_MULTIPLIER + __offset.y,
                         CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
     """:type: Position"""
+
+
     points = _MapPointsCalculator.calculate_points(__middle, roads, __offset)
     """:type : PointsQuadruple"""
+
     _vector_calculator = _MapVectorsCalculator(points)
     """:type : _MapVectorsCalculator"""
 
@@ -220,39 +222,46 @@ class MapPainter:
         self._vector_calculator = vectors_calculator
         self.border_points = points
 
-    def draw(self, screen, points):
+
+    def draw(self, screen, roads):
         """
         Draws whole state
         :param screen:
-        :param points:
+        :param roads:
+
         :type points: list[Road]
         :return:
         """
         screen.fill(WHITE)  # TODO : remove
-        top, right, left, down = points
-        self.__draw_borders(screen, [self.border_points.top, self.border_points.right, self.border_points.left,
-                                     self.border_points.down])
-        self.__seal(screen, points)
-        self.__draw_cars(screen, points)
 
-    def __seal(self, screen, points):
+        top, left, down, right = self.border_points
+        self.__draw_borders(screen, [top, left, down, right])
+        self.__seal(screen, roads, [top, left, down, right])
+        self.__draw_cars(screen, roads)
+
+    def __seal(self, screen, roads, points):
         """
         Draws intervals between every two adjacent roads.
-        :param points:
+        :param roads:
         :type points: list[Road]
         """
+        top_road, left_road, bottom_road, right_road = roads
+
         top, left, bottom, right = points
         directions = []
+        # region empty roads ifs
         # sealing when road is empty
-        if left.length <= 0:
+
+        if left_road.length <= 0:
             directions.append([left[0][0], left[1][0]])
-        if right.length <= 0:
-            directions.append(
-                [right[0][0], right[1][0]])
-        if top.length <= 0:
+        if right_road.length <= 0:
+            directions.append([top[0][0], bottom[1][1]])
+        if top_road.length <= 0:
             directions.append([top[0][0], top[1][0]])
-        if bottom.length <= 0:
+        if bottom_road.length <= 0:
             directions.append([bottom[0][0], bottom[1][0]])
+        # endregion
+
         self.__draw_seals(screen, directions)
 
     def __draw_cars(self, screen, points):
@@ -276,6 +285,7 @@ class MapPainter:
                                  self._vector_calculator.car_down_outside_direction,
                                  self._vector_calculator.car_down_inside_direction, bottom)
         self.__draw_cars_on_board(self.board, screen, self.board_start_point)
+
 
     @staticmethod
     def __draw_cars_on_board(board, screen, start_point):

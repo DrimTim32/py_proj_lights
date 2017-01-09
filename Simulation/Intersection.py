@@ -1,5 +1,5 @@
-from Simulation.enums import Directions
 
+from Simulation.enums import Directions
 
 class IntersectionProperties:
     def __init__(self, directions):
@@ -66,6 +66,7 @@ class Intersection:
         if on_field != 0 and on_field.destination == Directions.BOTTOM:
             return True
         return False
+
 
     def __check_pull_right(self, lane):
         on_field = self.array[self.height - 1 - lane][self.width - 1]

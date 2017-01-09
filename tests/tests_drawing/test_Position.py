@@ -1,5 +1,6 @@
-from Drawing.DataStructures.Position import Position
 import pytest
+
+from DataStructures import Position
 
 
 @pytest.mark.parametrize("a", (0, 10, 15))
