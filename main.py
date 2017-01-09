@@ -1,8 +1,9 @@
 import sys
 from time import clock
+
 import pygame
 
-from Simulation import CarRandomGenerator
+from Simulation import CarProperGenerator
 from Simulation import FixedLightsManager
 from Simulation import Game
 
@@ -19,7 +20,7 @@ def main():
 
     # Generators
 
-    car_generator = CarRandomGenerator()
+    car_generator = CarProperGenerator()
     lights_manager = FixedLightsManager()
 
     game = Game(car_generator, lights_manager)
