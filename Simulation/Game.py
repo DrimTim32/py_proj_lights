@@ -25,10 +25,14 @@ class Game:
 
         self.map = create_map_painter(self.intersection, self.roads)
 
-        self.out_roads = [self.top.out_lanes, self.right.out_lanes,
-                          self.bottom.out_lanes, self.left.out_lanes]
-        self.in_roads = [self.top.in_lanes, self.right.in_lanes,
-                         self.bottom.in_lanes, self.left.in_lanes]
+        self.out_roads = [self.top.out_lanes, self.left.out_lanes,
+                          self.bottom.out_lanes, self.right.out_lanes]
+        self.in_roads = [self.top.in_lanes, self.left.in_lanes,
+                         self.bottom.in_lanes, self.right.in_lanes]
+
+    @property
+    def points(self):
+        return [self.top, self.left, self.bottom, self.right]
 
     @property
     def points(self):
@@ -36,6 +40,7 @@ class Game:
 
     def update(self):
         self.lights_manager.update()
+        self.intersection.update()
         self.__update_out()
         self.__update_in()
 
@@ -50,13 +55,14 @@ class Game:
     def __update_in(self):
         for direction in range(len(self.in_roads)):
             road = self.in_roads[direction]
-            for lane in road:
-                if self.lights_manager.is_green(direction, lane):
-                    if lane[-1] == 1:
-                        self.intersection.push_car(direction, road.index(lane))
+            for lane_index in range(len(road)):
+                lane = road[lane_index]
+                if self.lights_manager.is_green(direction, lane_index):
+                    if lane[-1] != 0:
+                        self.intersection.push_car(direction, lane_index, lane[-1])
                     for i in range(len(lane) - 1, 0, -1):
                         lane[i] = lane[i - 1]
-                    lane[0] = self.car_generator.generate(direction, road.index(lane))
+                    lane[0] = self.car_generator.generate(direction, lane_index)
 
     @property
     def top(self):

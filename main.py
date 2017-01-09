@@ -6,7 +6,6 @@ from Simulation import CarRandomGenerator
 from Simulation import FixedLightsManager
 from Simulation import Game
 
-
 windowSize = (1000, 800)
 
 
@@ -17,7 +16,9 @@ def main():
     prev_update_time = clock()
     done = False
 
-    #Generators
+
+    # Generators
+
     car_generator = CarRandomGenerator()
     lights_manager = FixedLightsManager()
 
@@ -37,7 +38,9 @@ def main():
             prev_update_time = curr_time
             game.update()
 
-        map.draw(screen,game.points)
+
+        map.draw(screen, game.points)
+
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()

@@ -1,9 +1,8 @@
 """
 This module contains class Map and two methods for drawing (line and car)
 """
-from collections import namedtuple
-
 import pygame
+from collections import namedtuple
 
 from DataStructures import Position
 from Drawing.drawing_consts import *
@@ -184,6 +183,7 @@ def create_map_painter(intersection, roads):
     :param roads: Road definitions top,left,right,bottom
     :type roads: dict[str,RoadSizeVector]
     """
+
     board = intersection.array
 
     __offset = MaxOffset(
@@ -193,6 +193,7 @@ def create_map_painter(intersection, roads):
     __middle = Position(CONST_OFFSET + roads["left"].length * LENGTH_MULTIPLIER + __offset.y,
                         CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
     """:type: Position"""
+
 
     points = _MapPointsCalculator.calculate_points(__middle, roads, __offset)
     """:type : PointsQuadruple"""
@@ -221,15 +222,18 @@ class MapPainter:
         self._vector_calculator = vectors_calculator
         self.border_points = points
 
+
     def draw(self, screen, roads):
         """
         Draws whole state
         :param screen:
         :param roads:
+
         :type points: list[Road]
         :return:
         """
         screen.fill(WHITE)  # TODO : remove
+
         top, left, down, right = self.border_points
         self.__draw_borders(screen, [top, left, down, right])
         self.__seal(screen, roads, [top, left, down, right])
@@ -242,10 +246,12 @@ class MapPainter:
         :type points: list[Road]
         """
         top_road, left_road, bottom_road, right_road = roads
+
         top, left, bottom, right = points
         directions = []
         # region empty roads ifs
         # sealing when road is empty
+
         if left_road.length <= 0:
             directions.append([left[0][0], left[1][0]])
         if right_road.length <= 0:
@@ -279,6 +285,7 @@ class MapPainter:
                                  self._vector_calculator.car_down_outside_direction,
                                  self._vector_calculator.car_down_inside_direction, bottom)
         self.__draw_cars_on_board(self.board, screen, self.board_start_point)
+
 
     @staticmethod
     def __draw_cars_on_board(board, screen, start_point):
