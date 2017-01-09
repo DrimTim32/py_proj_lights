@@ -2,10 +2,10 @@
 This module contains class Map and two methods for drawing (line and car)
 """
 from collections import namedtuple
+
 import pygame
 
-from Drawing.DataStructures import Position, RoadSizeVector
-from Drawing.DataStructures import get_empty_road
+from Drawing.DataStructures import Position
 from Drawing.drawing_consts import *
 
 
@@ -34,7 +34,7 @@ PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right']
 class _MapPointsCalculator:
     @staticmethod
     def __calculate_top_points(middle, top, offset):
-        top_end_left = middle - Position((top.width*WIDTH_MULTIPLIER) // 2 , offset.y)
+        top_end_left = middle - Position((top.width * WIDTH_MULTIPLIER) // 2, offset.y)
         top_start_left = top_end_left - Position(0, top.length * LENGTH_MULTIPLIER)
         top_end_right = top_start_left + Position(top.width * WIDTH_MULTIPLIER, 0)
         top_start_right = top_end_right + Position(0, top.length * LENGTH_MULTIPLIER)
@@ -43,7 +43,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_left_points(middle, left, offset):
-        left_start_up = middle - Position(offset.x, (left.width*WIDTH_MULTIPLIER) // 2 )
+        left_start_up = middle - Position(offset.x, (left.width * WIDTH_MULTIPLIER) // 2)
         left_end_up = left_start_up + Position(-left.length * LENGTH_MULTIPLIER, 0)
         left_start_down = left_end_up + Position(0, left.width * WIDTH_MULTIPLIER)
         left_end_down = left_start_up + Position(0, left.width * WIDTH_MULTIPLIER)
@@ -52,7 +52,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_down_points(middle, down, offset):
-        down_start_left = middle + Position(-(down.width* WIDTH_MULTIPLIER) // 2 , offset.y)
+        down_start_left = middle + Position(-(down.width * WIDTH_MULTIPLIER) // 2, offset.y)
         down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
         down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
         down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
@@ -61,7 +61,7 @@ class _MapPointsCalculator:
 
     @staticmethod
     def __calculate_right_points(middle, right, offset):
-        right_end_up = middle + Position(offset.x, -(right.width* WIDTH_MULTIPLIER) // 2)
+        right_end_up = middle + Position(offset.x, -(right.width * WIDTH_MULTIPLIER) // 2)
         right_start_up = right_end_up + Position(right.length * LENGTH_MULTIPLIER, 0)
         right_start_down = right_end_up + Position(0, right.width * WIDTH_MULTIPLIER)
         right_end_down = right_start_up + Position(0, right.width * WIDTH_MULTIPLIER)
@@ -173,19 +173,9 @@ class Map:
     """
     Map class, used to draw crossroads
     """
-    __defaultVectors = [
-        RoadSizeVector(5, 2, 2),  # top
-        RoadSizeVector(5, 2, 2),  # left
-        RoadSizeVector(5, 2, 2),  # bottom
-        RoadSizeVector(5, 2, 2)  # right
-    ]
-    def __init__(self, vectors=__defaultVectors):
-        self.roads = {
-            "top": get_empty_road(vectors[0]),
-            "down": get_empty_road(vectors[2]),
-            "left": get_empty_road(vectors[1]),
-            "right": get_empty_road(vectors[3])
-        }
+
+    def __init__(self, vectors, roads):
+        self.roads = roads
         self.board = self.__generate_board(vectors)
         self.__offset = MaxOffset(
             int(max(self.top.width * WIDTH_MULTIPLIER, self.bottom.width * WIDTH_MULTIPLIER) / 2),
@@ -284,11 +274,11 @@ class Map:
         :return: returns list for middle part of crossroad
         :rtype List[[int]]
         """
-        left_right_max = max(roads_vectors[1].inside_direction_count + roads_vectors[1].outsize_direction_count,
-                             roads_vectors[3].inside_direction_count + roads_vectors[3].outsize_direction_count,
+        left_right_max = max(roads_vectors[1].out_lanes_count + roads_vectors[1].in_lanes_count,
+                             roads_vectors[3].out_lanes_count + roads_vectors[3].in_lanes_count,
                              )
-        top_down_max = max(roads_vectors[0].inside_direction_count + roads_vectors[0].outsize_direction_count,
-                           roads_vectors[2].inside_direction_count + roads_vectors[2].outsize_direction_count,
+        top_down_max = max(roads_vectors[0].out_lanes_count + roads_vectors[0].in_lanes_count,
+                           roads_vectors[2].out_lanes_count + roads_vectors[2].in_lanes_count,
                            )
         return [
                    [0] * top_down_max
@@ -315,9 +305,9 @@ class Map:
 
     @staticmethod
     def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
-        for (i, q) in line.first_indexes:
-            if line.first[i][q] is not None and line.first[i][q] != 0:
+        for (i, q) in line.out_indexes:
+            if line.out_lanes[i][q] is not None and line.out_lanes[i][q] != 0:
                 draw_car(screen, outside_dir(i, q))
-        for (i, q) in line.second_indexes:
-            if line.second[i][q] is not None and line.second[i][q] != 0:
+        for (i, q) in line.in_indexes:
+            if line.in_lanes[i][q] is not None and line.in_lanes[i][q] != 0:
                 draw_car(screen, inside_dir(i, q), RED)

@@ -1,19 +1,26 @@
-from Drawing.DataStructures.Road import RoadSizeVector
 from Drawing.Maps import Map
 from Simulation.DataStructures.IntersectionProperties import *
 from Simulation.Intersection import *
+from Simulation.Road import *
 
 
 class Game:
     def __init__(self, car_generator, lights_manager):
         self.car_generator = car_generator
         self.lights_manager = lights_manager
-        self.map = Map([
+        vectors = [
             RoadSizeVector(8, 2, 3),  # top
             RoadSizeVector(8, 2, 2),  # left
             RoadSizeVector(8, 2, 2),  # bottom
             RoadSizeVector(8, 2, 2)  # right
-        ])
+        ]
+        self.roads = {
+            "top": get_empty_road(vectors[0]),
+            "down": get_empty_road(vectors[2]),
+            "left": get_empty_road(vectors[1]),
+            "right": get_empty_road(vectors[3])
+        }
+        self.map = Map(vectors, self.roads)
 
         dimensions = IntersectionProperties([
             DirectionProperties(2, 3),  # top
@@ -23,10 +30,10 @@ class Game:
         ])
 
         self.intersection = Intersection(dimensions)
-        self.out_roads = [self.map.top.first, self.map.right.first,
-                          self.map.bottom.first, self.map.left.first]
-        self.in_roads = [self.map.top.second, self.map.right.second,
-                         self.map.bottom.second, self.map.left.second]
+        self.out_roads = [self.map.top.out_lanes, self.map.right.out_lanes,
+                          self.map.bottom.out_lanes, self.map.left.out_lanes]
+        self.in_roads = [self.map.top.in_lanes, self.map.right.in_lanes,
+                         self.map.bottom.in_lanes, self.map.left.in_lanes]
 
     def update(self):
         self.lights_manager.update()

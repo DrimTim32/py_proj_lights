@@ -1,9 +1,19 @@
-from Drawing import Map, Position
+from Drawing import Map
 
-from Drawing import RoadSizeVector
+from Simulation import RoadSizeVector, get_empty_road
+
+
 def test_points_calculation():
-    top_vector = RoadSizeVector(5,2,1)
-    left_vector = RoadSizeVector(7,1,1)
-    down_vector = RoadSizeVector(9,3,1)
-    bottom_vector = RoadSizeVector(3,3,2)
-    map = Map([top_vector,left_vector,down_vector,bottom_vector])
+    vectors = [
+        RoadSizeVector(5, 2, 1),
+        RoadSizeVector(7, 1, 1),
+        RoadSizeVector(9, 3, 1),
+        RoadSizeVector(3, 3, 2)
+    ]
+    roads = {
+        "top": get_empty_road(vectors[0]),
+        "down": get_empty_road(vectors[2]),
+        "left": get_empty_road(vectors[1]),
+        "right": get_empty_road(vectors[3])
+    }
+    map = Map(vectors, roads)
