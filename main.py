@@ -1,8 +1,11 @@
 import sys
+from time import clock
 
 import pygame
 
 from Drawing import Renderer
+from Simulation import CarRandomGenerator
+from Simulation import FixedLightsManager
 from Simulation import Game
 
 # consts
@@ -22,9 +25,13 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
-    game = Game()
+    car_generator = CarRandomGenerator()
+    lights_manager = FixedLightsManager()
+    game = Game(car_generator, lights_manager)
     renderer = Renderer(screen)
+    prev_update_time = clock()
     done = False
+    render_list = [game.map]
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
@@ -33,10 +40,14 @@ def main():
             if event.type == pygame.QUIT:
                 done = True
 
-        render_list = game.update()
+        curr_time = clock()
+        if curr_time - prev_update_time > 0.2:
+            prev_update_time = curr_time
+            render_list = game.update()
+
         renderer.render(render_list)
 
-        pygame.time.Clock().tick(1)
+        pygame.time.Clock().tick(60)
         pygame.display.flip()
     sys.exit()
 
