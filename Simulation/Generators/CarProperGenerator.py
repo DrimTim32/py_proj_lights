@@ -4,7 +4,7 @@ from Simulation import Car
 from Simulation.enums import TurnDirection
 
 
-class CarRandomGenerator:
+class CarProperGenerator:
     def __init__(self):
         pass
 
