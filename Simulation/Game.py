@@ -1,6 +1,6 @@
-from Drawing.Maps import Map
+from DataStructures.Road import *
+from Drawing.Maps import create_map_painter
 from Simulation.Intersection import *
-from Simulation.Road import *
 
 
 class Game:
@@ -23,18 +23,21 @@ class Game:
 
         self.intersection = Intersection(IntersectionProperties(directions))
 
-        self.map = Map(self.intersection, self.roads)
+        self.map = create_map_painter(self.intersection, self.roads)
 
         self.out_roads = [self.top.out_lanes, self.right.out_lanes,
                           self.bottom.out_lanes, self.left.out_lanes]
         self.in_roads = [self.top.in_lanes, self.right.in_lanes,
                          self.bottom.in_lanes, self.left.in_lanes]
 
+    @property
+    def points(self):
+        return [self.top, self.left, self.bottom, self.right]
+
     def update(self):
         self.lights_manager.update()
         self.__update_out()
         self.__update_in()
-        return [self.map]
 
     def __update_out(self):
         for direction in range(len(self.roads)):

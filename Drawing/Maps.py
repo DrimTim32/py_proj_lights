@@ -5,10 +5,11 @@ from collections import namedtuple
 
 import pygame
 
-from Drawing.DataStructures import Position
+from DataStructures import Position
 from Drawing.drawing_consts import *
 
 
+# region drawing funcitons
 def draw_line(screen, point1, point2, color=BLACK):
     """
     Draws line between two points on the screen using selected color
@@ -25,12 +26,18 @@ def draw_car(screen, position, color=BLUE):
     pygame.draw.circle(screen, color, [position.x, position.y], CAR_RADIUS)
 
 
+# endregion
+
+# region named tuples
 PointsPair = namedtuple('PointsPair', ['start', 'end'])
 RoadPointsGroup = namedtuple('RoadPointsGroup', ['outside', 'inside'])
 MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
 PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])
 
 
+# endregion
+
+# region calculating classes
 class _MapPointsCalculator:
     @staticmethod
     def __calculate_top_points(middle, top, offset):
@@ -56,7 +63,6 @@ class _MapPointsCalculator:
         down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
         down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
         down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
-
         return RoadPointsGroup(PointsPair(down_start_left, down_end_left), PointsPair(down_start_right, down_end_right))
 
     @staticmethod
@@ -168,104 +174,117 @@ class _MapVectorsCalculator:
         return -_MapVectorsCalculator.left_movement_vector(i, q)
 
 
-# noinspection PyAttributeOutsideInit
-class Map:
+# endregion
+
+def create_map_painter(intersection, roads):
     """
-    Map class, used to draw crossroads
+    Map painter initializer
+    :param intersection: Intersection data, such as road lengths
+    :type intersection: Intersection
+    :param roads: Road definitions top,left,right,bottom
+    :type roads: dict[str,RoadSizeVector]
+    """
+    board = intersection.array
+
+    __offset = MaxOffset(
+        int(max(roads["top"].width * WIDTH_MULTIPLIER, roads["bottom"].width * WIDTH_MULTIPLIER) / 2),
+        int(max(roads["left"].width * WIDTH_MULTIPLIER, roads["right"].width * WIDTH_MULTIPLIER) / 2))
+    """:type : MaxOffset"""
+    __middle = Position(CONST_OFFSET + roads["left"].length * LENGTH_MULTIPLIER + __offset.y,
+                        CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
+    """:type: Position"""
+
+    points = _MapPointsCalculator.calculate_points(__middle, roads, __offset)
+    """:type : PointsQuadruple"""
+
+    _vector_calculator = _MapVectorsCalculator(points)
+    """:type : _MapVectorsCalculator"""
+
+    return MapPainter(points.left.outside.start, board, _vector_calculator, points)
+
+
+class MapPainter:
+    """
+    Draws map
     """
 
-    def __init__(self, intersection, roads):
-        self.roads = roads
-        self.board = intersection.array
-        self.__offset = MaxOffset(
-            int(max(self.top.width * WIDTH_MULTIPLIER, self.bottom.width * WIDTH_MULTIPLIER) / 2),
-            int(max(self.left.width * WIDTH_MULTIPLIER, self.right.width * WIDTH_MULTIPLIER) / 2))
-        self.__middle = Position(CONST_OFFSET + self.left.length * LENGTH_MULTIPLIER + self.__offset.y,
-                                 CONST_OFFSET + self.top.length * LENGTH_MULTIPLIER + self.__offset.x)
-        self.points = _MapPointsCalculator.calculate_points(self.__middle, self.roads, self.__offset)
-        """:type : PointsQuadruple"""
-        self._vector_calculator = _MapVectorsCalculator(self.points)
+    def __init__(self, board_start_point, board, vectors_calculator, points):
+        """
 
-    def draw(self, screen):
+        :param board_start_point:
+        :param board:
+        :param vectors_calculator:
+        :param points:
+        """
+        self.board_start_point = board_start_point
+        self.board = board
+        self._vector_calculator = vectors_calculator
+        self.border_points = points
+
+    def draw(self, screen, roads):
         """
         Draws whole state
         :param screen:
+        :param roads:
+        :type points: list[Road]
         :return:
         """
-        self.draw_directions(screen, [self.points.top, self.points.right, self.points.left, self.points.down])
-        self.__seal(screen)
-        self.__draw_cars(screen)
+        screen.fill(WHITE)  # TODO : remove
+        top, left, down, right = self.border_points
+        self.__draw_borders(screen, [top, left, down, right])
+        self.__seal(screen, roads, [top, left, down, right])
+        self.__draw_cars(screen, roads)
 
-    def __seal(self, screen):
+    def __seal(self, screen, roads, points):
         """
         Draws intervals between every two adjacent roads.
+        :param roads:
+        :type points: list[Road]
         """
+        top_road, left_road, bottom_road, right_road = roads
+        top, left, bottom, right = points
         directions = []
+        # region empty roads ifs
         # sealing when road is empty
-        if self.left.length <= 0:
-            directions.append([self.points.left[0][0], self.points.left[1][0]])
-        if self.right.length <= 0:
-            directions.append(
-                [self.points.right[0][0], self.points.right[1][0]])
-        if self.top.length <= 0:
-            directions.append([self.points.top[0][0], self.points.top[1][0]])
-        if self.bottom.length <= 0:
-            directions.append([self.points.down[0][0], self.points.down[1][0]])
-        self.draw_seals(screen, directions)
+        if left_road.length <= 0:
+            directions.append([left[0][0], left[1][0]])
+        if right_road.length <= 0:
+            directions.append([top[0][0], bottom[1][1]])
+        if top_road.length <= 0:
+            directions.append([top[0][0], top[1][0]])
+        if bottom_road.length <= 0:
+            directions.append([bottom[0][0], bottom[1][0]])
+        # endregion
 
-    def __draw_cars(self, screen):
-        Map.__draw_cars_on_road(screen,
-                                self._vector_calculator.car_top_outside_direction,
-                                self._vector_calculator.car_top_inside_direction, self.top)
-        Map.__draw_cars_on_road(screen,
-                                self._vector_calculator.car_left_outside_direction,
-                                self._vector_calculator.car_left_inside_direction, self.left)
-        Map.__draw_cars_on_road(screen,
-                                self._vector_calculator.car_right_outside_direction,
-                                self._vector_calculator.car_right_inside_direction, self.right)
-        Map.__draw_cars_on_road(screen,
-                                self._vector_calculator.car_down_outside_direction,
-                                self._vector_calculator.car_down_inside_direction, self.bottom)
-        self.__draw_cars_on_board(screen,
-                                  self.points.left.outside.start
-                                  )
+        self.__draw_seals(screen, directions)
 
-    @property
-    def top(self):
-        return self.roads["top"]
+    def __draw_cars(self, screen, points):
 
-    @property
-    def right(self):
-        return self.roads["right"]
-
-    @property
-    def left(self):
-        return self.roads["left"]
-
-    @property
-    def bottom(self):
-        return self.roads["bottom"]
+        """
+        Draws cars on the screen
+        :param screen:
+        :return:
+        """
+        top, left, bottom, right = points
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_top_outside_direction,
+                                 self._vector_calculator.car_top_inside_direction, top)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_left_outside_direction,
+                                 self._vector_calculator.car_left_inside_direction, left)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_right_outside_direction,
+                                 self._vector_calculator.car_right_inside_direction, right)
+        self.__draw_cars_on_road(screen,
+                                 self._vector_calculator.car_down_outside_direction,
+                                 self._vector_calculator.car_down_inside_direction, bottom)
+        self.__draw_cars_on_board(self.board, screen, self.board_start_point)
 
     @staticmethod
-    def draw_seals(screen, directions):
-        for direction in directions:
-            draw_line(screen, direction[0], direction[1])
-
-    @staticmethod
-    def draw_directions(screen, directions):
-        for direction in directions:
-            draw_line(screen, direction[0][0], direction[0][1])
-            draw_line(screen, direction[1][0], direction[1][1])
-
-    @staticmethod
-    def prepare(screen):
-        pygame.display.set_caption("Game")
-        screen.fill(WHITE)
-
-    def __draw_cars_on_board(self, screen, start_point):
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if self.board[i][j] is not None and self.board[i][j] != 0:
+    def __draw_cars_on_board(board, screen, start_point):
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if board[i][j] is not None and board[i][j] != 0:
                     draw_car(screen, start_point +
                              _MapVectorsCalculator.down_movement_vector(j, i)
                              )
@@ -278,3 +297,19 @@ class Map:
         for (i, q) in line.in_indexes:
             if line.in_lanes[i][q] is not None and line.in_lanes[i][q] != 0:
                 draw_car(screen, inside_dir(i, q), RED)
+
+    @staticmethod
+    def __draw_seals(screen, directions):
+        for direction in directions:
+            draw_line(screen, direction[0], direction[1])
+
+    @staticmethod
+    def __draw_borders(screen, directions):
+        for direction in directions:
+            draw_line(screen, direction[0][0], direction[0][1])
+            draw_line(screen, direction[1][0], direction[1][1])
+
+    @staticmethod
+    def prepare(screen):
+        pygame.display.set_caption("Simulation")
+        screen.fill(WHITE)
