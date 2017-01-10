@@ -1,11 +1,12 @@
 """
 This module contains class Map and two methods for drawing (line and car)
 """
-import pygame
 from collections import namedtuple
 
-from DataStructures import Position
+import pygame
+
 from Drawing.drawing_consts import *
+from core.DataStructures import Position
 
 
 # region drawing funcitons

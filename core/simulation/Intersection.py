@@ -1,5 +1,5 @@
 
-from Simulation.enums import Directions
+from core.simulation.enums import Directions
 
 class IntersectionProperties:
     def __init__(self, directions):

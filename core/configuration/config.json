@@ -1,0 +1,56 @@
+{	"numberOfDirections": 4,
+	"directions": [
+		{	"Id": 0,
+			"InLanes": 2,
+			"OutLanes": 2,
+			"Directions": [
+				{	"LaneId": 0,
+					"TurnDirections": [[1, 0.5], [2, 0.5]],
+					
+				},
+				{	"LaneId": 1,
+					"TurnDirections": [[2, 0.5], [3, 0.5]],
+				}
+			]
+		},
+		{	"Id": 1,
+			"InLanes": 2,
+			"OutLanes": 2,
+			"Directions": [
+				{	"LaneId": 0,
+					"TurnDirections": [[1, 0.5], [2, 0.5]],
+					
+				},
+				{	"LaneId": 1,
+					"TurnDirections": [[2, 0.5], [3, 0.5]],
+				}
+			]
+		},
+		{	"Id": 2,
+			"InLanes": 2,
+			"OutLanes": 2,
+			"Directions": [
+				{	"LaneId": 0,
+					"TurnDirections": [[1, 0.5], [2, 0.5]],
+					
+				},
+				{	"LaneId": 1,
+					"TurnDirections": [[2, 0.5], [3, 0.5]],
+				}
+			]
+		},
+		{	"Id": 3,
+			"InLanes": 2,
+			"OutLanes": 2,
+			"Directions": [
+				{	"LaneId": 0,
+					"TurnDirections": [[1, 0.5], [2, 0.5]],
+					
+				},
+				{	"LaneId": 1,
+					"TurnDirections": [[2, 0.5], [3, 0.5]],
+				}
+			]
+		}
+	]
+}

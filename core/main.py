@@ -3,14 +3,28 @@ from time import clock
 
 import pygame
 
-from Simulation import CarProperGenerator
-from Simulation import FixedLightsManager
-from Simulation import Game
+from core.simulation.generators import CarProperGenerator
+from core.simulation.lights_managers import FixedLightsManager
+from core.simulation import Game
+from core.configuration import Config
 
 windowSize = (1000, 800)
 
+def read_configuration():
+    return Config.Config.from_config_file("Configuration/config.json")
+
+
+def entrypoint():
+    configuration = read_configuration()
+
 
 def main():
+    try:
+        entrypoint()
+    except Exception as e:
+        print("{0}, message : {1}".format(sys.stderr, e))
+        return 2
+
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)

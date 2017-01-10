@@ -1,7 +1,7 @@
 import random
 
-from Simulation import Car
-from Simulation.enums import TurnDirection
+from core.simulation import Car
+from core.simulation.enums import TurnDirection
 
 
 class CarProperGenerator:

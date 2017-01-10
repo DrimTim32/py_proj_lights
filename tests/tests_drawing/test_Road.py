@@ -1,6 +1,6 @@
 import pytest
 
-from DataStructures.Road import get_empty_road, RoadSizeVector, Road
+from core.DataStructures import get_empty_road, RoadSizeVector, Road
 
 empty_roads_data = [
     (RoadSizeVector(1, 1, 0), [[[0]], []]),
