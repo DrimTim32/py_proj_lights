@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
 import unittest
@@ -23,5 +24,6 @@ setup(
     description='',
     test_suite='setup.my_test_suite',
     setup_requires=requirements,
-    tests_require=test_requirements
+    tests_require=test_requirements,
+    use_2to3_exclude_fixers=['lib2to3.fixes.fix_import'],
 )
