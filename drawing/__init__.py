@@ -1,1 +1,1 @@
-from drawing.Maps import *
+from drawing.maps import *
