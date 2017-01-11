@@ -1,4 +1,4 @@
-from core.simulation import Car
+from core.simulation.car import Car
 from core.simulation.enums import Directions, TurnDirection
 
 
@@ -79,43 +79,37 @@ class Intersection:
 
         if orientation == 0:  # vertical
             # left half
+            for row in range(self.height - 1, -1, - 1):
+                for col in range(self.properties.top.in_lanes_count):
+                    on_field = self.array[row][col]
+                    if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                        self.array[row + 1][col] = on_field
+                        self.array[row][col] = 0
 
             # right half
+            for row in range(self.height):
+                for col in range(self.width - self.properties.top.in_lanes_count, self.width):
+                    on_field = self.array[row][col]
+                    if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                        self.array[row - 1][col] = on_field
+                        self.array[row][col] = 0
 
-            pass
         else:  # horizontal
             # top half
+            for col in range(self.width):
+                for row in range(self.properties.right.in_lanes_count):
+                    on_field = self.array[row][col]
+                    if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                        self.array[row][col - 1] = on_field
+                        self.array[row][col] = 0
 
             # bottom half
-
-            pass
-
-        for row in range(self.properties.left.out_lanes_count - 1, -1, -1):
-            for col in range(self.properties.top.in_lanes_count):
-                on_field = self.array[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    self.array[row][col] = 0
-
-        # bottom left quarter
-        for col in range(self.properties.bottom.out_lanes_count - 1, -1, -1):
-            for row in range(self.height - 1, self.height - 1 - self.properties.left.in_lanes_count, -1):
-                on_field = self.array[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    self.array[row][col] = 0
-
-        # bottom right quarter
-        for row in range(self.height - self.properties.right.out_lanes_count, self.height):
-            for col in range(self.width - 1, self.width - 1 - self.properties.bottom.in_lanes_count, -1):
-                on_field = self.array[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    self.array[row][col] = 0
-
-        # top right quarter
-        for col in range(self.width - self.properties.bottom.out_lanes_count, self.width):
-            for row in range(self.properties.right.in_lanes_count):
-                on_field = self.array[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    self.array[row][col] = 0
+            for col in range(self.width - 1, -1, -1):
+                for row in range(self.height - self.properties.left.in_lanes_count, self.height):
+                    on_field = self.array[row][col]
+                    if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                        self.array[row][col + 1] = on_field
+                        self.array[row][col] = 0
 
     def __update_left(self):
         # TODO
