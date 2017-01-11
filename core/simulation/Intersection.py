@@ -112,8 +112,15 @@ class Intersection:
                         self.array[row][col] = 0
 
     def __update_left(self):
-        # TODO
-        pass
+        orientation = self.__check_orientation()
+        if orientation is None:
+            return
+
+        if orientation == 0:  # vertical
+            pass
+
+        else:  # horizontal
+            pass
 
     def __check_orientation(self):
         for row in self.array:
