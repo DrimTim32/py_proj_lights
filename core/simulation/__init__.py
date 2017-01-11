@@ -1,14 +1,3 @@
-from Simulation.Generators.CarFixedGenerator import *
-from Simulation.Generators.CarProperGenerator import *
-
-from core.Simulation import *
-from core.Simulation import *
-from core.Simulation import *
-from core.Simulation import *
-from core.Simulation import *
-from core.Simulation.Car import *
-from core.Simulation.Game import *
-
-
-
-
+from core.simulation import *
+from core.simulation.Car import *
+from core.simulation.Game import *

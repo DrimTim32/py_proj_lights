@@ -5,8 +5,8 @@ from collections import namedtuple
 
 import pygame
 
-from Drawing.drawing_consts import *
-from core.DataStructures import Position
+from core.data_structures import Position
+from drawing.drawing_consts import *
 
 
 # region drawing funcitons
@@ -195,7 +195,6 @@ def create_map_painter(intersection, roads):
                         CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
     """:type: Position"""
 
-
     points = _MapPointsCalculator.calculate_points(__middle, roads, __offset)
     """:type : PointsQuadruple"""
 
@@ -223,14 +222,12 @@ class MapPainter:
         self._vector_calculator = vectors_calculator
         self.border_points = points
 
-
     def draw(self, screen, roads):
         """
         Draws whole state
         :param screen:
         :param roads:
 
-        :type points: list[Road]
         :return:
         """
         screen.fill(WHITE)  # TODO : remove
@@ -286,7 +283,6 @@ class MapPainter:
                                  self._vector_calculator.car_down_outside_direction,
                                  self._vector_calculator.car_down_inside_direction, bottom)
         self.__draw_cars_on_board(self.board, screen, self.board_start_point)
-
 
     @staticmethod
     def __draw_cars_on_board(board, screen, start_point):
