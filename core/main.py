@@ -3,20 +3,34 @@ from time import clock
 
 import pygame
 
-from Simulation import CarProperGenerator
-from Simulation import FixedLightsManager
-from Simulation import Game
+from core.configuration import Config
+from core.simulation import Game
+from core.simulation.generators import CarProperGenerator
+from core.simulation.lights_managers import FixedLightsManager
 
 windowSize = (1000, 800)
 
 
+def read_configuration():
+    return Config.Config.from_config_file("Configuration/config.json")
+
+
+def entrypoint():
+    configuration = read_configuration()
+
+
 def main():
+    #   try:
+    #        entrypoint()
+    #   except Exception as e:
+    #      print("{0}, message : {1}".format(sys.stderr, e))
+    #     return 2
+
     pygame.init()
 
     screen = pygame.display.set_mode(windowSize)
     prev_update_time = clock()
     done = False
-
 
     # Generators
 
@@ -39,9 +53,7 @@ def main():
             prev_update_time = curr_time
             game.update()
 
-
         map.draw(screen, game.points)
-
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()

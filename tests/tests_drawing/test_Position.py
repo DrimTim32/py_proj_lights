@@ -1,6 +1,6 @@
 import pytest
 
-from DataStructures import Position
+from core.data_structures import Position
 
 
 @pytest.mark.parametrize("a", (0, 10, 15))

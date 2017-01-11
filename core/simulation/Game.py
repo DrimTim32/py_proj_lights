@@ -1,6 +1,6 @@
-from DataStructures.Road import *
-from Drawing.Maps import create_map_painter
-from Simulation.Intersection import *
+from core.data_structures.Road import *
+from core.simulation.Intersection import *
+from drawing.Maps import create_map_painter
 
 
 class Game:
@@ -40,17 +40,18 @@ class Game:
 
     def update(self):
         self.lights_manager.update()
-        self.intersection.update()
         self.__update_out()
+        self.intersection.update()
         self.__update_in()
 
     def __update_out(self):
         for direction in range(len(self.roads)):
             road = self.out_roads[direction]
-            for lane in road:
+            for lane_index in range(len(road)):
+                lane = road[lane_index]
                 for i in range(len(lane) - 1, 0, -1):
                     lane[i] = lane[i - 1]
-                lane[0] = self.intersection.pull_car(direction, road.index(lane))
+                lane[0] = self.intersection.pull_car(direction, lane_index)
 
     def __update_in(self):
         for direction in range(len(self.in_roads)):
@@ -60,9 +61,13 @@ class Game:
                 if self.lights_manager.is_green(direction, lane_index):
                     if lane[-1] != 0:
                         self.intersection.push_car(direction, lane_index, lane[-1])
+                        lane[-1] = 0
                     for i in range(len(lane) - 1, 0, -1):
-                        lane[i] = lane[i - 1]
-                    lane[0] = self.car_generator.generate(direction, lane_index)
+                        if lane[i] == 0:
+                            lane[i] = lane[i - 1]
+                            lane[i - 1] = 0
+                    if lane[0] == 0:
+                        lane[0] = self.car_generator.generate(direction, lane_index)
 
     @property
     def top(self):
