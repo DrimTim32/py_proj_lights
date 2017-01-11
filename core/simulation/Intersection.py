@@ -1,5 +1,6 @@
+from core.simulation import Car
+from core.simulation.enums import Directions, TurnDirection
 
-from core.simulation.enums import Directions
 
 class IntersectionProperties:
     def __init__(self, directions):
@@ -19,9 +20,63 @@ class Intersection:
         self.array = [[0 for _ in range(properties.width)] for _ in range(properties.height)]
         self.width = properties.width
         self.height = properties.height
+        self.properties = properties
 
     def update(self):
-        pass
+        self.__update_right()
+        self.__update_straight()
+        self.__update_left()
+
+    def __update_right(self):
+        # top left quarter
+        for row in range(self.properties.left.out_lanes_count - 1, -1, -1):
+            for col in range(self.properties.top.in_lanes_count):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.RIGHT:
+                    if row < col:
+                        self.array[row + 1][col] = on_field
+                    else:
+                        self.array[row][col - 1] = on_field
+                    self.array[row][col] = 0
+
+        # bottom left quarter
+        for col in range(self.properties.bottom.out_lanes_count - 1, -1, -1):
+            for row in range(self.height - 1, self.height - 1 - self.properties.left.in_lanes_count, -1):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.RIGHT:
+                    if self.height - 1 - row > self.properties.bottom.out_lanes_count - 1 - col:
+                        self.array[row + 1][col] = on_field
+                    else:
+                        self.array[row][col + 1] = on_field
+                    self.array[row][col] = 0
+
+        # top right quarter
+        for row in range(self.properties.left.out_lanes_count - 1, -1, -1):
+            for col in range(self.properties.top.in_lanes_count):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.RIGHT:
+                    pass
+
+        # bottom right quarter
+        for row in range(self.properties.left.out_lanes_count - 1, -1, -1):
+            for col in range(self.properties.top.in_lanes_count):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.RIGHT:
+                    pass
+
+    def __update_straight(self):
+        for row in range(self.height):
+            for col in range(self.width):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car):
+                    pass
+
+    def __update_left(self):
+        for row in range(self.height):
+            for col in range(self.width):
+                on_field = self.array[row][col]
+                if isinstance(on_field, Car):
+                    pass
 
     def push_car(self, direction, lane, car):
         if direction == Directions.TOP:
@@ -51,25 +106,24 @@ class Intersection:
 
     def __check_pull_top(self, lane):
         on_field = self.array[0][self.width - lane - 1]
-        if on_field != 0 and on_field.destination == Directions.TOP:
+        if isinstance(on_field, Car) and on_field.destination == Directions.TOP:
             return True
         return False
 
     def __check_pull_left(self, lane):
         on_field = self.array[lane][0]
-        if on_field != 0 and on_field.destination == Directions.LEFT:
+        if isinstance(on_field, Car) and on_field.destination == Directions.LEFT:
             return True
         return False
 
     def __check_pull_bottom(self, lane):
         on_field = self.array[self.height - 1][lane]
-        if on_field != 0 and on_field.destination == Directions.BOTTOM:
+        if isinstance(on_field, Car) and on_field.destination == Directions.BOTTOM:
             return True
         return False
 
-
     def __check_pull_right(self, lane):
         on_field = self.array[self.height - 1 - lane][self.width - 1]
-        if on_field != 0 and on_field.destination == Directions.RIGHT:
+        if isinstance(on_field, Car) and on_field.destination == Directions.RIGHT:
             return True
         return False

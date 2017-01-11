@@ -5,8 +5,19 @@ from core.simulation.enums import TurnDirection
 
 
 class CarProperGenerator:
-    def __init__(self):
-        pass
+    def __init__(self, config=None):
+        self.config = config
 
     def generate(self, direction, lane):
-        return random.choice([0, 0, 0, 0, Car(direction, TurnDirection.RIGHT)]) if direction == 0 else 0
+        right = [0, 0, 0, 0,
+                 Car(direction, TurnDirection.RIGHT)]
+        right_n_straight = [0, 0, 0, 0,
+                            Car(direction, TurnDirection.RIGHT),
+                            Car(direction, TurnDirection.STRAIGHT)]
+        straight = [0, 0, 0, 0,
+                    Car(direction, TurnDirection.STRAIGHT)]
+        left = [0, 0, 0, 0,
+                Car(direction, TurnDirection.LEFT)]
+        if direction in {0, 1} and lane in {0, 1}:
+            return random.choice(right)
+        return 0
