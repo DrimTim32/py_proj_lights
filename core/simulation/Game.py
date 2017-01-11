@@ -1,6 +1,6 @@
-from core.data_structures.Road import *
+from core.data_structures.road import *
 from core.simulation.Intersection import *
-from drawing.Maps import create_map_painter
+from drawing.maps import create_map_painter
 
 
 class Game:

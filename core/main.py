@@ -3,7 +3,7 @@ from time import clock
 
 import pygame
 
-from core.configuration import Config
+from core.configuration import config
 from core.simulation import Game
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import FixedLightsManager
@@ -12,7 +12,7 @@ windowSize = (1000, 800)
 
 
 def read_configuration():
-    return Config.Config.from_config_file("Configuration/config.json")
+    return config.Config.from_config_file("Configuration/config.json")
 
 
 def entrypoint():
