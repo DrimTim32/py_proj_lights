@@ -117,10 +117,34 @@ class Intersection:
             return
 
         if orientation == 0:  # vertical
-            pass
+            in_lane_base = self.properties.top.in_lanes_count - 1
+            for i in range(self.properties.right.out_lanes_count):
+                on_field = self.array[0][in_lane_base - i]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 0:
+                    self.array[self.height - self.properties.right.out_lanes_count + i][self.width - 1] = on_field
+                    self.array[0][in_lane_base - i] = 0
+
+            in_lane_base = self.width - self.properties.bottom.in_lanes_count
+            for i in range(self.properties.left.out_lanes_count):
+                on_field = self.array[self.height - 1][in_lane_base + i]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 2:
+                    self.array[self.properties.left.out_lanes_count - 1 - i][0] = on_field
+                    self.array[self.height - 1][in_lane_base + i] = 0
 
         else:  # horizontal
-            pass
+            in_lane_base = self.properties.right.in_lanes_count - 1
+            for i in range(self.properties.bottom.out_lanes_count):
+                on_field = self.array[in_lane_base - i][self.width - 1]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 3:
+                    self.array[self.height - 1][self.properties.bottom.out_lanes_count - 1 - i] = on_field
+                    self.array[in_lane_base - i][self.width - 1] = 0
+
+            in_lane_base = self.height - self.properties.left.in_lanes_count
+            for i in range(self.properties.top.out_lanes_count):
+                on_field = self.array[in_lane_base + i][0]
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 1:
+                    self.array[0][self.width - self.properties.top.out_lanes_count + i] = on_field
+                    self.array[in_lane_base + i][0] = 0
 
     def __check_orientation(self):
         for row in self.array:
