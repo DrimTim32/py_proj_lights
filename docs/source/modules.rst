@@ -1,11 +1,7 @@
-py_proj_lights
-==============
+core
+====
 
 .. toctree::
    :maxdepth: 4
 
-   Drawing
-   Simulation
-   main
-   setup
-   tests
+   core
