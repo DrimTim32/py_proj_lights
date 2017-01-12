@@ -1,0 +1,13 @@
+language: python
+sudo: required
+python:
+  - 3.5
+  - 2.7
+branches:
+  only:
+    - malin
+    - bartek
+    - malin-development
+    - ania
+script:
+    - python setup.py test
