@@ -1,0 +1,22 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+omit =
+    tests/*
+    *\__init__.py
+[report]
+
+exclude_lines =
+    pragma: no cover
+    #defensive assertions
+    raise AssertionError
+    raise NotImplementedError
+
+    # non-runnable code
+    if 0:
+    if __name__ == .__main__.:
+
+ignore_errors = False
+
+[html]
+directory = docs/coverage
