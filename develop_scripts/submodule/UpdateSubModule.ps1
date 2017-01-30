@@ -14,9 +14,7 @@ try{
        else{
         Copy-Item -path $file.FullName -dest $destinationDirectory -recurse -Force
        }
-    }
-    write-host "Removing submodule directory..."
-    Remove-Item $submoduleDirectory -Recurse -Force
+    } 
 }catch [Exception]
 {
     write-host "Exception has occured!" $_.Exception.Message
