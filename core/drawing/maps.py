@@ -6,7 +6,7 @@ from collections import namedtuple
 import pygame
 
 from core.data_structures import Position
-from drawing.drawing_consts import *
+from core.drawing.drawing_consts import *
 
 
 # region drawing funcitons
