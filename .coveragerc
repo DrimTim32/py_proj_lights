@@ -4,7 +4,16 @@ branch = True
 omit =
     tests/*
     *\__init__.py
+    conftest.py
+    setup.py
+
+data_file = docs/coverage/.coverage
+source = core
+
 [report]
+show_missing = True
+
+sort = Miss
 
 exclude_lines =
     pragma: no cover
@@ -17,6 +26,7 @@ exclude_lines =
     if __name__ == .__main__.:
 
 ignore_errors = False
+precision = 2
 
 [html]
 directory = docs/coverage
