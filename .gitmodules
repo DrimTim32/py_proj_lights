@@ -1,0 +1,3 @@
+[submodule "py_proj_submodule"]
+	path = py_proj_submodule
+	url = https://github.com/DrimTim32/py_proj_submodule

@@ -1,6 +1,6 @@
-from core.data_structures.road import *
-from core.simulation.Intersection import *
-from drawing.maps import create_map_painter
+from core.data_structures.road import RoadSizeVector, get_empty_road
+from core.simulation.intersection import Intersection, IntersectionProperties
+from core.drawing.maps import create_map_painter
 
 
 class Game:
@@ -9,7 +9,7 @@ class Game:
         self.lights_manager = lights_manager
 
         directions = [
-            RoadSizeVector(8, 2, 3),  # top
+            RoadSizeVector(8, 2, 2),  # top
             RoadSizeVector(8, 2, 2),  # left
             RoadSizeVector(8, 2, 2),  # bottom
             RoadSizeVector(8, 2, 2)  # right
@@ -32,13 +32,11 @@ class Game:
 
     @property
     def points(self):
-        return [self.top, self.left, self.bottom, self.right]
-
-    @property
-    def points(self):
+        """Returns all points [top, left, bottom, right]"""
         return [self.top, self.left, self.bottom, self.right]
 
     def update(self):
+        """Updates whole object"""
         self.lights_manager.update()
         self.__update_out()
         self.intersection.update()
@@ -71,16 +69,20 @@ class Game:
 
     @property
     def top(self):
+        """Top roads"""
         return self.roads["top"]
 
     @property
     def right(self):
+        """Right roads"""
         return self.roads["right"]
 
     @property
     def left(self):
+        """Left roads"""
         return self.roads["left"]
 
     @property
     def bottom(self):
+        """Bottom roads"""
         return self.roads["bottom"]
