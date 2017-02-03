@@ -30,8 +30,7 @@ class Road:
     def __len__(self):
         out_len = 0 if len(self.out_lanes) == 0 else len(self.out_lanes[0])
         in_len = 0 if len(self.in_lanes) == 0 else len(self.in_lanes[0])
-        return max(in_len,out_len)
-
+        return max(in_len, out_len)
 
     @property
     def length(self):
@@ -40,11 +39,12 @@ class Road:
     @property
     def width(self):
         return len(self.out_lanes) + len(self.in_lanes)
+
     @property
     def out_indexes(self):
-        for i in range(len(self.out_lanes)):
-            for q in range(len(self.out_lanes[i])):
-                yield (i, q)
+        for lane_index in range(len(self.out_lanes)):
+            for field_index in range(len(self.out_lanes[lane_index])):
+                yield (lane_index, field_index)
 
     @property
     def in_indexes(self):
