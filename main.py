@@ -3,15 +3,17 @@ from time import clock
 
 import pygame
 
+from core.configuration import config
+from core.simulation import Game
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import FixedLightsManager
-from core.simulation import Game
-from core.configuration import Config
 
-windowSize = (1000, 800)
+WINDOW_SIZE = (1000, 800)
+
 
 def read_configuration():
-    return Config.Config.from_config_file("Configuration/config.json")
+    """Reads configuration from file"""
+    return config.Config.from_config_file("Configuration/config.json")
 
 
 def entrypoint():
@@ -19,18 +21,17 @@ def entrypoint():
 
 
 def main():
-    try:
-        entrypoint()
-    except Exception as e:
-        print("{0}, message : {1}".format(sys.stderr, e))
-        return 2
+    #   try:
+    #        entrypoint()
+    #   except Exception as e:
+    #      print("{0}, message : {1}".format(sys.stderr, e))
+    #     return 2
 
     pygame.init()
 
-    screen = pygame.display.set_mode(windowSize)
+    screen = pygame.display.set_mode(WINDOW_SIZE)
     prev_update_time = clock()
     done = False
-
 
     # Generators
 
@@ -38,8 +39,8 @@ def main():
     lights_manager = FixedLightsManager()
 
     game = Game(car_generator, lights_manager)
-    map = game.map
-    map.prepare(screen)
+    game_map = game.map
+    game_map.prepare(screen)
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
             done = True
@@ -53,9 +54,7 @@ def main():
             prev_update_time = curr_time
             game.update()
 
-
-        map.draw(screen, game.points)
-
+        game_map.draw(screen, game.points)
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()

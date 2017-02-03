@@ -1,6 +1,6 @@
-from drawing.Maps import create_map_painter
-from core.simulation.Intersection import *
-from core.data_structures.Road import *
+from core.data_structures.road import RoadSizeVector, get_empty_road
+from core.simulation.intersection import Intersection, IntersectionProperties
+from core.drawing.maps import create_map_painter
 
 
 class Game:
@@ -9,7 +9,7 @@ class Game:
         self.lights_manager = lights_manager
 
         directions = [
-            RoadSizeVector(8, 2, 3),  # top
+            RoadSizeVector(8, 2, 2),  # top
             RoadSizeVector(8, 2, 2),  # left
             RoadSizeVector(8, 2, 2),  # bottom
             RoadSizeVector(8, 2, 2)  # right
@@ -32,25 +32,24 @@ class Game:
 
     @property
     def points(self):
-        return [self.top, self.left, self.bottom, self.right]
-
-    @property
-    def points(self):
+        """Returns all points [top, left, bottom, right]"""
         return [self.top, self.left, self.bottom, self.right]
 
     def update(self):
+        """Updates whole object"""
         self.lights_manager.update()
-        self.intersection.update()
         self.__update_out()
+        self.intersection.update()
         self.__update_in()
 
     def __update_out(self):
         for direction in range(len(self.roads)):
             road = self.out_roads[direction]
-            for lane in road:
+            for lane_index in range(len(road)):
+                lane = road[lane_index]
                 for i in range(len(lane) - 1, 0, -1):
                     lane[i] = lane[i - 1]
-                lane[0] = self.intersection.pull_car(direction, road.index(lane))
+                lane[0] = self.intersection.pull_car(direction, lane_index)
 
     def __update_in(self):
         for direction in range(len(self.in_roads)):
@@ -60,22 +59,30 @@ class Game:
                 if self.lights_manager.is_green(direction, lane_index):
                     if lane[-1] != 0:
                         self.intersection.push_car(direction, lane_index, lane[-1])
+                        lane[-1] = 0
                     for i in range(len(lane) - 1, 0, -1):
-                        lane[i] = lane[i - 1]
-                    lane[0] = self.car_generator.generate(direction, lane_index)
+                        if lane[i] == 0:
+                            lane[i] = lane[i - 1]
+                            lane[i - 1] = 0
+                    if lane[0] == 0:
+                        lane[0] = self.car_generator.generate(direction, lane_index)
 
     @property
     def top(self):
+        """Top roads"""
         return self.roads["top"]
 
     @property
     def right(self):
+        """Right roads"""
         return self.roads["right"]
 
     @property
     def left(self):
+        """Left roads"""
         return self.roads["left"]
 
     @property
     def bottom(self):
+        """Bottom roads"""
         return self.roads["bottom"]
