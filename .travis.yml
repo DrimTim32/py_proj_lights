@@ -8,5 +8,6 @@ branches:
     - malin
     - bartek
     - malin-development
+    - ania
 script:
     - python setup.py test

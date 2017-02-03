@@ -9,8 +9,8 @@ Welcome to py_proj_lights's documentation!
 .. toctree::
    :maxdepth: 2
 
-   Drawing
-   Simulation
+   core
+   drawing
 
 
 

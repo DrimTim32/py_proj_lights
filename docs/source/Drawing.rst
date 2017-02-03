@@ -1,4 +1,4 @@
-Drawing package
+drawing package
 ===============
 
 Subpackages
@@ -6,23 +6,23 @@ Subpackages
 
 .. toctree::
 
-    Drawing.DataStructures
+    drawing.painters
 
 Submodules
 ----------
 
-Drawing.Maps module
--------------------
+drawing.drawing_consts module
+-----------------------------
 
-.. automodule:: Drawing.Maps
+.. automodule:: drawing.drawing_consts
     :members:
     :undoc-members:
     :show-inheritance:
 
-Drawing.drawing_consts module
------------------------------
+drawing.maps module
+-------------------
 
-.. automodule:: Drawing.drawing_consts
+.. automodule:: drawing.maps
     :members:
     :undoc-members:
     :show-inheritance:
@@ -31,7 +31,7 @@ Drawing.drawing_consts module
 Module contents
 ---------------
 
-.. automodule:: Drawing
+.. automodule:: drawing
     :members:
     :undoc-members:
     :show-inheritance:
