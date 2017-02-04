@@ -261,131 +261,137 @@ class Intersection:
                     return cell.source % 2
         return None
 
-    def push_car(self, direction, lane, car):
+    def push_car(self, direction, lane_index, car):
         """
         Adds car from road to the intersection
         :param direction: direction from which car is arriving
-        :param lane: lane from which car is ariving
+        :param lane_index: lane from which car is ariving
         :param car: Car
         :type direction: Directions
-        :type lane: int
+        :type lane_index: int
         :type car: Car
         :return: none
         """
         if direction == Directions.TOP:
-            self.__array_upper[0][lane] = car
+            self.__array_upper[0][lane_index] = car
         elif direction == Directions.LEFT:
             if car.turn_direction == TurnDirection.LEFT:
-                self.__array_lower[self.__height - 1 - lane][0] = car
+                self.__array_lower[self.__height - 1 - lane_index][0] = car
             else:
-                self.__array_upper[self.__height - 1 - lane][0] = car
+                self.__array_upper[self.__height - 1 - lane_index][0] = car
         elif direction == Directions.BOTTOM:
             if car.turn_direction == TurnDirection.LEFT:
-                self.__array_lower[self.__height - 1][self.__width - lane - 1] = car
+                self.__array_lower[self.__height - 1][self.__width - lane_index - 1] = car
             else:
-                self.__array_upper[self.__height - 1][self.__width - lane - 1] = car
+                self.__array_upper[self.__height - 1][self.__width - lane_index - 1] = car
         else:  # RIGHT
-            self.__array_upper[lane][self.__width - 1] = car
+            self.__array_upper[lane_index][self.__width - 1] = car
 
-    def pull_car(self, direction, lane, offset=0):
+    def pull_car(self, direction, lane_index, offset=0):
         """
         Removes car from intersection and returns it
         :param direction: direction in which car is going
-        :param lane: lane in which car is going
+        :param lane_index: lane in which car is going
         :param offset: offset between lanes on intersection and lanes on road
         :type direction: Directions
-        :type lane: int
+        :type lane_index: int
         :type offset: int
         :return: car
         :rtype: Car
         """
         ret = None
-        if direction == Directions.TOP and self.__check_pull_upper_top(lane):
-            ret = self.__array_upper[0][self.__width - lane - 1]
-            self.__array_upper[0][self.__width - lane - 1] = None
-        elif direction == Directions.TOP and self.__check_pull_lower_top(lane):
-            ret = self.__array_lower[0][self.__width - lane - 1]
-            self.__array_lower[0][self.__width - lane - 1] = None
+        if direction == Directions.TOP and self.__check_pull_upper_top(lane_index):
+            ret = self.__array_upper[0][self.__width - lane_index - 1]
+            self.__array_upper[0][self.__width - lane_index - 1] = None
+        elif direction == Directions.TOP and self.__check_pull_lower_top(lane_index):
+            ret = self.__array_lower[0][self.__width - lane_index - 1]
+            self.__array_lower[0][self.__width - lane_index - 1] = None
 
-        elif direction == Directions.LEFT and self.__check_pull_upper_left(lane):
-            ret = self.__array_upper[lane][0]
-            self.__array_upper[lane][0] = None
-        elif direction == Directions.LEFT and self.__check_pull_lower_left(lane):
-            ret = self.__array_lower[lane][0]
-            self.__array_lower[lane][0] = None
+        elif direction == Directions.LEFT and self.__check_pull_upper_left(lane_index):
+            ret = self.__array_upper[lane_index][0]
+            self.__array_upper[lane_index][0] = None
+        elif direction == Directions.LEFT and self.__check_pull_lower_left(lane_index):
+            ret = self.__array_lower[lane_index][0]
+            self.__array_lower[lane_index][0] = None
 
-        elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane):
-            ret = self.__array_upper[self.__height - 1][lane]
-            self.__array_upper[self.__height - 1][lane] = None
+        elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index):
+            ret = self.__array_upper[self.__height - 1][lane_index]
+            self.__array_upper[self.__height - 1][lane_index] = None
 
-        elif direction == Directions.RIGHT and self.__check_pull_right(lane):
-            ret = self.__array_upper[self.__height - 1 - lane][self.__width - 1]
-            self.__array_upper[self.__height - 1 - lane][self.__width - 1] = None
+        elif direction == Directions.RIGHT and self.__check_pull_right(lane_index):
+            ret = self.__array_upper[self.__height - 1 - lane_index][self.__width - 1]
+            self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
 
         return ret
 
-    def __check_pull_upper_top(self, lane):
+    def __check_pull_upper_top(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return: if there is a car on intersection going to direction top from upper array on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_upper[0][self.__width - lane - 1]
+        on_field = self.__array_upper[0][self.__width - lane_index - 1]
         if isinstance(on_field, Car) and on_field.destination == Directions.TOP:
             return True
         return False
 
-    def __check_pull_lower_top(self, lane):
+    def __check_pull_lower_top(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return: if there is a car on intersection going to direction top from lower array on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_lower[0][self.__width - lane - 1]
+        on_field = self.__array_lower[0][self.__width - lane_index - 1]
         if isinstance(on_field, Car) and on_field.destination == Directions.TOP:
             return True
         return False
 
-    def __check_pull_upper_left(self, lane):
+    def __check_pull_upper_left(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return:  if there is a car on intersection going to direction left from upper array on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_upper[lane][0]
+        on_field = self.__array_upper[lane_index][0]
         if isinstance(on_field, Car) and on_field.destination == Directions.LEFT:
             return True
         return False
 
-    def __check_pull_lower_left(self, lane):
+    def __check_pull_lower_left(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return: if there is a car on intersection going to direction left from lower array on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_lower[lane][0]
+        on_field = self.__array_lower[lane_index][0]
         if isinstance(on_field, Car) and on_field.destination == Directions.LEFT:
             return True
         return False
 
-    def __check_pull_bottom(self, lane):
+    def __check_pull_bottom(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return: if there is a car on intersection going to direction bottom on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_upper[self.__height - 1][lane]
+        on_field = self.__array_upper[self.__height - 1][lane_index]
         if isinstance(on_field, Car) and on_field.destination == Directions.BOTTOM:
             return True
         return False
 
-    def __check_pull_right(self, lane):
+    def __check_pull_right(self, lane_index):
         """
-        :param lane: lane
+        :param lane_index: lane
+        :type lane_index: int
         :return: if there is a car on intersection going to direction right on lane number lane
         :rtype: bool
         """
-        on_field = self.__array_upper[self.__height - 1 - lane][self.__width - 1]
+        on_field = self.__array_upper[self.__height - 1 - lane_index][self.__width - 1]
         if isinstance(on_field, Car) and on_field.destination == Directions.RIGHT:
             return True
         return False
