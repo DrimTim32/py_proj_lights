@@ -5,26 +5,26 @@ from core.simulation.road import get_empty_road, RoadSizeVector, Road
 empty_roads_data = [
     (RoadSizeVector(1, 1, 0), [[[None]], []]),
     (RoadSizeVector(1, 1, 1), [[[None]], [[None]]]),
-    (RoadSizeVector(2, 1, 1), [[[None,None]], [[None,None]]]),
-    (RoadSizeVector(2, 2, 1), [[[None,None], [None,None]], [[None,None]]]),
-    (RoadSizeVector(2, 2, 2), [[[None,None], [None,None]], [[None,None], [None,None]]]),
-    (RoadSizeVector(2, 1, 2), [[[None,None]], [[None,None], [None,None]]]),
+    (RoadSizeVector(2, 1, 1), [[[None, None]], [[None, None]]]),
+    (RoadSizeVector(2, 2, 1), [[[None, None], [None, None]], [[None, None]]]),
+    (RoadSizeVector(2, 2, 2), [[[None, None], [None, None]], [[None, None], [None, None]]]),
+    (RoadSizeVector(2, 1, 2), [[[None, None]], [[None, None], [None, None]]]),
     (RoadSizeVector(7, 3, 2), [
         [
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None]
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None]
         ],
         [
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None]
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None]
         ]
     ]),
 ]
 
 yield_first_data = [
     (Road([[], []]), []),
-    (Road([[[0]], []]), [(0,0)]),
+    (Road([[[0]], []]), [(0, 0)]),
     (Road([[[0]], [[0]]]), [(0, 0)]),
     (Road([[[0, 0]], []]), [(0, 0), (0, 1)]),
     (Road([[[0, 0], [0, 0]], []]), [(0, 0), (0, 1), (1, 0), (1, 1)]),
