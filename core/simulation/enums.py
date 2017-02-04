@@ -7,6 +7,9 @@ class Directions(IntEnum):
     BOTTOM = 2
     RIGHT = 3
 
+    def __str__(self):
+        return self.name.lower()
+
 
 class TurnDirection(IntEnum):
     RIGHT = 1

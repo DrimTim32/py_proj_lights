@@ -1,6 +1,7 @@
 """
 File containing FixedLightsManagerClass
 """
+from core.simulation.enums import Orientation
 
 
 class FixedLightsManager:
@@ -18,7 +19,7 @@ class FixedLightsManager:
         """
         self.current_phase = -1
         self.__previous_phase = -1
-        self.__no_phase_time = 15
+        self.__no_phase_time = 9
         self.__last_phase_change = 0
         self.__phases = phases
         self.__lanes_info = lanes_info
@@ -30,9 +31,22 @@ class FixedLightsManager:
         :return: if light is green on given lane in given direction
         :rtype: bool
         """
+
+        phase = self.__phases[self.current_phase]
+        lane = self.__lanes_info[direction.__str__()][lane_index]
         if self.current_phase == -1:
             return False
-        return True
+        if FixedLightsManager.__check_orientation(direction) == phase.orientation:
+            return False
+        if phase.right and lane.right:
+            return True
+        if phase.straight and lane.straight:
+            return True
+        if phase.left and lane.left:
+            return True
+        if phase.left_separated and lane.left_separated:
+            return True
+        return False
 
     def update(self):
         """
@@ -52,3 +66,7 @@ class FixedLightsManager:
                 self.__last_phase_change = 0
             else:
                 self.__last_phase_change += 1
+
+    @staticmethod
+    def __check_orientation(direction):
+        return Orientation(direction % 2)

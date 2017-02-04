@@ -199,13 +199,13 @@ class MapPainter:
         :type points : PointsQuadruple
         """
         self.board_start_point = board_start_point
-        self.__intersecion = intersection
+        self.__intersection = intersection
         self._vector_calculator = vectors_calculator
         self.border_points = points  # type : PointsQuadruple
 
     @property
     def board(self):
-        return self.__intersecion.array
+        return self.__intersection.array
 
     def get_lights_painter(self):
         top, left, down, right = self.border_points
