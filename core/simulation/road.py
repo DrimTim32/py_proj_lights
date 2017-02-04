@@ -13,7 +13,7 @@ def get_empty_road(size_vector):
     length = size_vector.length
 
     def get_empty_array():
-        return list([0 for _ in range(length)])
+        return list([None for _ in range(length)])
 
     def get_empty_array_of_arrays(count):
         return list([get_empty_array() for _ in range(count)])
@@ -36,9 +36,44 @@ class Road:
         in_len = 0 if len(self.in_lanes) == 0 else len(self.in_lanes[0])
         return max(in_len, out_len)
 
+    def update_out(self):
+        for lane_index in range(self.out_width):
+            lane = self.out_lanes[lane_index]
+            for i in range(self.__len__() - 1, 0, -1):
+                lane[i] = lane[i - 1]
+
+    def update_in(self, lane_index):
+        for i in range(self.__len__() - 1, 0, -1):
+            if self.in_lanes[lane_index][i] is None:
+                self.in_lanes[lane_index][i] = self.in_lanes[lane_index][i - 1]
+                self.in_lanes[lane_index][i - 1] = None
+
+    def push_car_out(self, lane_index, car):
+        self.out_lanes[lane_index][0] = car
+
+    def push_car_in(self, lane_index, car):
+        if self.in_lanes[lane_index][0] is None:
+            self.in_lanes[lane_index][0] = car
+
+    def pull_car(self, lane_index):
+        car = self.in_lanes[lane_index][-1]
+        self.in_lanes[lane_index][-1] = None
+        return car
+
+    def has_waiting_car(self, lane_index):
+        return self.in_lanes[lane_index][-1]
+
     @property
     def length(self):
         return self.__len__()
+
+    @property
+    def out_width(self):
+        return len(self.out_lanes)
+
+    @property
+    def in_width(self):
+        return len(self.in_lanes)
 
     @property
     def width(self):

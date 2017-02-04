@@ -4,7 +4,7 @@ from time import clock
 import pygame
 
 from core.configuration import config
-from core.simulation import Game
+from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import FixedLightsManager
 
@@ -38,7 +38,7 @@ def main():
     car_generator = CarProperGenerator()
     lights_manager = FixedLightsManager()
 
-    game = Game(car_generator, lights_manager)
+    game = Simulation(car_generator, lights_manager)
     game_map = game.map
     lights = game.map.get_lights_painter()
     game_map.prepare(screen)

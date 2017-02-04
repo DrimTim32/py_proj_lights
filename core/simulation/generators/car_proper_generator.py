@@ -9,15 +9,15 @@ class CarProperGenerator:
         self.config = config
 
     def generate(self, direction, lane):
-        right = [0, 0, 0, 0,
+        right = [None, None, None, None,
                  Car(direction, TurnDirection.RIGHT)]
-        right_n_straight = [0, 0, 0, 0,
+        right_n_straight = [None, None, None, None,
                             Car(direction, TurnDirection.RIGHT),
                             Car(direction, TurnDirection.STRAIGHT)]
-        straight = [0, 0, 0, 0,
+        straight = [None, None, None, None,
                     Car(direction, TurnDirection.STRAIGHT)]
-        left = [0, 0, 0, 0,
+        left = [None, None, None, None,
                 Car(direction, TurnDirection.LEFT)]
-        if direction in {1, 3} and lane in {1}:
+        if direction in {1} and lane in {0, 1}:
             return random.choice(left)
-        return 0
+        return None
