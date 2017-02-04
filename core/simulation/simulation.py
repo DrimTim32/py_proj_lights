@@ -12,7 +12,7 @@ class Simulation:
 
         self.__data_collector = DataCollector()
 
-        self.__lights_manager = lights_manager(Simulation.__create_lights_phases())
+        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(), Simulation.__create_lanes_data())
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection()
 
         self.__map = create_map_painter(self.__intersection, self.__roads)
@@ -96,3 +96,10 @@ class Simulation:
                 LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, 20),
                 LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, 20),
                 LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, 20)]
+
+    @staticmethod
+    def __create_lanes_data(data=None):
+        return {"top": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
+                "left": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
+                "bottom": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
+                "right": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)]}
