@@ -32,7 +32,7 @@ unsafe-load-any-extension=no
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code
-extension-pkg-whitelist=
+extension-pkg-whitelist=numpy
 
 # Allow optimization of some AST trees. This will activate a peephole AST
 # optimizer, which will apply various small optimizations. For instance, it can
@@ -64,7 +64,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=unichr-builtin,unicode-builtin,filter-builtin-not-iterating,cmp-builtin,apply-builtin,indexing-exception,next-method-called,no-absolute-import,nonzero-method,intern-builtin,old-octal-literal,import-star-module-level,xrange-builtin,using-cmp-argument,old-raise-syntax,long-suffix,reload-builtin,standarderror-builtin,coerce-builtin,dict-iter-method,reduce-builtin,zip-builtin-not-iterating,input-builtin,print-statement,buffer-builtin,delslice-method,raw_input-builtin,suppressed-message,range-builtin-not-iterating,metaclass-assignment,raising-string,setslice-method,basestring-builtin,round-builtin,long-builtin,unpacking-in-except,map-builtin-not-iterating,file-builtin,backtick,old-division,parameter-unpacking,execfile-builtin,oct-method,hex-method,getslice-method,dict-view-method,cmp-method,useless-suppression,old-ne-operator,coerce-method
+disable=unichr-builtin,unicode-builtin,filter-builtin-not-iterating,cmp-builtin,apply-builtin,indexing-exception,next-method-called,no-absolute-import,nonzero-method,intern-builtin,old-octal-literal,import-star-module-level,xrange-builtin,using-cmp-argument,old-raise-syntax,long-suffix,reload-builtin,standarderror-builtin,coerce-builtin,dict-iter-method,reduce-builtin,zip-builtin-not-iterating,input-builtin,print-statement,buffer-builtin,delslice-method,raw_input-builtin,suppressed-message,range-builtin-not-iterating,metaclass-assignment,raising-string,setslice-method,basestring-builtin,round-builtin,long-builtin,unpacking-in-except,map-builtin-not-iterating,file-builtin,backtick,old-division,parameter-unpacking,execfile-builtin,oct-method,hex-method,getslice-method,dict-view-method,cmp-method,useless-suppression,old-ne-operator,coerce-method,I0011
 
 
 [REPORTS]
@@ -98,7 +98,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 [BASIC]
 
 # Good variable names which should always be accepted, separated by a comma
-good-names=i,j,k,ex,Run,_
+good-names=i,j,k,ex,Run,_,id
 
 # Bad variable names which should always be refused, separated by a comma
 bad-names=foo,bar,baz,toto,tutu,tata
@@ -108,7 +108,7 @@ bad-names=foo,bar,baz,toto,tutu,tata
 name-group=
 
 # Include a hint for the correct naming format with invalid-name
-include-naming-hint=no
+include-naming-hint=yes
 
 # List of decorators that produce properties, such as abc.abstractproperty. Add
 # to this list to register other decorators that produce valid properties.
@@ -357,7 +357,7 @@ max-statements=50
 max-parents=7
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=10
 
 # Minimum number of public methods for a class (see R0903).
 min-public-methods=1

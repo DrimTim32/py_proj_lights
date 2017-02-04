@@ -7,8 +7,8 @@ count = 0
 
 BASE_DIRECTORY = os.getcwd()
 EXTENDED = ""
-TYPE = "text"
-excluded_directories = ["develop_scripts", "tests", "docs"]
+TYPE = "text" 
+excluded_directories = ["develop_scripts", "tests", "docs","demo"] 
 excluded_files = ["__init__.py", "setup.py", "custom_assertions.py", "conftest.py"]
 
 expected_html_tags = ["<table>", "<html>"]
@@ -50,10 +50,10 @@ def check(module):
             elif "Your code has been rated at" in line:
                 print(line)
 
-            if "Your code has been rated at" in line:
-                score = re.findall("[-]?\d.\d\d", line)[0]
+            if "Your code has been rated at" in line: 
+                score = re.findall("[-]?(\d+.\d+)", line)[0]
                 total += float(score)
-                count += 1
+                count += 1 
         print("-" * 50 + "\n")
         if TYPE == "html":
             print("</div></br>")
