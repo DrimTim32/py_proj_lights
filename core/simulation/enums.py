@@ -7,11 +7,19 @@ class Directions(IntEnum):
     BOTTOM = 2
     RIGHT = 3
 
+    def __str__(self):
+        return self.name.lower()
+
 
 class TurnDirection(IntEnum):
     RIGHT = 1
     STRAIGHT = 2
     LEFT = 3
+
+
+class Orientation(IntEnum):
+    VERTICAL = 0
+    HORIZONTAL = 1
 
 
 def str_to_direction(direction_str):

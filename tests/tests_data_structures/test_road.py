@@ -1,30 +1,31 @@
 import pytest
 
 from core.simulation.road import get_empty_road, RoadSizeVector, Road
+from core.simulation.car import Car
 
 empty_roads_data = [
     (RoadSizeVector(1, 1, 0), [[[None]], []]),
     (RoadSizeVector(1, 1, 1), [[[None]], [[None]]]),
-    (RoadSizeVector(2, 1, 1), [[[None,None]], [[None,None]]]),
-    (RoadSizeVector(2, 2, 1), [[[None,None], [None,None]], [[None,None]]]),
-    (RoadSizeVector(2, 2, 2), [[[None,None], [None,None]], [[None,None], [None,None]]]),
-    (RoadSizeVector(2, 1, 2), [[[None,None]], [[None,None], [None,None]]]),
+    (RoadSizeVector(2, 1, 1), [[[None, None]], [[None, None]]]),
+    (RoadSizeVector(2, 2, 1), [[[None, None], [None, None]], [[None, None]]]),
+    (RoadSizeVector(2, 2, 2), [[[None, None], [None, None]], [[None, None], [None, None]]]),
+    (RoadSizeVector(2, 1, 2), [[[None, None]], [[None, None], [None, None]]]),
     (RoadSizeVector(7, 3, 2), [
         [
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None]
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None]
         ],
         [
-            [None,None,None,None,None,None,None],
-            [None,None,None,None,None,None,None]
+            [None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None]
         ]
     ]),
 ]
 
 yield_first_data = [
     (Road([[], []]), []),
-    (Road([[[0]], []]), [(0,0)]),
+    (Road([[[0]], []]), [(0, 0)]),
     (Road([[[0]], [[0]]]), [(0, 0)]),
     (Road([[[0, 0]], []]), [(0, 0), (0, 1)]),
     (Road([[[0, 0], [0, 0]], []]), [(0, 0), (0, 1), (1, 0), (1, 1)]),
@@ -105,3 +106,24 @@ def test_raise_constructor_exception(road_data, str_contains):
     with pytest.raises(ValueError) as excinfo:
         Road(road_data)
     assert str_contains in str(excinfo.value)
+
+
+@pytest.mark.parametrize("road,expected_in_width,expected_out_width", [
+    (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0], [0, 0]]]), 2, 3),
+    (Road([[[0, 0, 0]], [[0, 0], [0, 0]]]), 2, 1),
+    (Road([[[0, 0]], [[0, 0]]]), 1, 1),
+])
+def test_road_width(road, expected_in_width, expected_out_width):
+    assert road.out_width == expected_out_width
+    assert road.in_width == expected_in_width
+
+
+import numpy as np
+import numpy.ma as ma
+
+
+def test_car_pull_push_in():
+    road = Road([[[None, None, None], [None, None, None], [None, None, None]], [[None, None], [None, None]]])
+    road.push_car_in(0, Car(0, 0))
+    arr = np.array(road.in_lanes)
+    assert len(arr[arr != np.array(None)]) == 1
