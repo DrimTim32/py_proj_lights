@@ -24,7 +24,7 @@ class LightsPhase:
         self.__right = directions.right  # type : bool
         self.__straight = directions.straight  # type : bool
         self.__left = directions.left  # type : bool
-        self.__left_separated = directions.ledt_separated  # type : bool
+        self.__left_separated = directions.left_separated  # type : bool
         self.__orientation = orientation  # type : Orientation
         self.__duration = duration  # type : int
 

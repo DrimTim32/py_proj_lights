@@ -5,7 +5,6 @@ import pygame
 
 from core.configuration import config
 from core.simulation import Simulation
-
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import FixedLightsManager
 
@@ -36,9 +35,8 @@ def main():
 
     # Generators
 
-    car_generator = CarProperGenerator()
-    lights_manager = FixedLightsManager()
-
+    car_generator = CarProperGenerator
+    lights_manager = FixedLightsManager
 
     game = Simulation(car_generator, lights_manager)
     game_map = game.map
