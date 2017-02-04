@@ -24,6 +24,10 @@ def get_empty_road(size_vector):
 
 class Road:
     def __init__(self, road_array):
+        if len(road_array[0]) != 0 and len(min(road_array[0], key=len)) != len(max(road_array[0], key=len)):
+            raise ValueError("Out lanes are not equal")
+        if len(road_array[1]) != 0 and len(min(road_array[1], key=len)) != len(max(road_array[1], key=len)):
+            raise ValueError("In lanes are not equal")
         self.out_lanes = road_array[0]
         self.in_lanes = road_array[1]
 
@@ -38,16 +42,26 @@ class Road:
             for i in range(self.__len__() - 1, 0, -1):
                 lane[i] = lane[i - 1]
 
-    def update_in(self):
-        for lane_index in range(self.in_width):
-            lane = self.in_lanes[lane_index
-            ]
+    def update_in(self, lane_index):
+        for i in range(self.__len__() - 1, 0, -1):
+            if self.in_lanes[lane_index][i] == 0:
+                self.in_lanes[lane_index][i] = self.in_lanes[lane_index][i - 1]
+                self.in_lanes[lane_index][i - 1] = 0
 
-    def push_car(self, lane_index, car):
+    def push_car_out(self, lane_index, car):
         self.out_lanes[lane_index][0] = car
 
-    def pull_car(self, lane):
-        pass
+    def push_car_in(self, lane_index, car):
+        if self.in_lanes[lane_index][0] == 0:
+            self.in_lanes[lane_index][0] = car
+
+    def pull_car(self, lane_index):
+        car = self.in_lanes[lane_index][-1]
+        self.in_lanes[lane_index][-1] = 0
+        return car
+
+    def has_waiting_car(self, lane_index):
+        return self.in_lanes[lane_index][-1]
 
     @property
     def length(self):
