@@ -1,7 +1,7 @@
 """
 File containing FixedLightsManagerClass
 """
-from core.simulation.enums import Orientation
+from core.data_structures.enums import Orientation
 
 
 class FixedLightsManager:

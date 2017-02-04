@@ -1,6 +1,6 @@
+from core.data_structures.enums import str_to_direction, Orientation
 from core.drawing.maps import create_map_painter
 from core.simulation.data_collector import DataCollector
-from core.simulation.enums import str_to_direction, Orientation
 from core.simulation.intersection import Intersection, IntersectionProperties
 from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 from core.simulation.road import RoadSizeVector, get_empty_road

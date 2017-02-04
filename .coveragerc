@@ -17,6 +17,7 @@ sort = Miss
 
 exclude_lines =
     pragma: no cover
+
     #defensive assertions
     raise AssertionError
     raise NotImplementedError
@@ -24,6 +25,9 @@ exclude_lines =
     # non-runnable code
     if 0:
     if __name__ == .__main__.:
+
+    # private methods
+    __*
 
 ignore_errors = False
 precision = 2
