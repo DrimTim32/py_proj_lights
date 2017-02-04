@@ -8,16 +8,23 @@ class CarProperGenerator:
     def __init__(self, config=None):
         self.config = config
 
-    def generate(self, direction, lane):
-        right = [0, 0, 0, 0,
+    def generate(self, direction, lane_index):
+        right = [None, None, None, None,
                  Car(direction, TurnDirection.RIGHT)]
-        right_n_straight = [0, 0, 0, 0,
+        right_n_straight = [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+                            None, None, None, None, None, None, None,
+                            None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+                            None, None, None, None, None, None, None,
                             Car(direction, TurnDirection.RIGHT),
                             Car(direction, TurnDirection.STRAIGHT)]
-        straight = [0, 0, 0, 0,
+        straight = [None, None, None, None,
                     Car(direction, TurnDirection.STRAIGHT)]
-        left = [0, 0, 0, 0,
+        left = [None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+                None, None, None, None, None, None, None,
                 Car(direction, TurnDirection.LEFT)]
-        if direction in {1, 3} and lane in {1}:
+
+        if lane_index in {0}:
+            return random.choice(right_n_straight)
+        if lane_index in {1}:
             return random.choice(left)
-        return 0
+        return None

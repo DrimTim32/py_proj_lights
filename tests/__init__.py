@@ -1,1 +1,1 @@
-from tests.tests_drawing.test_Position import *
+from tests.tests_data_structures.test_vector import *
