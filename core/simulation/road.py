@@ -123,6 +123,7 @@ class Road:
     def length(self):
         """
         :return: length of the road
+        :rtype: int
         """
         return self.__len__()
 
@@ -130,6 +131,7 @@ class Road:
     def out_width(self):
         """
         :return: number of out lanes
+        :rtype: int
         """
         return len(self.out_lanes)
 
@@ -137,6 +139,7 @@ class Road:
     def in_width(self):
         """
         :return: number of in lanes
+        :rtype: int
         """
         return len(self.in_lanes)
 
@@ -144,6 +147,7 @@ class Road:
     def width(self):
         """
         :return: number of lanes
+        :rtype: int
         """
         return len(self.out_lanes) + len(self.in_lanes)
 
