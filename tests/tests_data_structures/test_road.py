@@ -295,7 +295,7 @@ def test_update_out_middle():
     assert isinstance(road.out_lanes[2][2], Car)
 
 
-def test_update_three():
+def test_update_out_three():
     road = Road([
         [
             [Car(0, 0), Car(1, 1), Car(0, 0)],
@@ -318,3 +318,53 @@ def test_update_three():
     assert road.out_lanes[0][2] is not None
     assert isinstance(road.out_lanes[0][2], Car)
     assert road.out_lanes[0][2].source == 1
+
+
+def test_pull_no_car():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+        ],
+        [
+            [Car(1, 1), Car(1, 1), None],
+            [Car(1, 1), Car(1, 1), None],
+        ]
+    ])
+    assert road.pull_car(0) is None
+    assert road.pull_car(1) is None
+
+
+def test_pull_car():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+        ],
+        [
+            [None, None, Car(1, 1)],
+            [None, None, Car(0, 0)],
+        ]
+    ])
+    car1 = road.pull_car(1)
+    car0 = road.pull_car(0)
+    assert car0 is not None
+    assert isinstance(car0,Car)
+    assert car0.source == 1
+    assert car1 is not None
+    assert isinstance(car1,Car)
+    assert car1.source == 0
+
+def test_waiting_car():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+        ],
+        [
+            [None, None, Car(1, 1)],
+            [None, None, None],
+        ]
+    ])
+    assert road.has_waiting_car(0)
+    assert not road.has_waiting_car(1)
