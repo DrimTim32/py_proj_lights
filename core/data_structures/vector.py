@@ -1,13 +1,18 @@
-"""This file contains Point class"""
+"""This file contains Position class"""
 
 
-class Position:
+class Vector:
     """ Point class represents and manipulates x,y coords. """
 
     def __init__(self, x, y):
         """ Create a new point """
         self.x = x
         self.y = y
+
+    def __mul__(self, other):
+        if not isinstance(other, int):
+            raise ValueError("Second multiplication object must be an int")
+        return Vector(self.x * 2, self.y * 2)
 
     def __ne__(self, other):
         return not self == other
@@ -16,7 +21,7 @@ class Position:
         return self is other or (self.x == other.x and self.y == other.y)
 
     def __add__(self, other):
-        return Position(self.x + other.x, self.y + other.y)
+        return Vector(self.x + other.x, self.y + other.y)
 
     def __str__(self):
         return "Position ({0},{1})".format(self.x, self.y)
@@ -25,14 +30,14 @@ class Position:
         return self.x if item == 0 else self.y
 
     def __sub__(self, other):
-        return Position(self.x - other.x, self.y - other.y)
+        return Vector(self.x - other.x, self.y - other.y)
 
     def copy(self):
         """
         Creates new object with the same position
-        :rtype: Position
+        :rtype: Vector
         """
-        return Position(self.x, self.y)
+        return Vector(self.x, self.y)
 
     def __neg__(self):
-        return Position(-self.x, -self.y)
+        return Vector(-self.x, -self.y)

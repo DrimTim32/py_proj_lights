@@ -4,7 +4,8 @@ from time import clock
 import pygame
 
 from core.configuration import config
-from core.simulation import Game
+from core.simulation import Simulation
+
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import FixedLightsManager
 
@@ -38,8 +39,11 @@ def main():
     car_generator = CarProperGenerator()
     lights_manager = FixedLightsManager()
 
-    game = Game(car_generator, lights_manager)
+
+    game = Simulation(car_generator, lights_manager)
     game_map = game.map
+    lights = game.map.get_lights_painter()
+
     game_map.prepare(screen)
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
@@ -55,6 +59,8 @@ def main():
             game.update()
 
         game_map.draw(screen, game.points)
+
+        lights.draw_empty(screen)
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()
