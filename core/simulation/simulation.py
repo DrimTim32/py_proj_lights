@@ -10,8 +10,8 @@ class Simulation:
         self.__lights_manager = lights_manager
 
         directions = [
-            RoadSizeVector(8, 2, 2),  # top
-            RoadSizeVector(8, 2, 2),  # left
+            RoadSizeVector(8, 3, 2),  # top
+            RoadSizeVector(8, 2, 3),  # left
             RoadSizeVector(8, 2, 2),  # bottom
             RoadSizeVector(8, 2, 2)  # right
         ]

@@ -18,6 +18,6 @@ class CarProperGenerator:
                     Car(direction, TurnDirection.STRAIGHT)]
         left = [None, None, None, None,
                 Car(direction, TurnDirection.LEFT)]
-        if direction in {0, 2} and lane in {1}:
-            return random.choice(straight)
+        if direction in {1} and lane in {0, 1}:
+            return random.choice(left)
         return None
