@@ -46,7 +46,7 @@ class FixedLightsManager:
             return True
         if phase.left_separated and lane.left_separated:
             return True
-        return True
+        return False
 
     def update(self):
         """
