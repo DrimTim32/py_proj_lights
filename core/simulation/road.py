@@ -79,6 +79,8 @@ class Road:
             if self.in_lanes[lane_index][i] is None:
                 self.in_lanes[lane_index][i] = self.in_lanes[lane_index][i - 1]
                 self.in_lanes[lane_index][i - 1] = None
+            else:
+                self.in_lanes[lane_index][i].waiting_time += 1
 
     def push_car_out(self, lane_index, car):
         """

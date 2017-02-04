@@ -2,6 +2,7 @@ from core.drawing.maps import create_map_painter
 from core.simulation.data_collector import DataCollector
 from core.simulation.enums import str_to_direction
 from core.simulation.intersection import Intersection, IntersectionProperties
+from core.simulation.lights_managers.lights_phase import LightsPhase
 from core.simulation.road import RoadSizeVector, get_empty_road
 
 
@@ -9,22 +10,10 @@ class Simulation:
     def __init__(self, car_generator, lights_manager):
         self.__car_generator = car_generator
         self.__lights_manager = lights_manager
-        self._data_collector = DataCollector()
+        self.__data_collector = DataCollector()
 
-        directions = [
-            RoadSizeVector(8, 3, 2),  # top
-            RoadSizeVector(8, 2, 3),  # left
-            RoadSizeVector(8, 2, 2),  # bottom
-            RoadSizeVector(8, 2, 2)  # right
-        ]
-        self.__roads = {
-            "top": get_empty_road(directions[0]),
-            "left": get_empty_road(directions[1]),
-            "bottom": get_empty_road(directions[2]),
-            "right": get_empty_road(directions[3])
-        }
-
-        self.__intersection = Intersection(IntersectionProperties(directions))
+        self.__lights_phases = Simulation.__create_lights_phases()
+        self.__roads, self.__intersection = Simulation.__create_roads_and_intersection()
 
         self.__map = create_map_painter(self.__intersection, self.__roads)
 
@@ -83,3 +72,23 @@ class Simulation:
     @property
     def map(self):
         return self.__map
+
+    @staticmethod
+    def __create_roads_and_intersection(direction=None):
+        directions = [
+            RoadSizeVector(8, 3, 2),  # top
+            RoadSizeVector(8, 2, 3),  # left
+            RoadSizeVector(8, 2, 2),  # bottom
+            RoadSizeVector(8, 2, 2)  # right
+        ]
+
+        roads = {"top": get_empty_road(directions[0]),
+                 "left": get_empty_road(directions[1]),
+                 "bottom": get_empty_road(directions[2]),
+                 "right": get_empty_road(directions[3])}
+
+        return roads, Intersection(IntersectionProperties(directions))
+
+    @staticmethod
+    def __create_lights_phases(phases=None):
+        return [LightsPhase(True, True, False, False)]
