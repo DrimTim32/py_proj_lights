@@ -1,10 +1,16 @@
+"""This file contains Point class"""
+
+
 class Position:
+    """ Point class represents and manipulates x,y coords. """
+
     def __init__(self, x, y):
+        """ Create a new point """
         self.x = x
         self.y = y
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __eq__(self, other):
         return self is other or (self.x == other.x and self.y == other.y)
@@ -22,6 +28,10 @@ class Position:
         return Position(self.x - other.x, self.y - other.y)
 
     def copy(self):
+        """
+        Creates new object with the same position
+        :rtype: Position
+        """
         return Position(self.x, self.y)
 
     def __neg__(self):
