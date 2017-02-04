@@ -1,9 +1,22 @@
+"""
+File containing Intersection class and supporting tools
+"""
+
 from core.simulation.car import Car
 from core.simulation.enums import Directions, TurnDirection
 
 
 class IntersectionProperties:
+    """
+    Class handling properties of intersection
+    """
+
     def __init__(self, directions):
+        """
+        initializes intersection proeprties from roads properties
+        :param directions: array of properties of roads
+        :type directions: list[RoadSizeVector]
+        """
         self.top = directions[0]
         self.left = directions[1]
         self.bottom = directions[2]
@@ -16,7 +29,16 @@ class IntersectionProperties:
 
 
 class Intersection:
+    """
+    Intersection class
+    """
+
     def __init__(self, properties):
+        """
+        Initialzes Intersection from properties
+        :param properties: properties of intersection
+        :type properties: IntersectionProperties
+        """
         self.__array_upper = [[0 for _ in range(properties.width)] for _ in range(properties.height)]
         self.__array_lower = [[0 for _ in range(properties.width)] for _ in range(properties.height)]
         self.__width = properties.width
@@ -24,11 +46,19 @@ class Intersection:
         self.__properties = properties
 
     def update(self):
+        """
+        Updates positions of cars on intersection
+        :return: none
+        """
         self.__update_right()
         self.__update_straight()
         self.__update_left()
 
     def __update_right(self):
+        """
+        updates positions of cars turning right
+        :return: none
+        """
         # top left quarter
         for row in range(self.__properties.left.out_lanes_count - 1, -1, -1):
             for col in range(self.__properties.top.in_lanes_count):
@@ -74,6 +104,10 @@ class Intersection:
                     self.__array_upper[row][col] = 0
 
     def __update_straight(self):
+        """
+        updates positions of cars going straight
+        :return: none
+        """
         orientation = self.__check_orientation()
         if orientation is None:
             return
@@ -114,6 +148,10 @@ class Intersection:
                         self.__array_upper[row][col] = 0
 
     def __update_left(self):
+        """
+        updates positions of cars turning left
+        :return: none
+        """
         orientation = self.__check_orientation()
         if orientation is None:
             return
@@ -150,6 +188,11 @@ class Intersection:
                     self.__array_lower[in_lane_base + i][0] = 0
 
     def __check_orientation(self):
+        """
+        Checks orientation of current lights phase
+        :return: orientation or none
+        :rtype int, None
+        """
         for row in self.__array_upper:
             for cell in row:
                 if isinstance(cell, Car):
@@ -157,6 +200,16 @@ class Intersection:
         return None
 
     def push_car(self, direction, lane, car):
+        """
+        Adds car from road to the intersection
+        :param direction: direction from which car is arriving
+        :param lane: lane from which car is ariving
+        :param car: Car
+        :type direction: Directions
+        :type lane: int
+        :type car: Car
+        :return: none
+        """
         if direction == Directions.TOP:
             self.__array_upper[0][lane] = car
         elif direction == Directions.LEFT:
@@ -173,6 +226,17 @@ class Intersection:
             self.__array_upper[lane][self.__width - 1] = car
 
     def pull_car(self, direction, lane, offset=0):
+        """
+        Removes car from intersection and returns it
+        :param direction: direction in which car is going
+        :param lane: lane in which car is going
+        :param offset: offset between lanes on intersection and lanes on road
+        :type direction: Directions
+        :type lane: int
+        :type offset: int
+        :return: car
+        :rtype: Car
+        """
         ret = 0
         if direction == Directions.TOP and self.__check_pull_top(lane):
             ret = self.__array_upper[0][self.__width - lane - 1]
@@ -189,24 +253,44 @@ class Intersection:
         return ret
 
     def __check_pull_top(self, lane):
+        """
+        :param lane: lane
+        :return: if there is a space on intersection for new car from top, lane number lane
+        :rtype: bool
+        """
         on_field = self.__array_upper[0][self.__width - lane - 1]
         if isinstance(on_field, Car) and on_field.destination == Directions.TOP:
             return True
         return False
 
     def __check_pull_left(self, lane):
+        """
+        :param lane: lane
+        :return: if there is a space on intersection for new car from left, lane number lane
+        :rtype: bool
+        """
         on_field = self.__array_upper[lane][0]
         if isinstance(on_field, Car) and on_field.destination == Directions.LEFT:
             return True
         return False
 
     def __check_pull_bottom(self, lane):
+        """
+        :param lane: lane
+        :return: if there is a space on intersection for new car from bottom, lane number lane
+        :rtype: bool
+        """
         on_field = self.__array_upper[self.__height - 1][lane]
         if isinstance(on_field, Car) and on_field.destination == Directions.BOTTOM:
             return True
         return False
 
     def __check_pull_right(self, lane):
+        """
+        :param lane: lane
+        :return: if there is a space on intersection for new car from right, lane number lane
+        :rtype: bool
+        """
         on_field = self.__array_upper[self.__height - 1 - lane][self.__width - 1]
         if isinstance(on_field, Car) and on_field.destination == Directions.RIGHT:
             return True
@@ -214,4 +298,7 @@ class Intersection:
 
     @property
     def array(self):
+        """
+        :return:Array of cars on intersection
+        """
         return self.__array_upper
