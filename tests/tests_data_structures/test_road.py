@@ -88,6 +88,8 @@ road_exceptions = [
     ([[], [[0, 0], [0, 0, 0]]], "in"),
     ([[[0, 0], [0, 0, 0]], []], "out"),
     ([[[0, 0, 0], [0, 0], [0, 0, 0]], []], "out"),
+    ([[[0, 0], [0, 0], [0, 0]], [[0, 0]]], "in and out"),
+    ([[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0]]], "in and out"),
 ]
 
 
@@ -95,7 +97,7 @@ road_exceptions = [
 def test_raise_constructor_exception(road_data, str_contains):
     with pytest.raises(ValueError) as excinfo:
         Road(road_data)
-    assert str_contains in str(excinfo.value)
+    assert str_contains in str(excinfo.value).lower()
 
 
 @pytest.mark.parametrize("road,expected_in_width,expected_out_width", [
@@ -149,16 +151,170 @@ def test_car_pull_push_in():
 def test_update_in_not_at_end():
     road = Road([
         [
-            [Car(0, 0), None, None],
-            [Car(1, 1), None, None],
-            [Car(2, 2), None, None]
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
         ],
         [
-            [Car(3, 3), None, None],
-            [Car(4, 4), None, None],
-            [Car(4, 4), None, None]
+            [Car(0, 0), None, None],
+            [None, None, None],
+            [Car(2, 2), None, None]
         ]
     ])
     road.update_in(0)
-
     assert road.in_lanes[0][0] is None and road.in_lanes[0][1] is not None and isinstance(road.in_lanes[0][1], Car)
+    road.update_in(1)
+    assert road.in_lanes[1][0] is None and road.in_lanes[1][1] is None
+    road.update_in(2)
+    assert road.in_lanes[2][0] is None and road.in_lanes[2][1] is not None and isinstance(road.in_lanes[2][1], Car)
+
+
+def test_update_in_middle():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ],
+        [
+            [None, Car(0, 0), None],
+            [None, None, None],
+            [None, Car(2, 2), None]
+        ]
+    ])
+    road.update_in(0)
+    road.update_in(1)
+    road.update_in(2)
+    print(road.in_lanes)
+    assert road.in_lanes[0][1] is None
+    assert road.in_lanes[0][2] is not None
+    assert isinstance(road.in_lanes[0][2], Car)
+    assert road.in_lanes[1][1] is None
+    assert road.in_lanes[1][2] is None
+    assert road.in_lanes[2][1] is None
+    assert road.in_lanes[2][2] is not None
+    assert isinstance(road.in_lanes[2][2], Car)
+
+
+def test_update_in_two():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ],
+        [
+            [Car(0, 0), Car(0, 0), None],
+            [None, None, None],
+            [Car(0, 0), Car(2, 2), None]
+        ]
+    ])
+    road.update_in(0)
+    assert road.in_lanes[0][1] is not None
+    assert isinstance(road.in_lanes[0][1], Car)
+    assert road.in_lanes[0][2] is not None
+    assert isinstance(road.in_lanes[0][2], Car)
+    road.update_in(1)
+    assert road.in_lanes[1][1] is None
+    assert road.in_lanes[1][2] is None
+    road.update_in(2)
+    assert road.in_lanes[2][1] is not None
+    assert isinstance(road.in_lanes[2][1], Car)
+    assert road.in_lanes[2][2] is not None
+    assert isinstance(road.in_lanes[2][2], Car)
+
+
+def test_update_in_at_end():
+    road = Road([
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ],
+        [
+            [None, None, Car(0, 0)],
+            [None, None, None],
+            [None, None, Car(2, 2)]
+        ]
+    ])
+    road.update_in(0)
+    assert road.in_lanes[0][2] is not None
+    assert isinstance(road.in_lanes[0][2], Car)
+    assert road.in_lanes[0][2].waiting_time == 1
+    road.update_in(1)
+    assert road.in_lanes[1][2] is None
+    road.update_in(2)
+    assert road.in_lanes[2][2] is not None
+    assert isinstance(road.in_lanes[2][2], Car)
+    assert road.in_lanes[2][2].waiting_time == 1
+    for _ in range(4):
+        road.update_in(0)
+        road.update_in(2)
+
+    assert road.in_lanes[0][2].waiting_time == 5
+    assert road.in_lanes[2][2].waiting_time == 5
+
+
+def test_update_out_at_end():
+    road = Road([
+        [
+            [None, None, Car(0, 0)],
+            [None, None, None],
+            [None, None, Car(0, 0)]
+        ],
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ]
+    ])
+    road.update_out()
+    assert road.out_lanes[0][2] is None
+    assert road.out_lanes[1][2] is None
+    assert road.out_lanes[2][2] is None
+
+
+def test_update_out_middle():
+    road = Road([
+        [
+            [None, Car(0, 0), None],
+            [None, None, None],
+            [None, Car(0, 0), None]
+        ],
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ]
+    ])
+    road.update_out()
+    assert road.out_lanes[0][2] is not None
+    assert isinstance(road.out_lanes[0][2], Car)
+    assert road.out_lanes[1][2] is None
+    assert road.out_lanes[2][2] is not None
+    assert isinstance(road.out_lanes[2][2], Car)
+
+
+def test_update_three():
+    road = Road([
+        [
+            [Car(0, 0), Car(1, 1), Car(0, 0)],
+            [None, None, None],
+            [None, None, None]
+        ],
+        [
+            [None, None, None],
+            [None, None, None],
+            [None, None, None]
+        ]
+    ])
+    print("Przed update", road.out_lanes)
+    road.update_out()
+    print("po update", road.out_lanes)
+    # assert road.out_lanes[0][0] is None
+    assert road.out_lanes[0][1] is not None
+    assert isinstance(road.out_lanes[0][1], Car)
+    assert road.out_lanes[0][1].source == 0
+    assert road.out_lanes[0][2] is not None
+    assert isinstance(road.out_lanes[0][2], Car)
+    assert road.out_lanes[0][2].source == 1
