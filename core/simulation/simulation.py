@@ -52,8 +52,8 @@ class Simulation:
                 if self.__lights_manager.is_green(str_to_direction(direction), lane_index):
                     if road.has_waiting_car(lane_index):
                         self.__intersection.push_car(str_to_direction(direction), lane_index, road.pull_car(lane_index))
-                    road.update_in(lane_index)
-                    road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
+                road.update_in(lane_index)
+                road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
 
     def calculate_offset(self, direction):
         pass
