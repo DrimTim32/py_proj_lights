@@ -2,7 +2,7 @@
 
 
 class Vector:
-    """ Point class represents and manipulates x,y coords. """
+    """ Vector class represents and manipulates x,y coords. """
 
     def __init__(self, x, y):
         """ Create a new point """
@@ -12,7 +12,7 @@ class Vector:
     def __mul__(self, other):
         if not isinstance(other, int):
             raise ValueError("Second multiplication object must be an int")
-        return Vector(self.x * 2, self.y * 2)
+        return Vector(self.x * other, self.y * other)
 
     def __ne__(self, other):
         return not self == other
