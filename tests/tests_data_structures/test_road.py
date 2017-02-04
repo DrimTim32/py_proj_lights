@@ -1,8 +1,8 @@
-import pytest
 import numpy as np
+import pytest
 
-from core.simulation.road import get_empty_road, RoadSizeVector, Road
 from core.simulation.car import Car
+from core.simulation.road import get_empty_road, RoadSizeVector, Road
 
 empty_roads_data = [
     (RoadSizeVector(1, 1, 1), [[[None]], [[None]]]),
@@ -311,7 +311,7 @@ def test_update_three():
     print("Przed update", road.out_lanes)
     road.update_out()
     print("po update", road.out_lanes)
-    # assert road.out_lanes[0][0] is None
+    assert road.out_lanes[0][0] is None
     assert road.out_lanes[0][1] is not None
     assert isinstance(road.out_lanes[0][1], Car)
     assert road.out_lanes[0][1].source == 0
