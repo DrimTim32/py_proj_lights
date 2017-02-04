@@ -5,7 +5,7 @@ from core.drawing.drawing_consts import GREEN, RED
 from collections import namedtuple
 
 """Structure for lists of colors"""
-RoadSizeVector = namedtuple('ColorsVector', ['top', 'left', 'bottom', 'right'])
+RoadColorsVector = namedtuple('ColorsVector', ['top', 'left', 'bottom', 'right'])
 
 
 class LightsPainter:
@@ -41,7 +41,7 @@ class LightsPainter:
 
         :param screen:
         :param array:
-        :type array: list[tuple[tuple(int,int,int),int]]
+        :type colors_vector: RoadColorsVector
         :return:
         """
         draw_circle(screen, self.__top_location, LIGHT_RADIUS)
@@ -51,7 +51,7 @@ class LightsPainter:
 
         :param screen:
         :param array:
-        :type array: list[tuple[tuple(int,int,int),int]]
+        :type colors_vector: RoadColorsVector
         :return:
         """
         curr_location = self.__left_location.copy()
@@ -64,7 +64,7 @@ class LightsPainter:
 
         :param screen:
         :param array:
-        :type array: list[tuple[tuple(int,int,int),int]]
+        :type colors_vector: RoadColorsVector
         :return:
         """
         curr_location = self.__bottom_location.copy()
@@ -77,7 +77,7 @@ class LightsPainter:
 
         :param screen:
         :param array:
-        :type array: list[tuple[tuple(int,int,int),int]]
+        :type colors_vector: RoadColorsVector
         :return:
         """
         draw_circle(screen, self.__right_location, LIGHT_RADIUS)
@@ -87,6 +87,6 @@ class LightsPainter:
         Draws all lights
         :param screen:
         :param colors_vector:
-        :type colors_vector: RoadSizeVector
+        :type colors_vector: RoadColorsVector
         :return:
         """
