@@ -19,13 +19,12 @@ def read_configuration():
 def entrypoint():
     configuration = read_configuration()
 
-
 def main():
-    #   try:
-    #        entrypoint()
-    #   except Exception as e:
-    #      print("{0}, message : {1}".format(sys.stderr, e))
-    #     return 2
+      # try:
+      #      entrypoint()
+      # except Exception as e:
+      #   print("{0}, message : {1}".format(sys.stderr, e))
+      #   return 2
 
     pygame.init()
 
