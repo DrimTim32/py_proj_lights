@@ -39,7 +39,9 @@ class Road:
                 lane[i] = lane[i - 1]
 
     def update_in(self):
-        pass
+        for lane_index in range(self.in_width):
+            lane = self.in_lanes[lane_index
+            ]
 
     def push_car(self, lane_index, car):
         self.out_lanes[lane_index][0] = car
