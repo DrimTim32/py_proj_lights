@@ -29,6 +29,7 @@ class Simulation:
         self.__lights_manager.update()
         self.__update_in()
         print(self.__lights_manager.current_phase)
+        print(self.__data_collector.data)
 
     def __update_out(self):
         for direction in self.__roads.keys():
