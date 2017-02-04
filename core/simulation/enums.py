@@ -14,6 +14,11 @@ class TurnDirection(IntEnum):
     LEFT = 3
 
 
+class Orientation(IntEnum):
+    VERTICAL = 0
+    HORIZONTAL = 1
+
+
 def str_to_direction(direction_str):
     if direction_str == "top":
         return Directions.TOP

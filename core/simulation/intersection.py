@@ -5,7 +5,7 @@ File containing Intersection class and supporting tools
 import numpy as np
 
 from core.simulation.car import Car
-from core.simulation.enums import Directions, TurnDirection
+from core.simulation.enums import Directions, TurnDirection, Orientation
 
 
 class IntersectionProperties:
@@ -126,7 +126,7 @@ class Intersection:
         orientation = self.__check_orientation()
         if orientation is None:
             return
-        if orientation == 0:
+        if orientation == Orientation.VERTICAL:
             self.__update_straight_vertical()
         else:
             self.__update_straight_horizontal()
@@ -182,7 +182,7 @@ class Intersection:
         orientation = self.__check_orientation()
         if orientation is None:
             return
-        if orientation == 0:
+        if orientation == Orientation.VERTICAL:
             self.__update_left_vertical()
         else:
             self.__update_left_horizontal()
