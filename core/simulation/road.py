@@ -48,9 +48,11 @@ class Road:
         :type road_list list[list[list[Car]]]
         """
         if len(road_list[0]) != 0 and len(min(road_list[0], key=len)) != len(max(road_list[0], key=len)):
-            raise ValueError("Out lanes are not equal")
+            raise ValueError("all out lanes must have equal length")
         if len(road_list[1]) != 0 and len(min(road_list[1], key=len)) != len(max(road_list[1], key=len)):
-            raise ValueError("In lanes are not equal")
+            raise ValueError("all in lanes must have equal length")
+        if len(road_list[0])!= len(road_list[1]):
+            raise ValueError("In and Out lanest must have equal length")
         self.out_lanes = road_list[0]
         self.in_lanes = road_list[1]
 
