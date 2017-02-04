@@ -1,4 +1,5 @@
 from core.drawing.maps import create_map_painter
+from core.simulation.data_collector import DataCollector
 from core.simulation.enums import str_to_direction
 from core.simulation.intersection import Intersection, IntersectionProperties
 from core.simulation.road import RoadSizeVector, get_empty_road
@@ -8,6 +9,7 @@ class Simulation:
     def __init__(self, car_generator, lights_manager):
         self.__car_generator = car_generator
         self.__lights_manager = lights_manager
+        self._data_collector = DataCollector()
 
         directions = [
             RoadSizeVector(8, 3, 2),  # top
