@@ -24,10 +24,6 @@ def get_empty_road(size_vector):
 
 class Road:
     def __init__(self, road_array):
-        if len(road_array[0]) != 0 and len(min(road_array[0], key=len)) != len(max(road_array[0], key=len)):
-            raise ValueError("Out lanes are not equal")
-        if len(road_array[1]) != 0 and len(min(road_array[1], key=len)) != len(max(road_array[1], key=len)):
-            raise ValueError("In lanes are not equal")
         self.out_lanes = road_array[0]
         self.in_lanes = road_array[1]
 
