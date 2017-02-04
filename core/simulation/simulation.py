@@ -2,7 +2,7 @@ from core.drawing.maps import create_map_painter
 from core.simulation.data_collector import DataCollector
 from core.simulation.enums import str_to_direction, Orientation
 from core.simulation.intersection import Intersection, IntersectionProperties
-from core.simulation.lights_managers.lights_phase import LightsPhase, LightsPhaseDirections
+from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 from core.simulation.road import RoadSizeVector, get_empty_road
 
 
@@ -24,11 +24,11 @@ class Simulation:
 
     def update(self):
         """Updates whole object"""
-        self.__lights_manager.update()
         self.__update_out()
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
+        print(self.__lights_manager.current_phase)
 
     def __update_out(self):
         for direction in self.__roads.keys():
@@ -77,8 +77,8 @@ class Simulation:
     @staticmethod
     def __create_roads_and_intersection(direction=None):
         directions = [
-            RoadSizeVector(16, 3, 2),  # top
-            RoadSizeVector(16, 2, 3),  # left
+            RoadSizeVector(16, 2, 2),  # top
+            RoadSizeVector(16, 2, 2),  # left
             RoadSizeVector(16, 2, 2),  # bottom
             RoadSizeVector(16, 2, 2)  # right
         ]
@@ -92,7 +92,7 @@ class Simulation:
 
     @staticmethod
     def __create_lights_phases(phases=None):
-        return [LightsPhase(LightsPhaseDirections(True, True, False, False), Orientation.VERTICAL, 40),
-                LightsPhase(LightsPhaseDirections(False, False, True, False), Orientation.VERTICAL, 40),
-                LightsPhase(LightsPhaseDirections(True, True, False, False), Orientation.HORIZONTAL, 40),
-                LightsPhase(LightsPhaseDirections(False, False, True, False), Orientation.HORIZONTAL, 40)]
+        return [LightsPhase(DirectionsInfo(True, True, False, False), Orientation.VERTICAL, 20),
+                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, 20),
+                LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, 20),
+                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, 20)]
