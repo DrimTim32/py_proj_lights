@@ -8,8 +8,8 @@ import pygame
 from core.data_structures import Vector
 from core.drawing.drawing_consts import WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
-from core.drawing.lights_painter import LightsPainter
 from core.drawing.drawing_helpers import draw_car, draw_line
+from core.drawing.lights_painter import LightsPainter
 
 # region named tuples
 PointsPair = namedtuple('PointsPair', ['start', 'end'])
@@ -171,8 +171,6 @@ def create_map_painter(intersection, roads):
     :type roads: dict[str,RoadSizeVector]
     """
 
-    board = intersection.array
-
     __offset = MaxOffset(
         int(max(roads["top"].width * WIDTH_MULTIPLIER, roads["bottom"].width * WIDTH_MULTIPLIER) / 2),
         int(max(roads["left"].width * WIDTH_MULTIPLIER, roads["right"].width * WIDTH_MULTIPLIER) / 2))
@@ -183,7 +181,7 @@ def create_map_painter(intersection, roads):
     points = calculate_points(__middle, roads, __offset)  # type: PointsQuadruple
     _vector_calculator = _MapVectorsCalculator(points)  # type: _MapVectorsCalculator
 
-    return MapPainter(points.left.outside.start, board, _vector_calculator, points)
+    return MapPainter(points.left.outside.start, intersection, _vector_calculator, points)
 
 
 class MapPainter:
@@ -191,19 +189,23 @@ class MapPainter:
     Draws map
     """
 
-    def __init__(self, board_start_point, board, vectors_calculator, points):
+    def __init__(self, board_start_point, intersection, vectors_calculator, points):
         """
 
         :param board_start_point:
-        :param board:
+        :param intersection:
         :param vectors_calculator:
         :param points:
         :type points : PointsQuadruple
         """
         self.board_start_point = board_start_point
-        self.board = board
+        self.__intersecion = intersection
         self._vector_calculator = vectors_calculator
         self.border_points = points  # type : PointsQuadruple
+
+    @property
+    def board(self):
+        return self.__intersecion.array
 
     def get_lights_painter(self):
         top, left, down, right = self.border_points
