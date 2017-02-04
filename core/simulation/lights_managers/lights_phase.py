@@ -1,9 +1,9 @@
 """
-File containing LightsPhase namedtuple and supporting tools
+File containing LightsPhase class and supporting tools
 """
 from collections import namedtuple
 
-LightsPhaseDirections = namedtuple('LightsPhase', ['right', 'straight', 'left', 'left_separated'])
+DirectionsInfo = namedtuple('DirectionsInfo', ['right', 'straight', 'left', 'left_separated'])
 
 
 class LightsPhase:
@@ -17,7 +17,7 @@ class LightsPhase:
         :param directions: phase properties
         :param orientation: orientation of driving during phase
         :param duration: duration time of phase
-        :type directions: LightsPhaseDirections
+        :type directions: DirectionsInfo
         :type orientation: Orientation
         :type duration: int
         """
@@ -50,7 +50,7 @@ class LightsPhase:
         :return: if phase serves left turn
         :rtype: bool
         """
-        return self.left
+        return self.__left
 
     @property
     def left_separated(self):
@@ -58,7 +58,7 @@ class LightsPhase:
         :return: if phase serves separated left turn
         :rtype: bool
         """
-        return self.left_separated
+        return self.__left_separated
 
     @property
     def orientation(self):
@@ -66,7 +66,7 @@ class LightsPhase:
         :return: orientation of driving during phase
         :rtype: Orientation
         """
-        return self.orientation
+        return self.__orientation
 
     @property
     def duration(self):
@@ -74,7 +74,7 @@ class LightsPhase:
         :return: phase duration
         :rtype: int
         """
-        return self.duration
+        return self.__duration
 
     @duration.setter
     def duration(self, new_duration):
