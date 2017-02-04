@@ -58,3 +58,50 @@ def test_yielding_second_indexes(vector, expected):
     output = [(x, y) for (x, y) in vector.in_indexes]
     assert len(output) == len(expected), "{0}".format(expected)
     assert output == expected
+
+
+road_len_parameters = [
+    (Road([[], []]), 0),
+    (Road([[], [[0]]]), 1),
+    (Road([[[0]], [[0]]]), 1),
+    (Road([[], [[0, 0]]]), 2),
+    (Road([[], [[0, 0], [0, 0]]]), 2),
+    (Road([[[0, 0], [0, 0]], [[0, 0], [0, 0]]]), 2),
+    (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0], [0, 0]]]), 3),
+]
+
+
+@pytest.mark.parametrize("road,expected_len", road_len_parameters)
+def test_len(road, expected_len):
+    assert road.length == expected_len
+
+
+road_width_parameters = [
+    (Road([[], []]), 0),
+    (Road([[], [[0]]]), 1),
+    (Road([[[0]], [[0]]]), 2),
+    (Road([[], [[0, 0]]]), 1),
+    (Road([[], [[0, 0], [0, 0]]]), 2),
+    (Road([[[0, 0], [0, 0]], [[0, 0], [0, 0]]]), 4),
+    (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0], [0, 0]]]), 5),
+]
+
+
+@pytest.mark.parametrize("road,expected_with", road_width_parameters)
+def test_with(road, expected_with):
+    assert road.width == expected_with
+
+
+road_exceptions = [
+    ([[], [[0, 0], [0]]], "In"),
+    ([[], [[0, 0], [0, 0, 0]]], "In"),
+    ([[[0, 0], [0, 0, 0]], []], "Out"),
+    ([[[0, 0, 0], [0, 0], [0, 0, 0]], []], "Out"),
+]
+
+
+@pytest.mark.parametrize("road_data,str_contains", road_exceptions)
+def test_raise_constructor_exception(road_data, str_contains):
+    with pytest.raises(ValueError) as excinfo:
+        Road(road_data)
+    assert str_contains in str(excinfo.value)

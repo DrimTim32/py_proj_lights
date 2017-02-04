@@ -40,6 +40,7 @@ def main():
 
     game = Game(car_generator, lights_manager)
     game_map = game.map
+    lights = game.map.get_lights_painter()
     game_map.prepare(screen)
     while not done:
         if pygame.key.get_pressed()[pygame.K_ESCAPE]:
@@ -55,7 +56,7 @@ def main():
             game.update()
 
         game_map.draw(screen, game.points)
-
+        lights.draw_empty(screen)
         pygame.time.Clock().tick(60)
         pygame.display.flip()
     sys.exit()

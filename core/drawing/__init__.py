@@ -1,2 +1,2 @@
-from .maps import MapPainter,Position
+from .maps import MapPainter,Vector
 
