@@ -51,7 +51,7 @@ class Road:
             raise ValueError("all out lanes must have equal length")
         if len(road_list[1]) != 0 and len(min(road_list[1], key=len)) != len(max(road_list[1], key=len)):
             raise ValueError("all in lanes must have equal length")
-        if len(road_list[0])!= len(road_list[1]):
+        if len(road_list[0]) != len(road_list[1]):
             raise ValueError("In and Out lanest must have equal length")
         self.out_lanes = road_list[0]
         self.in_lanes = road_list[1]
@@ -70,6 +70,7 @@ class Road:
             lane = self.out_lanes[lane_index]
             for i in range(self.__len__() - 1, 0, -1):
                 lane[i] = lane[i - 1]
+            lane[0] = None
 
     def update_in(self, lane_index):
         """

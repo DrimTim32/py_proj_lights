@@ -43,7 +43,9 @@ class Simulation:
             for lane_index in range(road.in_width):
                 if self.__lights_manager.is_green(str_to_direction(direction), lane_index):
                     if road.has_waiting_car(lane_index):
-                        self.__intersection.push_car(str_to_direction(direction), lane_index, road.pull_car(lane_index))
+                        car = road.pull_car(lane_index)
+                        self.__data_collector.register(car, lane_index, self.__lights_manager.current_phase)
+                        self.__intersection.push_car(str_to_direction(direction), lane_index, car)
                 road.update_in(lane_index)
                 road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
 

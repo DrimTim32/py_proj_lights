@@ -17,7 +17,7 @@ class FixedLightsManager:
         :type phases: list[LightsPhase]
         :type lanes_info: LanesData
         """
-        self.current_phase = -1
+        self.__current_phase = -1
         self.__previous_phase = -1
         self.__no_phase_time = 9
         self.__last_phase_change = 0
@@ -31,10 +31,9 @@ class FixedLightsManager:
         :return: if light is green on given lane in given direction
         :rtype: bool
         """
-
         phase = self.__phases[self.current_phase]
         lane = self.__lanes_info[direction.__str__()][lane_index]
-        if self.current_phase == -1:
+        if self.__current_phase == -1:
             return False
         if FixedLightsManager.__check_orientation(direction) == phase.orientation:
             return False
@@ -55,18 +54,32 @@ class FixedLightsManager:
         """
         if self.current_phase == -1:
             if self.__last_phase_change == self.__no_phase_time:
-                self.current_phase = (self.__previous_phase + 1) % len(self.__phases)
+                self.__current_phase = (self.__previous_phase + 1) % len(self.__phases)
                 self.__last_phase_change = 0
             else:
                 self.__last_phase_change += 1
         else:
             if self.__last_phase_change == self.__phases[self.current_phase].duration:
                 self.__previous_phase = self.current_phase
-                self.current_phase = -1
+                self.__current_phase = -1
                 self.__last_phase_change = 0
             else:
                 self.__last_phase_change += 1
 
     @staticmethod
     def __check_orientation(direction):
+        """
+        :param direction: checks orientation of given direction
+        :type direction: Direction
+        :return: orientation
+        :rtype: Orientation
+        """
         return Orientation(direction % 2)
+
+    @property
+    def current_phase(self):
+        """
+        :return: cuurent phase
+        :rtype: int
+        """
+        return self.__current_phase
