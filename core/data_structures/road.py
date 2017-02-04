@@ -32,9 +32,32 @@ class Road:
         in_len = 0 if len(self.in_lanes) == 0 else len(self.in_lanes[0])
         return max(in_len, out_len)
 
+    def update_out(self):
+        for lane_index in range(self.out_width):
+            lane = self.out_lanes[lane_index]
+            for i in range(self.__len__() - 1, 0, -1):
+                lane[i] = lane[i - 1]
+
+    def update_in(self):
+        pass
+
+    def push_car(self, lane_index, car):
+        self.out_lanes[lane_index][0] = car
+
+    def pull_car(self, lane):
+        pass
+
     @property
     def length(self):
         return self.__len__()
+
+    @property
+    def out_width(self):
+        return len(self.out_lanes)
+
+    @property
+    def in_width(self):
+        return len(self.in_lanes)
 
     @property
     def width(self):

@@ -18,6 +18,7 @@ class IntersectionProperties:
 class Intersection:
     def __init__(self, properties):
         self.array = [[0 for _ in range(properties.width)] for _ in range(properties.height)]
+        self.array_2 = [[0 for _ in range(properties.width)] for _ in range(properties.height)]
         self.width = properties.width
         self.height = properties.height
         self.properties = properties
@@ -88,7 +89,7 @@ class Intersection:
 
             # right half
             for row in range(self.height):
-                for col in range(self.width - self.properties.top.in_lanes_count, self.width):
+                for col in range(self.width - self.properties.bottom.in_lanes_count, self.width):
                     on_field = self.array[row][col]
                     if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
                         self.array[row - 1][col] = on_field
@@ -163,7 +164,7 @@ class Intersection:
         else:  # RIGHT
             self.array[lane][self.width - 1] = car
 
-    def pull_car(self, direction, lane):
+    def pull_car(self, direction, lane, offset=0):
         ret = 0
         if direction == Directions.TOP and self.__check_pull_top(lane):
             ret = self.array[0][self.width - lane - 1]
