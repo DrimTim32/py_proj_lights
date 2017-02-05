@@ -28,6 +28,13 @@ class LightsPhase:
         self.__orientation = orientation  # type : Orientation
         self.__duration = duration  # type : int
 
+    def __repr__(self):
+        return str(self.right) + str(self.straight) + str(self.left) + str(self.left_separated) + str(self.orientation)
+
+    def __eq__(self, other):
+        return (self.__right == other.right or self.__straight == other.straight) and self.__left == other.left and \
+               self.left_separated == other.left_separated and self.__orientation == other.orientation
+
     @property
     def right(self):
         """

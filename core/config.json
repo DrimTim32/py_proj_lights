@@ -92,7 +92,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.01,
+              "Probability": 0.0,
               "Safe": true
             }
           ]
@@ -122,7 +122,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.0,
+              "Probability": 0.1,
               "Safe": true
             }
           ]

@@ -60,17 +60,20 @@ class Simulation:
         :rtype: int
         """
         in_direction_str = direction.__str__()
-        out_direction_str = (direction % 4).__str__()
+        out_direction_str = Directions((direction + 2) % 4).__str__()
         diff = self.__roads[in_direction_str].in_width - self.__roads[out_direction_str].out_width
-        if diff <= 0:
-            print(0)
-            return 0
-        offset = diff
-
         return 0
 
-    def set_lights_phases(self, new_phases):
-        self.__lights_manager.phases = new_phases
+    def set_phases_durations(self, new_durations):
+        """
+        sets new duration of lights phases
+        :param new_durations: new durations
+        :type new_durations: list[int]
+        :return: none
+        """
+        for phase_id in range(len(self.__lights_manager.phases)):
+            phase = self.__lights_manager.phases[phase_id]
+            phase.duration = new_durations[phase_id]
 
     def get_lights(self):
         lights = {Directions.TOP: [],
@@ -157,8 +160,16 @@ class Simulation:
             direction = directions_turns[direction_id]
             for lane in direction:
                 turns = Simulation.check_turns(lane)
-                phases.append(LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
-                                          Simulation.__check_orientation(direction_id), 20))
+                phase = LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
+                                    Simulation.__check_orientation(direction_id), 20)
+                is_new_phase = True
+                for existing_phase in phases:
+                    if phase == existing_phase:
+                        is_new_phase = False
+                        break
+                if is_new_phase:
+                    phases.append(phase)
+        print(phases)
         return phases
 
     @staticmethod
