@@ -1,3 +1,4 @@
+"""This file contains Config class"""
 import json
 
 
@@ -5,8 +6,8 @@ class Config:
     """
     Configuration class
     """
-    def __init__(self, numberOfDirections, directions, norm, variance, importance):
-        self.numberOfDirections = numberOfDirections
+    def __init__(self, number_of_directions, directions, norm, variance, importance):
+        self.number_of_directions = number_of_directions
         self.directions = directions
         self.norm = norm
         self.variance = variance
