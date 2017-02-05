@@ -99,6 +99,12 @@ class Simulation:
 
     @staticmethod
     def __create_roads_and_intersection(directions_lanes, roads_length):
+        """
+        :param directions_lanes: information about number of lanes
+        :param roads_length: roads length
+        :return: roads and intersection
+        :rtype: dict[str, Road], Intersection
+        """
         directions_properties = [None, None, None, None]
         for direction_id in directions_lanes.keys():
             direction = directions_lanes[direction_id]
@@ -115,6 +121,11 @@ class Simulation:
 
     @staticmethod
     def __create_lights_phases(directions_turns):
+        """
+        :param directions_turns: information about directions
+        :return: lights phases
+        :rtype: list[LightsPhase]
+        """
         phases = []
         for direction_id in directions_turns.keys():
             direction = directions_turns[direction_id]
@@ -126,6 +137,11 @@ class Simulation:
 
     @staticmethod
     def __create_lanes_info(directions_turns=None):
+        """
+        :param directions_turns: information about directions
+        :return: lanes info
+        :rtype: dict[str, list[DirectionsInfo]]
+        """
         lanes_info = {"top": [],
                       "left": [],
                       "bottom": [],
@@ -140,6 +156,11 @@ class Simulation:
 
     @staticmethod
     def check_turns(lane):
+        """
+        :param lane: lane data from config
+        :return: possible turn direction from lane
+        :rtype: list[bool]
+        """
         turns = [False, False, False, False]
         for turn_direction in lane.keys():
             if turn_direction == 3 and lane[turn_direction][1]:
@@ -150,6 +171,11 @@ class Simulation:
 
     @staticmethod
     def create_probability_info(directions_turns):
+        """
+        :param directions_turns: information about directions
+        :return: probabilities for car generation
+        :rtype: dict[str,list[list[float]]]
+        """
         pass
 
     @staticmethod
