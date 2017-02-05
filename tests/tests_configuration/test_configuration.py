@@ -3,7 +3,7 @@ import os
 import pytest
 
 from core.configuration import config
-
+from core.configuration.config import SimulationData
 norm = "euclidean"
 variance = "variance"
 importance = "log"
@@ -133,9 +133,13 @@ file_json = """{
     }
   ],
   "roads_length": 16,
-  "norm": "euclidean",
-  "variance": "variance",
-  "importance": "log"
+  "simulation_data": {
+    "norm": "euclidean",
+    "variance": "variance",
+    "importance": "log",
+    "step_count": "500",
+    "simulation_count": "300"
+  }
 }"""
 
 def test_reading_from_file():
@@ -144,9 +148,6 @@ def test_reading_from_file():
     text_file.close()
     configuration = config.Config.from_config_file("test.json")
     assert configuration.roads_length == roads_length
-    assert configuration.norm == norm
-    assert configuration.variance == variance
-    assert configuration.importance == importance
     assert configuration.directions_lanes == {0: [2, 2], 1: [2, 2], 2: [2, 2], 3: [2, 2]}
     assert configuration.directions_turns == {0: [{1: [0.1, False], 2: [0.01, False]}, {3: [0.01, True]}], 1: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, False]}], 2: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}], 3: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}]}
 

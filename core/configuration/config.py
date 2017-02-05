@@ -16,7 +16,6 @@ class Config:
         """
         :type simulation_data : SimulationData
         """
-        # TODO : Documentation
         self.__directions = directions
         self.__roads_length = roads_length
         self.__simulation_data = simulation_data
@@ -31,7 +30,8 @@ class Config:
         """
         file = open(file_name)
         data = json.load(file)
-        return Config(data['directions'], data['roads_length'], data['simulation_data'])
+        print(data)
+        return Config(data['directions'], data['roads_length'],data['simulation_data'])
 
     @property
     def directions_lanes(self):
