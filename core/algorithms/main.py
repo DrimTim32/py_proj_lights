@@ -28,17 +28,20 @@ class Optimizer:
 
     @staticmethod
     def generate_start_lights(count):
-        return [20]*count
+        return [20] * count
 
     def simulate(self):
         simulation = Simulation(self.car_generator, self.lights_manager, self.config)
-        lights = simulation.current_data
-        print(lights)
-        times = Optimizer.generate_start_lights(4)
+        simulation.set_phases_durations(Optimizer.generate_start_lights(simulation.get_number_of_phases()))
+        N = 500
+        times, best_times, = [30] * 4, [30] * 4
+        best_norm = 99999999999
+        best_cars, best_wait = 0, 0
 
 
 opt = Optimizer("../config.json")
 opt.simulate()
+
 
 def norm(vector):
     from numpy.linalg import norm
@@ -129,4 +132,3 @@ def main():
         file.write("Car sum {}, sum wait {}, norm {}\n".format(best_cars, best_wait, best_norm))
         file.write("New times {}\n".format(best_times))
         file.write("Experiment took {}".format(end - start))
-
