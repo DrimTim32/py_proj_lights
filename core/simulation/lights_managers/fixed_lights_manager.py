@@ -21,7 +21,7 @@ class FixedLightsManager:
         self.__previous_phase = -1
         self.__no_phase_time = 9
         self.__last_phase_change = 0
-        self.__phases = phases
+        self.phases = phases
         self.__lanes_info = lanes_info
 
     def is_green(self, direction, lane_index):
@@ -31,7 +31,7 @@ class FixedLightsManager:
         :return: if light is green on given lane in given direction
         :rtype: bool
         """
-        phase = self.__phases[self.current_phase]
+        phase = self.phases[self.current_phase]
         lane = self.__lanes_info[direction.__str__()][lane_index]
         if self.__current_phase == -1:
             return False
@@ -54,12 +54,12 @@ class FixedLightsManager:
         """
         if self.current_phase == -1:
             if self.__last_phase_change == self.__no_phase_time:
-                self.__current_phase = (self.__previous_phase + 1) % len(self.__phases)
+                self.__current_phase = (self.__previous_phase + 1) % len(self.phases)
                 self.__last_phase_change = 0
             else:
                 self.__last_phase_change += 1
         else:
-            if self.__last_phase_change == self.__phases[self.current_phase].duration:
+            if self.__last_phase_change == self.phases[self.current_phase].duration:
                 self.__previous_phase = self.current_phase
                 self.__current_phase = -1
                 self.__last_phase_change = 0

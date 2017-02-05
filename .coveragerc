@@ -27,7 +27,7 @@ exclude_lines =
     if __name__ == .__main__.:
 
     # private methods
-
+    
 ignore_errors = False
 precision = 2
 

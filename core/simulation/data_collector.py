@@ -14,7 +14,7 @@ class LanePhaseData:
         return self.total_waiting_time / self.car_count
 
     def __repr__(self):
-        return '<<' + str(self.car_count) + " " + str(self.lane_identifier) + " " + str(self.total_waiting_time) + '>>'
+        return '|' + str(self.car_count) + " " + str(self.average_waiting_time) + '|'
 
 
 class DataCollector:
@@ -52,7 +52,7 @@ class DataCollector:
                     i += 1
                 if i == len(phase):
                     DataCollector._add_new_dataset(phase, lane_identifier, car)
-                print(phase)
+                # print(phase)
                 break
 
     @staticmethod

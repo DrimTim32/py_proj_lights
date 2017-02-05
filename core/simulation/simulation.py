@@ -12,7 +12,7 @@ class Simulation:
 
         self.__data_collector = DataCollector()
 
-        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(), Simulation.__create_lanes_data())
+        self.lights_manager = lights_manager(Simulation.__create_lights_phases(), Simulation.__create_lanes_data())
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection()
 
         self.__map = create_map_painter(self.__intersection, self.__roads)
@@ -22,14 +22,17 @@ class Simulation:
         """Returns all points [top, left, bottom, right]"""
         return [self.top, self.left, self.bottom, self.right]
 
+    def get_current_data(self):
+        return self.__data_collector.data
+
     def update(self):
         """Updates whole object"""
         self.__update_out()
         self.__intersection.update()
-        self.__lights_manager.update()
+        self.lights_manager.update()
         self.__update_in()
-        print(self.__lights_manager.current_phase)
-        print(self.__data_collector.data)
+        #print(self.__lights_manager.current_phase)
+        #print(self.__data_collector.data)
 
     def __update_out(self):
         for direction in self.__roads.keys():
@@ -42,10 +45,10 @@ class Simulation:
         for direction in self.__roads.keys():
             road = self.__roads[direction]
             for lane_index in range(road.in_width):
-                if self.__lights_manager.is_green(str_to_direction(direction), lane_index):
+                if self.lights_manager.is_green(str_to_direction(direction), lane_index):
                     if road.has_waiting_car(lane_index):
                         car = road.pull_car(lane_index)
-                        self.__data_collector.register(car, lane_index, self.__lights_manager.current_phase)
+                        self.__data_collector.register(car, lane_index, self.lights_manager.current_phase)
                         self.__intersection.push_car(str_to_direction(direction), lane_index, car)
                 road.update_in(lane_index)
                 road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
