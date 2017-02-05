@@ -1,14 +1,8 @@
-import sys
-from time import clock
-
-import pygame
-
 from core.configuration import config
+from core.data_structures.enums import Orientation
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import FixedLightsManager
-from core.simulation.data_collector import LanePhaseData
-from core.data_structures.enums import Orientation
+from core.simulation.lights_managers import LightsManager
 from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 
 
@@ -21,12 +15,10 @@ def entrypoint():
     configuration = read_configuration()
 
 
-from statistics import variance
 from math import log, sqrt
 
 
 def norm(vector):
-    import numpy
     from numpy.linalg import norm
     return norm(vector)
 
@@ -42,8 +34,6 @@ def get_lights(times):
 import random
 
 import operator
-import math
-from math import sin
 import time
 
 
@@ -65,7 +55,7 @@ def calcule_function(car_count, wait_count):
 
 def main():
     car_generator = CarProperGenerator
-    lights_manager = FixedLightsManager
+    lights_manager = LightsManager
     N = 500
     times, best_times, = [30] * 4, [30] * 4
     best_norm = 99999999999

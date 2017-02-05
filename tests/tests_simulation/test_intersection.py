@@ -1,7 +1,7 @@
-from core.simulation.intersection import Intersection, IntersectionProperties
-from core.simulation.road import RoadSizeVector
 from core.data_structures.enums import Directions, TurnDirection
 from core.simulation.car import Car
+from core.simulation.intersection import Intersection, IntersectionProperties
+from core.simulation.road import RoadSizeVector
 
 
 def test_one_car_update():
@@ -17,6 +17,7 @@ def test_one_car_update():
         assert intersection[9][q + 1] == 1
         intersection.update()
     print(intersection.array)
+
 
 def test_few_car_update():
     road = [RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5)]

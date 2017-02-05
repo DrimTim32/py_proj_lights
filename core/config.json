@@ -14,7 +14,7 @@
             },
             {
               "Direction": 2,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -23,7 +23,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": true
             }
           ]
@@ -39,12 +39,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -53,7 +53,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -69,12 +69,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -83,7 +83,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": true
             }
           ]
@@ -99,12 +99,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -113,7 +113,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.03,
+              "Probability": 0.01,
               "Safe": true
             }
           ]
