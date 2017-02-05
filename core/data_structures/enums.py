@@ -7,8 +7,8 @@ class Directions(IntEnum):
     BOTTOM = 2
     RIGHT = 3
 
-    def __mod__(self, other):
-        return Directions((other.value + 2) % 4)
+    # def __mod__(self, other):
+    #     return Directions((other.value + 2) % 4)
 
     def __str__(self):
         return self.name.lower()

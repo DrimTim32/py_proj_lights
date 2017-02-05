@@ -67,7 +67,7 @@ class Simulation:
             return 0
         offset = diff
 
-        return offset
+        return 0
 
     def set_lights_phases(self, new_phases):
         self.__lights_manager.phases = new_phases
@@ -214,7 +214,7 @@ class Simulation:
                 lane_probabilities = direction_probabilities[-1]
                 for turn_direction in lane.keys():
                     lane_probabilities[turn_direction - 1] = lane[turn_direction][0]
-        #print(probabilities)
+        # print(probabilities)
         return probabilities
 
     @staticmethod

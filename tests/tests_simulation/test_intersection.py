@@ -151,4 +151,3 @@ def test_pull_car():
 
         assert intersection.pull_car(Directions.RIGHT, i) is not None
         assert intersection.pull_car(Directions.RIGHT, 5 + i) is None
-

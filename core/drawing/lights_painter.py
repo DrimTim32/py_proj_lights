@@ -1,9 +1,10 @@
+from collections import namedtuple
+
+from core.data_structures.enums import Directions
 from core.data_structures.vector import Vector
+from core.drawing.drawing_consts import GREEN, RED
 from core.drawing.drawing_consts import LIGHT_OFFSET, LIGHT_RADIUS
 from core.drawing.drawing_helpers import draw_circle
-from core.drawing.drawing_consts import GREEN, RED
-from core.data_structures.enums import Directions
-from collections import namedtuple
 
 """Structure for lists of colors"""
 RoadColorsVector = namedtuple('ColorsVector', ['top', 'left', 'bottom', 'right'])
