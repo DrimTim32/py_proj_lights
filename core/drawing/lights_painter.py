@@ -1,10 +1,10 @@
 """This file contains LightsPainter class and helper functions"""
-from core.data_structures.vector import Vector
+from core.data_structures.enums import Directions
 from core.data_structures.points_structures import PointsQuadruple
+from core.data_structures.vector import Vector
+from core.drawing.drawing_consts import GREEN, RED
 from core.drawing.drawing_consts import LIGHT_OFFSET, LIGHT_RADIUS
 from core.drawing.drawing_helpers import draw_circle
-from core.drawing.drawing_consts import GREEN, RED
-from core.data_structures.enums import Directions
 
 
 def _draw_light(screen, position, color):
