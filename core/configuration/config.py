@@ -41,12 +41,11 @@ class Config:
     def directions_turns(self):
         """
         :return: returns crossroad turns topology
-        :rtype: dict[int,dict[int:dict[int:[float, bool]]]]
+        :rtype: dict[int,list[dict[int,[float, bool]]]]
         """
-        return {direction.get('Id'): {
-            lane.get("LaneId"): {turn.get('Direction'): [turn.get('Probability'), turn.get('Safe')] for turn in
-                                 lane.get('TurnDirections')} for lane in direction.get('Lanes')} for direction in
-            self.__directions}
+        return {direction.get('Id'): [{turn.get('Direction'): [turn.get('Probability'), turn.get('Safe')] for turn in
+                                       lane.get('TurnDirections')} for lane in direction.get('Lanes')] for direction in
+                self.__directions}
 
     @property
     def roads_length(self):

@@ -1,4 +1,4 @@
-from core.data_structures.enums import str_to_direction, Orientation
+from core.data_structures.enums import str_to_direction, Orientation, Directions
 from core.drawing.maps import create_map_painter
 from core.simulation.data_collector import DataCollector
 from core.simulation.intersection import Intersection, IntersectionProperties
@@ -14,7 +14,8 @@ class Simulation:
 
         self.__car_generator = car_generator(self.__lanes_info)
 
-        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(), self.__lanes_info)
+        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(config.directions_turns),
+                                               self.__lanes_info)
 
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection(config.directions_lanes,
                                                                                        config.roads_length)
@@ -113,15 +114,50 @@ class Simulation:
         return roads, Intersection(IntersectionProperties(directions_properties))
 
     @staticmethod
-    def __create_lights_phases(turns=None):
-        return [LightsPhase(DirectionsInfo(True, True, False, False), Orientation.VERTICAL, 20),
-                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, 20),
-                LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, 20),
-                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, 20)]
+    def __create_lights_phases(directions_turns):
+        phases = []
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                turns = Simulation.check_turns(lane)
+                phases.append(LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
+                                          Simulation.__check_orientation(direction_id), 20))
+        return phases
 
     @staticmethod
-    def __create_lanes_info(turns=None):
-        return {"top": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "left": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "bottom": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "right": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)]}
+    def __create_lanes_info(directions_turns=None):
+        lanes_info = {"top": [],
+                      "left": [],
+                      "bottom": [],
+                      "right": []}
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                turns = Simulation.check_turns(lane)
+                lanes_info[Directions(direction_id).__str__()].append(
+                    DirectionsInfo(turns[0], turns[1], turns[2], turns[3]))
+        return lanes_info
+
+    @staticmethod
+    def check_turns(lane):
+        turns = [False, False, False, False]
+        for turn_direction in lane.keys():
+            if turn_direction == 3 and lane[turn_direction][1]:
+                turns[3] = True
+            else:
+                turns[turn_direction - 1] = True
+        return turns
+
+    @staticmethod
+    def create_probability_info(directions_turns):
+        pass
+
+    @staticmethod
+    def __check_orientation(direction):
+        """
+        :param direction: checks orientation of given direction
+        :type direction: Direction
+        :return: orientation
+        :rtype: Orientation
+        """
+        return Orientation(direction % 2)
