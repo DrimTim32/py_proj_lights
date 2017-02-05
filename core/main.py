@@ -6,7 +6,7 @@ import pygame
 from core.configuration import config
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import FixedLightsManager
+from core.simulation.lights_managers import LightsManager
 
 WINDOW_SIZE = (1000, 800)
 
@@ -19,12 +19,13 @@ def read_configuration():
 def entrypoint():
     configuration = read_configuration()
 
+
 def main():
-      # try:
-      #      entrypoint()
-      # except Exception as e:
-      #   print("{0}, message : {1}".format(sys.stderr, e))
-      #   return 2
+    # try:
+    #      entrypoint()
+    # except Exception as e:
+    #   print("{0}, message : {1}".format(sys.stderr, e))
+    #   return 2
 
     pygame.init()
 
@@ -35,7 +36,7 @@ def main():
     # Generators
 
     car_generator = CarProperGenerator
-    lights_manager = FixedLightsManager
+    lights_manager = LightsManager
 
     game = Simulation(car_generator, lights_manager)
     game_map = game.map
