@@ -47,6 +47,9 @@ class Intersection:
         self.__height = properties.height
         self.__properties = properties
 
+    def __getitem__(self, item):
+        return self.array[item]
+
     def update(self):
         """
         Updates positions of cars on intersection
@@ -141,7 +144,7 @@ class Intersection:
             for col in range(self.__properties.top.in_lanes_count):
                 on_field = self.__array_upper[row][col]
                 if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    #print(row, col)
+                    # print(row, col)
                     self.__array_upper[row + 1][col] = on_field
                     self.__array_upper[row][col] = None
 

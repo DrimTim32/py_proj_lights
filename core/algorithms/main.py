@@ -52,7 +52,7 @@ def randomize_time():
 
 
 def choose_wait_count(count1, count2):
-    return (count2 + count1)/2
+    return (count2 + count1) / 2
 
 
 def choose_car_count(count1, count2):
@@ -60,7 +60,7 @@ def choose_car_count(count1, count2):
 
 
 def calcule_function(car_count, wait_count):
-    return 1/(car_count*car_count) * sin(wait_count/1000)
+    return 1 / log(sqrt(car_count))  # * log(wait_count)
 
 
 def main():
@@ -70,11 +70,11 @@ def main():
     times, best_times, = [30] * 4, [30] * 4
     best_norm = 99999999999
     best_cars, best_wait = 0, 0
-    with open('test11.txt', 'w') as file:
+    with open('test12.txt', 'w') as file:
         start = time.time()
         file.write("Metric: euclid\n")
         file.write("Main function: ")
-        file.write("1/(car_count*car_count) * sin(wait_count/1000)\n")
+        file.write("1/log(car_count,100) * log(wait_count,1000)\n")
         file.write("Car count choosing: sum\n")
         file.write("Wait time count choosing: avg\n")
         file.write("Start values: N={}, light times{}\n".format(N, times))
