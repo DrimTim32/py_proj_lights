@@ -1,6 +1,5 @@
-from core.simulation.car import Car
-
 from core.data_structures.enums import Directions, TurnDirection
+from core.simulation.car import Car
 
 
 def test_car_init():
