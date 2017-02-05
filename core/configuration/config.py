@@ -8,12 +8,12 @@ class Config:
     """
     Configuration class
     """
-    def __init__(self, numberOfDirections, directions, norm, variance, importance):
-        self.numberOfDirections = numberOfDirections
-        self.directions = directions
-        self.norm = norm
-        self.variance = variance
-        self.importance = importance
+
+    def __init__(self, directions, norm, variance, importance):
+        self.__directions = directions
+        self.__norm = norm
+        self.__variance = variance
+        self.__importance = importance
 
     @staticmethod
     def from_config_file(file_name):
@@ -25,7 +25,8 @@ class Config:
         """
         file = open(file_name)
         data = json.load(file)
-        return Config(data['numberOfDirections'], data['directions'], data['norm'], data['variance'], data['importance'])
+        return Config(data['directions'], data['norm'], data['variance'],
+                      data['importance'])
 
     @property
     def directions_lanes(self):
@@ -33,7 +34,8 @@ class Config:
         :return: returns crossroad topology
         :rtype: dict[int,tuple[int,int]]
         """
-        return {direction.get('Id'): [direction.get('InLanes'), direction.get('OutLanes')] for direction in self.directions}
+        return {direction.get('Id'): [direction.get('InLanes'), direction.get('OutLanes')] for direction in
+                self.__directions}
 
     @property
     def directions_turns(self):
@@ -41,4 +43,31 @@ class Config:
         :return: returns crossroad turns topology
         :rtype: dict[int,dict[int:dict[int:[float, bool]]]]
         """
-        return {direction.get('Id'): {lane.get("LaneId"): {turn.get('Direction'): [turn.get('Probability'), turn.get('Safe')]  for turn in lane.get('TurnDirections')} for lane in direction.get('Lanes')} for direction in self.directions}
+        return {direction.get('Id'): {
+            lane.get("LaneId"): {turn.get('Direction'): [turn.get('Probability'), turn.get('Safe')] for turn in
+                                 lane.get('TurnDirections')} for lane in direction.get('Lanes')} for direction in
+            self.__directions}
+
+    @property
+    def norm(self):
+        """
+        :return: name of norm to be used in optimization
+        :rtype: str
+        """
+        return self.__norm
+
+    @property
+    def variance(self):
+        """
+        :return: name of variance to be used in optimization
+        :rtype: str
+        """
+        return self.__variance
+
+    @property
+    def importance(self):
+        """
+        :return: name of importance function
+        :rtype: str
+        """
+        return self.__importance
