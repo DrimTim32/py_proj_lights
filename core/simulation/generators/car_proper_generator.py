@@ -1,23 +1,43 @@
-import random
+"""
+File containing CarProperGenerator class
+"""
+from numpy.random import choice
 
+from core.data_structures.enums import TurnDirection
 from core.simulation import Car
-from core.simulation.enums import TurnDirection
 
 
 class CarProperGenerator:
-    def __init__(self, config=None):
-        self.config = config
+    """
+    CarProperGenerator class
+    """
 
-    def generate(self, direction, lane):
-        right = [0, 0, 0, 0,
-                 Car(direction, TurnDirection.RIGHT)]
-        right_n_straight = [0, 0, 0, 0,
-                            Car(direction, TurnDirection.RIGHT),
-                            Car(direction, TurnDirection.STRAIGHT)]
-        straight = [0, 0, 0, 0,
-                    Car(direction, TurnDirection.STRAIGHT)]
-        left = [0, 0, 0, 0,
-                Car(direction, TurnDirection.LEFT)]
-        if direction in {1, 3} and lane in {1}:
-            return random.choice(right)
-        return 0
+    def __init__(self, probability_info):
+        """
+        initializes generator with lanes info and probability info
+        :param probability_info: probability info
+        :type probability_info: dict[Directions,list[list[float]]]
+        """
+        self.__probability_info = probability_info
+
+    def generate(self, direction, lane_index):
+        """
+        Generates car or none on given lane in gocen direction
+        :param direction: direction
+        :param lane_index:
+        :type direction: Directions
+        :type lane_index: int
+        :return: generated Car or None
+        :rtype: Car, None
+        """
+        probabilities = self.__probability_info[direction][lane_index]
+        possibilities = [None,
+                         Car(direction, TurnDirection.RIGHT),
+                         Car(direction, TurnDirection.STRAIGHT),
+                         Car(direction, TurnDirection.LEFT)]
+
+        none_prob = 1. - sum(probabilities)
+        ret = choice(possibilities, 1, p=[none_prob] + probabilities)
+        if direction == 0:
+            print([none_prob] + probabilities)
+        return ret[0]

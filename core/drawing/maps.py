@@ -5,29 +5,11 @@ from collections import namedtuple
 
 import pygame
 
-from core.data_structures import Position
-from core.drawing.drawing_consts import BLACK, BLUE, WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
+from core.data_structures import Vector
+from core.drawing.drawing_consts import WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
-
-
-# region drawing funcitons
-def draw_line(screen, point1, point2, color=BLACK):
-    """
-    Draws line between two points on the screen using selected color
-    :return: None
-    """
-    pygame.draw.line(screen, color, [point1.x, point1.y], [point2.x, point2.y])
-
-
-def draw_car(screen, position, color=BLUE):
-    """
-    Draws car in selected color and position
-    :return: None
-    """
-    pygame.draw.circle(screen, color, [position.x, position.y], CAR_RADIUS)
-
-
-# endregion
+from core.drawing.drawing_helpers import draw_car, draw_line
+from core.drawing.lights_painter import LightsPainter
 
 # region named tuples
 PointsPair = namedtuple('PointsPair', ['start', 'end'])
@@ -41,36 +23,36 @@ PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right']
 # region calculating classes
 
 def __calculate_top_points(middle, top, offset):
-    top_end_left = middle - Position((top.width * WIDTH_MULTIPLIER) // 2, offset.y)
-    top_start_left = top_end_left - Position(0, top.length * LENGTH_MULTIPLIER)
-    top_end_right = top_start_left + Position(top.width * WIDTH_MULTIPLIER, 0)
-    top_start_right = top_end_right + Position(0, top.length * LENGTH_MULTIPLIER)
+    top_end_left = middle - Vector((top.width * WIDTH_MULTIPLIER) // 2, offset.y)
+    top_start_left = top_end_left - Vector(0, top.length * LENGTH_MULTIPLIER)
+    top_end_right = top_start_left + Vector(top.width * WIDTH_MULTIPLIER, 0)
+    top_start_right = top_end_right + Vector(0, top.length * LENGTH_MULTIPLIER)
 
     return RoadPointsGroup(PointsPair(top_start_right, top_end_right), PointsPair(top_start_left, top_end_left))
 
 
 def __calculate_left_points(middle, left, offset):
-    left_start_up = middle - Position(offset.x, (left.width * WIDTH_MULTIPLIER) // 2)
-    left_end_up = left_start_up + Position(-left.length * LENGTH_MULTIPLIER, 0)
-    left_start_down = left_end_up + Position(0, left.width * WIDTH_MULTIPLIER)
-    left_end_down = left_start_up + Position(0, left.width * WIDTH_MULTIPLIER)
+    left_start_up = middle - Vector(offset.x, (left.width * WIDTH_MULTIPLIER) // 2)
+    left_end_up = left_start_up + Vector(-left.length * LENGTH_MULTIPLIER, 0)
+    left_start_down = left_end_up + Vector(0, left.width * WIDTH_MULTIPLIER)
+    left_end_down = left_start_up + Vector(0, left.width * WIDTH_MULTIPLIER)
 
     return RoadPointsGroup(PointsPair(left_start_up, left_end_up), PointsPair(left_start_down, left_end_down))
 
 
 def __calculate_down_points(middle, down, offset):
-    down_start_left = middle + Position(-(down.width * WIDTH_MULTIPLIER) // 2, offset.y)
-    down_end_left = down_start_left + Position(0, down.length * LENGTH_MULTIPLIER)
-    down_start_right = down_end_left + Position(down.width * WIDTH_MULTIPLIER, 0)
-    down_end_right = down_start_right - Position(0, down.length * LENGTH_MULTIPLIER)
+    down_start_left = middle + Vector(-(down.width * WIDTH_MULTIPLIER) // 2, offset.y)
+    down_end_left = down_start_left + Vector(0, down.length * LENGTH_MULTIPLIER)
+    down_start_right = down_end_left + Vector(down.width * WIDTH_MULTIPLIER, 0)
+    down_end_right = down_start_right - Vector(0, down.length * LENGTH_MULTIPLIER)
     return RoadPointsGroup(PointsPair(down_start_left, down_end_left), PointsPair(down_start_right, down_end_right))
 
 
 def __calculate_right_points(middle, right, offset):
-    right_end_up = middle + Position(offset.x, -(right.width * WIDTH_MULTIPLIER) // 2)
-    right_start_up = right_end_up + Position(right.length * LENGTH_MULTIPLIER, 0)
-    right_start_down = right_end_up + Position(0, right.width * WIDTH_MULTIPLIER)
-    right_end_down = right_start_up + Position(0, right.width * WIDTH_MULTIPLIER)
+    right_end_up = middle + Vector(offset.x, -(right.width * WIDTH_MULTIPLIER) // 2)
+    right_start_up = right_end_up + Vector(right.length * LENGTH_MULTIPLIER, 0)
+    right_start_down = right_end_up + Vector(0, right.width * WIDTH_MULTIPLIER)
+    right_end_down = right_start_up + Vector(0, right.width * WIDTH_MULTIPLIER)
 
     return RoadPointsGroup(PointsPair(right_start_down, right_end_down), PointsPair(right_start_up, right_end_up))
 
@@ -94,7 +76,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.top.outside.start + _MapVectorsCalculator.up_movement_vector(line_index, field_index)
 
@@ -102,7 +84,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.down.outside.start + _MapVectorsCalculator.down_movement_vector(line_index, field_index)
 
@@ -110,7 +92,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.left.outside.start + _MapVectorsCalculator.left_movement_vector(line_index, field_index)
 
@@ -118,7 +100,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.right.outside.start + _MapVectorsCalculator.right_movement_vector(line_index, field_index)
 
@@ -126,7 +108,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.top.inside.start + _MapVectorsCalculator.down_movement_vector(line_index, field_index)
 
@@ -134,7 +116,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.down.inside.start + _MapVectorsCalculator.up_movement_vector(line_index, field_index)
 
@@ -142,7 +124,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.left.inside.start + _MapVectorsCalculator.right_movement_vector(line_index, field_index)
 
@@ -150,7 +132,7 @@ class _MapVectorsCalculator:
         """
         :param line_index: int
         :param field_index: int
-        :rtype: Position
+        :rtype: Vector
         """
         return self.__points.right.inside.start + _MapVectorsCalculator.left_movement_vector(line_index, field_index)
 
@@ -159,7 +141,7 @@ class _MapVectorsCalculator:
         """Calculates down movement vector"""
         left_offset = CAR_OFFSET + CAR_RADIUS + x_delta * LENGTH_MULTIPLIER
         right_offset = CAR_OFFSET + CAR_RADIUS + y_delta * WIDTH_MULTIPLIER
-        return Position(left_offset, right_offset)
+        return Vector(left_offset, right_offset)
 
     @staticmethod
     def up_movement_vector(x_delta, y_delta):
@@ -170,7 +152,7 @@ class _MapVectorsCalculator:
     def left_movement_vector(x_delta, y_delta):
         """Calculates left movement vector"""
         point = _MapVectorsCalculator.down_movement_vector(y_delta, x_delta)
-        return Position(-point.x, point.y)
+        return Vector(-point.x, point.y)
 
     @staticmethod
     def right_movement_vector(x_delta, y_delta):
@@ -189,19 +171,17 @@ def create_map_painter(intersection, roads):
     :type roads: dict[str,RoadSizeVector]
     """
 
-    board = intersection.array
-
     __offset = MaxOffset(
         int(max(roads["top"].width * WIDTH_MULTIPLIER, roads["bottom"].width * WIDTH_MULTIPLIER) / 2),
         int(max(roads["left"].width * WIDTH_MULTIPLIER, roads["right"].width * WIDTH_MULTIPLIER) / 2))
 
-    __middle = Position(CONST_OFFSET + roads["left"].length * LENGTH_MULTIPLIER + __offset.y,
-                        CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
+    __middle = Vector(CONST_OFFSET + roads["left"].length * LENGTH_MULTIPLIER + __offset.y,
+                      CONST_OFFSET + roads["top"].length * LENGTH_MULTIPLIER + __offset.x)
 
     points = calculate_points(__middle, roads, __offset)  # type: PointsQuadruple
     _vector_calculator = _MapVectorsCalculator(points)  # type: _MapVectorsCalculator
 
-    return MapPainter(points.left.outside.start, board, _vector_calculator, points)
+    return MapPainter(points.left.outside.start, intersection, _vector_calculator, points)
 
 
 class MapPainter:
@@ -209,18 +189,31 @@ class MapPainter:
     Draws map
     """
 
-    def __init__(self, board_start_point, board, vectors_calculator, points):
+    def __init__(self, board_start_point, intersection, vectors_calculator, points):
         """
 
         :param board_start_point:
-        :param board:
+        :param intersection:
         :param vectors_calculator:
         :param points:
+        :type points : PointsQuadruple
         """
         self.board_start_point = board_start_point
-        self.board = board
+        self.__intersection = intersection
         self._vector_calculator = vectors_calculator
-        self.border_points = points
+        self.border_points = points  # type : PointsQuadruple
+
+    @property
+    def board(self):
+        return self.__intersection.array
+
+    def get_lights_painter(self):
+        """
+        :return: ligths_painter
+        :rtype: LightsPainter
+        """
+        top, left, down, right = self.border_points
+        return LightsPainter(top[1][1], left[1][1], down[1][1], right[1][1])
 
     def draw(self, screen, roads):
         """

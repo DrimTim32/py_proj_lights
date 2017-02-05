@@ -1,7 +1,10 @@
 from core.simulation.car import Car
 
+from core.data_structures.enums import Directions, TurnDirection
+
 
 def test_car_init():
-    c = Car(0, 0)
-    assert c.source == 0
-    assert c.turn_direction == 0
+    c = Car(Directions.TOP, TurnDirection.LEFT)
+    assert c.source == Directions.TOP
+    assert c.turn_direction == TurnDirection.LEFT
+    assert c.waiting_time == 0
