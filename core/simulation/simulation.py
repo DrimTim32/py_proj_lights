@@ -26,16 +26,16 @@ class Simulation:
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
-        self.get_lights()
-        # print(self.__lights_manager.current_phase)
-        # print(self.__data_collector.data)
 
     def __update_out(self):
-        for direction in self.__roads.keys():
-            road = self.__roads[direction]
+        for direction_str in self.__roads.keys():
+            direction = str_to_direction(direction_str)
+            road = self.__roads[direction_str]
             road.update_out()
             for lane_index in range(road.out_width):
-                road.push_car_out(lane_index, self.__intersection.pull_car(str_to_direction(direction), lane_index))
+                road.push_car_out(lane_index, self.__intersection.pull_car(direction,
+                                                                           lane_index + self.__calculate_offset(
+                                                                               direction)))
 
     def __update_in(self):
         for direction in self.__roads.keys():
@@ -49,8 +49,23 @@ class Simulation:
                 road.update_in(lane_index)
                 road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
 
-    def calculate_offset(self, direction):
-        pass
+    def __calculate_offset(self, direction):
+        """
+        calculates offset for pulling car's going straight
+        :param direction: directions
+        :type direction: Directions
+        :return: offset
+        :rtype: int
+        """
+        in_direction_str = direction.__str__()
+        out_direction_str = (direction % 4).__str__()
+        diff = self.__roads[in_direction_str].in_width - self.__roads[out_direction_str].out_width
+        if diff <= 0:
+            print(0)
+            return 0
+        offset = diff
+
+        return offset
 
     def set_lights_phases(self, new_phases):
         self.__lights_manager.phases = new_phases
@@ -63,7 +78,6 @@ class Simulation:
         for direction in lights.keys():
             for lane_index in range(self.__roads[direction.__str__()].in_width):
                 lights[direction].append(self.__lights_manager.is_green(direction, lane_index))
-        print(lights)
         return lights
 
     @property
