@@ -6,16 +6,14 @@ from collections import namedtuple
 import pygame
 
 from core.data_structures import Vector
+from core.data_structures.points_structures import PointsQuadruple, RoadPointsGroup, PointsPair
 from core.drawing.drawing_consts import WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
 from core.drawing.drawing_helpers import draw_car, draw_line
 from core.drawing.lights_painter import LightsPainter
 
 # region named tuples
-PointsPair = namedtuple('PointsPair', ['start', 'end'])
-RoadPointsGroup = namedtuple('RoadPointsGroup', ['outside', 'inside'])
 MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
-PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])
 
 
 # endregion
