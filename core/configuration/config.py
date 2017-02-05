@@ -63,3 +63,4 @@ class Config:
         :rtype: str
         """
         return self.__simulation_data
+
