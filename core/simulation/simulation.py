@@ -26,6 +26,7 @@ class Simulation:
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
+        self.get_lights()
         # print(self.__lights_manager.current_phase)
         # print(self.__data_collector.data)
 
@@ -62,6 +63,7 @@ class Simulation:
         for direction in lights.keys():
             for lane_index in range(self.__roads[direction.__str__()].in_width):
                 lights[direction].append(self.__lights_manager.is_green(direction, lane_index))
+        print(lights)
         return lights
 
     @property
@@ -196,7 +198,7 @@ class Simulation:
                 lane_probabilities = direction_probabilities[-1]
                 for turn_direction in lane.keys():
                     lane_probabilities[turn_direction - 1] = lane[turn_direction][0]
-        #print(probabilities)
+        print(probabilities)
         return probabilities
 
     @staticmethod

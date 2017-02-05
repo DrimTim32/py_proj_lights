@@ -1,3 +1,8 @@
+import random
+import operator
+import time
+from math import log, sqrt
+
 from core.configuration import config
 from core.data_structures.enums import Orientation
 from core.simulation import Simulation
@@ -6,17 +11,34 @@ from core.simulation.lights_managers import LightsManager
 from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 
 
-def read_configuration():
+def read_configuration(config_path):
     """Reads configuration from file"""
-    return config.Config.from_config_file("Configuration/config.json")
+    return config.Config.from_config_file(config_path)
 
 
-def entrypoint():
-    configuration = read_configuration()
+class OptimalizerCreator:
+    pass
 
 
-from math import log, sqrt
+class Optimizer:
+    def __init__(self, config_path, car_generator=CarProperGenerator, lights_manager=LightsManager):
+        self.config = read_configuration(config_path)
+        self.car_generator = car_generator
+        self.lights_manager = lights_manager
 
+    @staticmethod
+    def generate_start_lights(count):
+        return [20]*count
+
+    def simulate(self):
+        simulation = Simulation(self.car_generator, self.lights_manager, self.config)
+        lights = simulation.current_data
+        print(lights)
+        times = Optimizer.generate_start_lights(4)
+
+
+opt = Optimizer("../config.json")
+opt.simulate()
 
 def norm(vector):
     from numpy.linalg import norm
@@ -29,12 +51,6 @@ def get_lights(times):
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, t2),
             LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, t3),
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, t4)]
-
-
-import random
-
-import operator
-import time
 
 
 def randomize_time():
@@ -114,5 +130,3 @@ def main():
         file.write("New times {}\n".format(best_times))
         file.write("Experiment took {}".format(end - start))
 
-
-main()
