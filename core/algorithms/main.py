@@ -16,10 +16,6 @@ def read_configuration():
     return config.Config.from_config_file("Configuration/config.json")
 
 
-def entrypoint():
-    configuration = read_configuration()
-
-
 def norm(vector):
     from numpy.linalg import norm
     return norm(vector)
@@ -50,6 +46,7 @@ def calcule_function(car_count, wait_count):
 
 
 def main():
+    configuration = read_configuration()
     car_generator = CarProperGenerator
     lights_manager = LightsManager
     N = 500
@@ -67,8 +64,8 @@ def main():
         file.write("After first iteration\n")
         for z in range(N):
             vect = [0, 0, 0, 0]
-            game = Simulation(car_generator, lights_manager)
-            game.lights_manager.phases = get_lights(times)
+            game = Simulation(car_generator, lights_manager, config)
+            game.set_lights_phases(get_lights(times))
             for _ in range(300):
                 game.update()
             data = game.current_data

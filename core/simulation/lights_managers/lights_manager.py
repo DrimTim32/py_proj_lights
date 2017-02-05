@@ -21,8 +21,8 @@ class LightsManager:
         self.__previous_phase = -1
         self.__no_phase_time = 9
         self.__last_phase_change = 0
-        self.phases = phases
         self.__lanes_info = lanes_info
+        self.phases = phases
 
     def is_green(self, direction, lane_index):
         """
@@ -83,3 +83,4 @@ class LightsManager:
         :rtype: int
         """
         return self.__current_phase
+

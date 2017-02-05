@@ -1,0 +1,146 @@
+{
+  "directions": [
+    {
+      "Id": 0,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "LaneId": 0,
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.05,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.5,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "LaneId": 1,
+          "TurnDirections": [
+            {
+              "Direction": 3,
+              "Probability": 0.05,
+              "Safe": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 1,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "LaneId": 0,
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.05,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "LaneId": 1,
+          "TurnDirections": [
+            {
+              "Direction": 3,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "LaneId": 0,
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.05,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "LaneId": 1,
+          "TurnDirections": [
+            {
+              "Direction": 2,
+              "Probability": 0.05,
+              "Safe": false
+            },
+            {
+              "Direction": 3,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "LaneId": 0,
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.5,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.5,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "LaneId": 1,
+          "TurnDirections": [
+            {
+              "Direction": 2,
+              "Probability": 0.05,
+              "Safe": false
+            },
+            {
+              "Direction": 3,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roads_length": 16,
+  "norm": "euclidean",
+  "variance": "variance",
+  "importance": "log"
+}

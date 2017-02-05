@@ -9,8 +9,9 @@ class Config:
     Configuration class
     """
 
-    def __init__(self, directions, norm, variance, importance):
+    def __init__(self, directions, roads_length, norm, variance, importance):
         self.__directions = directions
+        self.__roads_length = roads_length
         self.__norm = norm
         self.__variance = variance
         self.__importance = importance
@@ -25,8 +26,7 @@ class Config:
         """
         file = open(file_name)
         data = json.load(file)
-        return Config(data['directions'], data['norm'], data['variance'],
-                      data['importance'])
+        return Config(data['directions'], data['roads_length'], data['norm'], data['variance'], data['importance'])
 
     @property
     def directions_lanes(self):
@@ -47,6 +47,10 @@ class Config:
             lane.get("LaneId"): {turn.get('Direction'): [turn.get('Probability'), turn.get('Safe')] for turn in
                                  lane.get('TurnDirections')} for lane in direction.get('Lanes')} for direction in
             self.__directions}
+
+    @property
+    def roads_length(self):
+        return self.__roads_length
 
     @property
     def norm(self):

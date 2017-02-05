@@ -13,11 +13,7 @@ WINDOW_SIZE = (1000, 800)
 
 def read_configuration():
     """Reads configuration from file"""
-    return config.Config.from_config_file("Configuration/config.json")
-
-
-def entrypoint():
-    configuration = read_configuration()
+    return config.Config.from_config_file('core/config.json')
 
 
 def main():
@@ -34,11 +30,11 @@ def main():
     done = False
 
     # Generators
-
+    configuration = read_configuration()
     car_generator = CarProperGenerator
     lights_manager = LightsManager
 
-    game = Simulation(car_generator, lights_manager)
+    game = Simulation(car_generator, lights_manager, configuration)
     game_map = game.map
     lights = game.map.get_lights_painter()
 
