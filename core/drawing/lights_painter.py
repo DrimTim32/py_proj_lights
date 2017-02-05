@@ -2,6 +2,7 @@ from core.data_structures.vector import Vector
 from core.drawing.drawing_consts import LIGHT_OFFSET, LIGHT_RADIUS
 from core.drawing.drawing_helpers import draw_circle
 from core.drawing.drawing_consts import GREEN, RED
+from core.data_structures.enums import Directions
 from collections import namedtuple
 
 """Structure for lists of colors"""
@@ -30,13 +31,33 @@ class LightsPainter:
         self.__bottom_location = bottom_location + self.__down_vector + self.__right_vector
         self.__right_location = right_location + self.__top_vector + self.__right_vector
 
-    def draw_empty(self, screen):
-        self.__draw_top(screen)
-        self.__draw_left(screen)
-        self.__draw_bottom(screen)
-        self.__draw_right(screen)
+    def draw(self, screen, lights_dict):
+        for direction, lights in lights_dict.items():
+            self.__draw(screen, direction, lights)
 
-    def __draw_top(self, screen, array=[GREEN]):
+    def __draw(self, screen, direction, vector):
+        vector = vector[::-1]
+        if direction == Directions.BOTTOM:
+            self.__draw_bottom(screen, vector)
+        if direction == Directions.TOP:
+            self.__draw_top(screen, vector)
+        if direction == Directions.RIGHT:
+            self.__draw_right(screen, vector)
+        if direction == Directions.LEFT:
+            self.__draw_left(screen, vector)
+
+    def __draw_top(self, screen, array):
+        """
+        :param screen:
+        :param array:
+        :type colors_vector: RoadColorsVector
+        :return:
+        """
+        for i in range(len(array)):
+            color = GREEN if array[i] else RED
+            draw_circle(screen, self.__top_location + 2 * i * self.__left_vector, LIGHT_RADIUS, color)
+
+    def __draw_left(self, screen, array):
         """
 
         :param screen:
@@ -44,9 +65,11 @@ class LightsPainter:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        draw_circle(screen, self.__top_location, LIGHT_RADIUS)
+        for i in range(len(array)):
+            color = GREEN if array[i] else RED
+            draw_circle(screen, self.__left_location + 2 * i * self.__down_vector, LIGHT_RADIUS, color)
 
-    def __draw_left(self, screen, array=[GREEN, RED, GREEN]):
+    def __draw_bottom(self, screen, array):
         """
 
         :param screen:
@@ -54,33 +77,20 @@ class LightsPainter:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        curr_location = self.__left_location.copy()
-        for color in array:
-            draw_circle(screen, curr_location, LIGHT_RADIUS, color)
-            curr_location += self.__down_vector * 2
+        for i in range(len(array)):
+            color = GREEN if array[i] else RED
+            draw_circle(screen, self.__bottom_location + 2 * i * self.__right_vector, LIGHT_RADIUS, color)
 
-    def __draw_bottom(self, screen, array=[GREEN, GREEN]):
+    def __draw_right(self, screen, array):
         """
-
         :param screen:
         :param array:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        curr_location = self.__bottom_location.copy()
-        for color in array:
-            draw_circle(screen, curr_location, LIGHT_RADIUS, color)
-            curr_location += self.__right_vector * 2
-
-    def __draw_right(self, screen, array=[GREEN]):
-        """
-
-        :param screen:
-        :param array:
-        :type colors_vector: RoadColorsVector
-        :return:
-        """
-        draw_circle(screen, self.__right_location, LIGHT_RADIUS)
+        for i in range(len(array)):
+            color = GREEN if array[i] else RED
+            draw_circle(screen, self.__right_location + 2 * i * self.__top_vector, LIGHT_RADIUS, color)
 
     def refresh(self, screen, colors_vector):
         """

@@ -56,13 +56,10 @@ def test_multiple_right_forward_update():
         intersection.push_car(Directions.RIGHT, i, Car(Directions.RIGHT, TurnDirection.STRAIGHT))
     for i in range(9, 0, -1):
         for j in range(5):
-            print(i, j)
-            print(intersection.array)
             assert intersection[j][i] == 1
         intersection.update()
 
     for j in range(5):
-        print(intersection.array)
         assert intersection[j][0] == 1
 
 
@@ -78,7 +75,6 @@ def test_multiple_left_forward_update():
         intersection.update()
 
     for j in range(5, 10):
-        print(intersection.array)
         assert intersection[j][9] == 1
 
 
@@ -109,7 +105,6 @@ def test_multiple_bottom_forward_update():
             assert intersection[9 - i][q] == 1
         intersection.update()
     for q in range(9, 5, -1):
-        print(q)
         assert intersection[0][q] == 1
 
 
@@ -148,7 +143,6 @@ def test_pull_car():
     for i in range(5):
         assert intersection.pull_car(Directions.LEFT, i) is not None
         assert intersection.pull_car(Directions.LEFT, i) is None
-        print(intersection.array)
         assert intersection.pull_car(Directions.TOP, i) is not None
         assert intersection.pull_car(Directions.TOP, i) is None
 
