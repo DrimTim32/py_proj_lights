@@ -8,7 +8,7 @@ def test_one_car_update():
     road = [RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5)]
     properties = IntersectionProperties(road)
     intersection = Intersection(properties)
-    intersection.push_car(Directions.TOP, 0, Car(0, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 0, Car(Directions.TOP, TurnDirection.LEFT))
     for q in range(10):
         assert intersection[q][0] == 1
         intersection.update()
@@ -18,15 +18,16 @@ def test_one_car_update():
         intersection.update()
     print(intersection.array)
 
+
 def test_few_car_update():
     road = [RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5)]
     properties = IntersectionProperties(road)
     intersection = Intersection(properties)
-    intersection.push_car(Directions.TOP, 0, Car(0, TurnDirection.LEFT))
-    intersection.push_car(Directions.TOP, 1, Car(0, TurnDirection.LEFT))
-    intersection.push_car(Directions.TOP, 2, Car(0, TurnDirection.LEFT))
-    intersection.push_car(Directions.TOP, 3, Car(0, TurnDirection.LEFT))
-    intersection.push_car(Directions.TOP, 4, Car(0, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 0, Car(Directions.TOP, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 1, Car(Directions.TOP, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 2, Car(Directions.TOP, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 3, Car(Directions.TOP, TurnDirection.LEFT))
+    intersection.push_car(Directions.TOP, 4, Car(Directions.TOP, TurnDirection.LEFT))
     for i in range(6):
         for q in range(5):
             assert intersection[i][q] == 1
