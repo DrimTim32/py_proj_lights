@@ -182,9 +182,7 @@ class Intersection:
         updates positions of cars turning left
         :return: none
         """
-        orientation = self.__check_orientation()
-        if orientation is None:
-            return
+        orientation = self.__check_orientation() 
         if orientation == Orientation.VERTICAL:
             self.__update_left_vertical()
         else:
