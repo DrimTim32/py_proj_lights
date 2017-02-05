@@ -64,6 +64,13 @@ class Simulation:
         diff = self.__roads[in_direction_str].in_width - self.__roads[out_direction_str].out_width
         return 0
 
+    def get_number_of_phases(self):
+        """
+        :return:number of lights phases
+        :rtype: int
+        """
+        return len(self.__lights_manager.phases)
+
     def set_phases_durations(self, new_durations):
         """
         sets new duration of lights phases
