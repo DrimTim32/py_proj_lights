@@ -1,8 +1,3 @@
-import operator
-import random
-import time
-from math import sin
-
 from core.configuration import config
 from core.data_structures.enums import Orientation
 from core.simulation import Simulation
@@ -16,6 +11,13 @@ def read_configuration():
     return config.Config.from_config_file("Configuration/config.json")
 
 
+def entrypoint():
+    configuration = read_configuration()
+
+
+from math import log, sqrt
+
+
 def norm(vector):
     from numpy.linalg import norm
     return norm(vector)
@@ -27,6 +29,12 @@ def get_lights(times):
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, t2),
             LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, t3),
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, t4)]
+
+
+import random
+
+import operator
+import time
 
 
 def randomize_time():
@@ -46,7 +54,6 @@ def calcule_function(car_count, wait_count):
 
 
 def main():
-    configuration = read_configuration()
     car_generator = CarProperGenerator
     lights_manager = LightsManager
     N = 500
@@ -64,11 +71,11 @@ def main():
         file.write("After first iteration\n")
         for z in range(N):
             vect = [0, 0, 0, 0]
-            game = Simulation(car_generator, lights_manager, config)
-            game.set_lights_phases(get_lights(times))
+            game = Simulation(car_generator, lights_manager)
+            game.lights_manager.phases = get_lights(times)
             for _ in range(300):
                 game.update()
-            data = game.current_data
+            data = game.get_current_data()
             car_sum = 0
             wait_sum = 0
             vector = [0, 0, 0, 0]

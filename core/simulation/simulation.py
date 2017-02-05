@@ -26,6 +26,7 @@ class Simulation:
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
+        self.get_lights()
         # print(self.__lights_manager.current_phase)
         # print(self.__data_collector.data)
 
@@ -53,6 +54,17 @@ class Simulation:
 
     def set_lights_phases(self, new_phases):
         self.__lights_manager.phases = new_phases
+
+    def get_lights(self):
+        lights = {Directions.TOP: [],
+                  Directions.LEFT: [],
+                  Directions.BOTTOM: [],
+                  Directions.RIGHT: []}
+        for direction in lights.keys():
+            for lane_index in range(self.__roads[direction.__str__()].in_width):
+                lights[direction].append(self.__lights_manager.is_green(direction, lane_index))
+        print(lights)
+        return lights
 
     @property
     def top(self):

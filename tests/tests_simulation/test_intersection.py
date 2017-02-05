@@ -1,7 +1,7 @@
-from core.simulation.intersection import Intersection, IntersectionProperties
-from core.simulation.road import RoadSizeVector
 from core.data_structures.enums import Directions, TurnDirection
 from core.simulation.car import Car
+from core.simulation.intersection import Intersection, IntersectionProperties
+from core.simulation.road import RoadSizeVector
 
 
 def get_intersection():
