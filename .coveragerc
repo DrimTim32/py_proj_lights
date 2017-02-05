@@ -13,10 +13,11 @@ source = core
 [report]
 show_missing = True
 
-sort = Miss
+sort = Cover
 
 exclude_lines =
     pragma: no cover
+
     #defensive assertions
     raise AssertionError
     raise NotImplementedError

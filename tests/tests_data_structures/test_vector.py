@@ -37,7 +37,15 @@ def test_copy(a, b):
 @pytest.mark.parametrize("a", ((0, 1), (2, 3), (4, 5)))
 @pytest.mark.parametrize("b", (0, 6, 7, 8, 11, 8))
 def test_multiply(a, b):
-    p1 = Vector(a[0],a[1])
+    p1 = Vector(a[0], a[1])
     p2 = p1 * b
-    assert p2.x == a[0]*b
-    assert p2.y == a[1]*b
+    assert p2.x == a[0] * b
+    assert p2.y == a[1] * b
+
+
+def test_bad_multiply():
+    tmp = Vector(1, 1)
+    for i in ["", 1.0, Vector(1, 1)]:
+        with pytest.raises(ValueError) as excinfo:
+            tmp * i
+        assert "int" in str(excinfo.value).lower()
