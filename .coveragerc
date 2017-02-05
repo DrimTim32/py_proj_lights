@@ -13,7 +13,7 @@ source = core
 [report]
 show_missing = True
 
-sort = Miss
+sort = Cover
 
 exclude_lines =
     pragma: no cover
@@ -25,6 +25,8 @@ exclude_lines =
     # non-runnable code
     if 0:
     if __name__ == .__main__.:
+
+    # private methods
 
 ignore_errors = False
 precision = 2
