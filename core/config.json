@@ -9,12 +9,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.05,
+              "Probability": 0.1,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.03,
               "Safe": false
             }
           ]
@@ -23,7 +23,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": true
             }
           ]
@@ -39,12 +39,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": false
             }
           ]
@@ -53,7 +53,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": false
             }
           ]
@@ -62,19 +62,19 @@
     },
     {
       "Id": 2,
-      "InLanes": 3,
+      "InLanes": 2,
       "OutLanes": 2,
       "Lanes": [
         {
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.05,
+              "Probability": 0.03,
               "Safe": false
             }
           ]
@@ -82,27 +82,9 @@
         {
           "TurnDirections": [
             {
-              "Direction": 2,
-              "Probability": 0.05,
-              "Safe": false
-            },
-            {
               "Direction": 3,
-              "Probability": 0.05,
-              "Safe": false
-            }
-          ]
-        }, {
-          "TurnDirections": [
-            {
-              "Direction": 2,
-              "Probability": 0.05,
-              "Safe": false
-            },
-            {
-              "Direction": 3,
-              "Probability": 0.05,
-              "Safe": false
+              "Probability": 0.03,
+              "Safe": true
             }
           ]
         }
@@ -117,12 +99,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.5,
+              "Probability": 0.03,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.03,
               "Safe": false
             }
           ]
@@ -130,14 +112,9 @@
         {
           "TurnDirections": [
             {
-              "Direction": 2,
-              "Probability": 0.05,
-              "Safe": false
-            },
-            {
               "Direction": 3,
-              "Probability": 0.05,
-              "Safe": false
+              "Probability": 0.03,
+              "Safe": true
             }
           ]
         }

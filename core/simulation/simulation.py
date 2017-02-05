@@ -10,12 +10,10 @@ class Simulation:
     def __init__(self, car_generator, lights_manager, config):
         self.__data_collector = DataCollector()
 
-        self.__lanes_info = Simulation.__create_lanes_info(config.directions_turns)
+        self.__car_generator = car_generator(Simulation.___create_probability_info(config.directions_turns))
 
-        self.__car_generator = car_generator(self.__lanes_info)
-
-        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(config.directions_turns),
-                                               self.__lanes_info)
+        self.__lights_manager = lights_manager(Simulation.create_lights_phases(config.directions_turns),
+                                               Simulation.__create_lanes_info(config.directions_turns))
 
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection(config.directions_lanes,
                                                                                        config.roads_length)
@@ -120,7 +118,7 @@ class Simulation:
         return roads, Intersection(IntersectionProperties(directions_properties))
 
     @staticmethod
-    def __create_lights_phases(directions_turns):
+    def create_lights_phases(directions_turns):
         """
         :param directions_turns: information about directions
         :return: lights phases
@@ -140,17 +138,17 @@ class Simulation:
         """
         :param directions_turns: information about directions
         :return: lanes info
-        :rtype: dict[str, list[DirectionsInfo]]
+        :rtype: dict[Directions, list[DirectionsInfo]]
         """
-        lanes_info = {"top": [],
-                      "left": [],
-                      "bottom": [],
-                      "right": []}
+        lanes_info = {Directions.TOP: [],
+                      Directions.LEFT: [],
+                      Directions.BOTTOM: [],
+                      Directions.RIGHT: []}
         for direction_id in directions_turns.keys():
             direction = directions_turns[direction_id]
             for lane in direction:
                 turns = Simulation.check_turns(lane)
-                lanes_info[Directions(direction_id).__str__()].append(
+                lanes_info[Directions(direction_id)].append(
                     DirectionsInfo(turns[0], turns[1], turns[2], turns[3]))
         return lanes_info
 
@@ -170,13 +168,26 @@ class Simulation:
         return turns
 
     @staticmethod
-    def create_probability_info(directions_turns):
+    def ___create_probability_info(directions_turns):
         """
         :param directions_turns: information about directions
         :return: probabilities for car generation
-        :rtype: dict[str,list[list[float]]]
+        :rtype: dict[Directions,list[list[float]]]
         """
-        pass
+        probabilities = {Directions.TOP: [],
+                         Directions.LEFT: [],
+                         Directions.BOTTOM: [],
+                         Directions.RIGHT: []}
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                direction_probabilities = probabilities[Directions(direction_id)]
+                direction_probabilities.append([0, 0, 0])
+                lane_probabilities = direction_probabilities[-1]
+                for turn_direction in lane.keys():
+                    lane_probabilities[turn_direction - 1] = lane[turn_direction][0]
+        print(probabilities)
+        return probabilities
 
     @staticmethod
     def __check_orientation(direction):

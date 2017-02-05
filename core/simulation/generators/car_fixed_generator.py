@@ -5,8 +5,8 @@ from core.simulation import Car
 
 
 class CarFixedGenerator:
-    def __init__(self, lanes_info):
-        self.__lanes_info = lanes_info
+    def __init__(self, probability_info=None):
+        self.probability_info = probability_info
 
     def generate(self, direction, lane_index):
         right = [None, None, None, None,

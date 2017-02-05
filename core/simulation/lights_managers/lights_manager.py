@@ -13,9 +13,9 @@ class LightsManager:
         """
         initializes LightsManager with lights phases and information about lanes on intersection
         :param phases: lights phases
-        :param lanes_info: informations about lanes on intersection
+        :param lanes_info: information about lanes on intersection
         :type phases: list[LightsPhase]
-        :type lanes_info: LanesData
+        :type lanes_info: dict[Directions, list[DirectionsInfo]]
         """
         self.__current_phase = -1
         self.__previous_phase = -1
@@ -28,11 +28,13 @@ class LightsManager:
         """
         :param direction: direction
         :param lane_index: lane index
+        :type lane_index: int
+        :type direction: Directions
         :return: if light is green on given lane in given direction
         :rtype: bool
         """
         phase = self.phases[self.current_phase]
-        lane = self.__lanes_info[direction.__str__()][lane_index]
+        lane = self.__lanes_info[direction][lane_index]
         if self.__current_phase == -1:
             return False
         if LightsManager.__check_orientation(direction) == phase.orientation:
@@ -83,4 +85,3 @@ class LightsManager:
         :rtype: int
         """
         return self.__current_phase
-

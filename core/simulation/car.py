@@ -1,4 +1,5 @@
 """This file contains Car class"""
+from core.data_structures.enums import Directions
 
 
 class Car:
@@ -9,17 +10,19 @@ class Car:
         Initializes car from it's source and turn direction
         :param source: car's source
         :param turn_direction: car's source direction
+        :type source: Directions
+        :type turn_direction: TurnDirection
         """
         self.__source = source
         self.__turn_direction = turn_direction
-        self.__destination = (self.__source + self.__turn_direction) % 4
+        self.__destination = Directions((self.__source.value + self.__turn_direction.value) % 4)
         self.waiting_time = 0
 
     @property
     def source(self):
         """
         :return: car's source direction
-        :rtype: int
+        :rtype: Directions
         """
         return self.__source
 
@@ -35,6 +38,6 @@ class Car:
     def destination(self):
         """
         :return: car's destination direction of car
-        :rtype: int
+        :rtype: Directions
         """
         return self.__destination
