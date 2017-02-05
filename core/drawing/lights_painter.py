@@ -36,7 +36,7 @@ class LightsPainter:
             self.__draw(screen, direction, lights)
 
     def __draw(self, screen, direction, vector):
-        vector = vector[::-1]
+        vector = [GREEN if q else RED for q in vector[::-1]]
         if direction == Directions.BOTTOM:
             self.__draw_bottom(screen, vector)
         if direction == Directions.TOP:
@@ -46,6 +46,13 @@ class LightsPainter:
         if direction == Directions.LEFT:
             self.__draw_left(screen, vector)
 
+    def __draw_lights(self, screen, base_vector, move_vector, colors):
+        for i in range(len(colors)):
+            self.__draw_light(screen, base_vector + 2 * i * move_vector, colors[i])
+
+    def __draw_light(self, screen, vector, color):
+        draw_circle(screen, vector, LIGHT_RADIUS, color)
+
     def __draw_top(self, screen, array):
         """
         :param screen:
@@ -53,21 +60,16 @@ class LightsPainter:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        for i in range(len(array)):
-            color = GREEN if array[i] else RED
-            draw_circle(screen, self.__top_location + 2 * i * self.__left_vector, LIGHT_RADIUS, color)
+        self.__draw_lights(screen, self.__top_location, self.__left_vector, array)
 
     def __draw_left(self, screen, array):
         """
-
         :param screen:
         :param array:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        for i in range(len(array)):
-            color = GREEN if array[i] else RED
-            draw_circle(screen, self.__left_location + 2 * i * self.__down_vector, LIGHT_RADIUS, color)
+        self.__draw_lights(screen, self.__left_location, self.__down_vector, array)
 
     def __draw_bottom(self, screen, array):
         """
@@ -77,9 +79,7 @@ class LightsPainter:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        for i in range(len(array)):
-            color = GREEN if array[i] else RED
-            draw_circle(screen, self.__bottom_location + 2 * i * self.__right_vector, LIGHT_RADIUS, color)
+        self.__draw_lights(screen, self.__bottom_location, self.__right_vector, array)
 
     def __draw_right(self, screen, array):
         """
@@ -88,15 +88,4 @@ class LightsPainter:
         :type colors_vector: RoadColorsVector
         :return:
         """
-        for i in range(len(array)):
-            color = GREEN if array[i] else RED
-            draw_circle(screen, self.__right_location + 2 * i * self.__top_vector, LIGHT_RADIUS, color)
-
-    def refresh(self, screen, colors_vector):
-        """
-        Draws all lights
-        :param screen:
-        :param colors_vector:
-        :type colors_vector: RoadColorsVector
-        :return:
-        """
+        self.__draw_lights(screen, self.__right_location, self.__top_vector, array)
