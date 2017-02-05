@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from core.data_structures.enums import Directions, TurnDirection
 from core.simulation.car import Car
 from core.simulation.road import get_empty_road, RoadSizeVector, Road
 
@@ -61,7 +62,7 @@ road_len_parameters = [
     (Road([[], []]), 0),
     (Road([[[0]], [[0]]]), 1),
     (Road([[[0, 0], [0, 0]], [[0, 0], [0, 0]]]), 2),
-    (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0], [0, 0], [0, 0]]]), 3),
+    (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]]), 3),
 ]
 
 
@@ -88,8 +89,6 @@ road_exceptions = [
     ([[], [[0, 0], [0, 0, 0]]], "in"),
     ([[[0, 0], [0, 0, 0]], []], "out"),
     ([[[0, 0, 0], [0, 0], [0, 0, 0]], []], "out"),
-    ([[[0, 0], [0, 0], [0, 0]], [[0, 0]]], "in and out"),
-    ([[[0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0]]], "in and out"),
 ]
 
 
@@ -102,7 +101,7 @@ def test_raise_constructor_exception(road_data, str_contains):
 
 @pytest.mark.parametrize("road,expected_in_width,expected_out_width", [
     (Road([[[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0], [0, 0, 0]]]), 3, 3),
-    (Road([[[0, 0, 0], [0, 0, 0]], [[0, 0], [0, 0]]]), 2, 2),
+    (Road([[[0, 0, 0], [0, 0, 0]], [[0, 0, 0], [0, 0, 0]]]), 2, 2),
     (Road([[[0, 0]], [[0, 0]]]), 1, 1),
 ])
 def test_road_width(road, expected_in_width, expected_out_width):
@@ -113,17 +112,17 @@ def test_road_width(road, expected_in_width, expected_out_width):
 def test_car_pull_push_out():
     road = Road([[[None, None, None], [None, None, None], [None, None, None]],
                  [[None, None, None], [None, None, None], [None, None, None]]])
-    road.push_car_out(0, Car(0, 0))
+    road.push_car_out(0, Car(Directions.BOTTOM, TurnDirection.LEFT))
     arr = np.array(road.out_lanes)
     assert len(arr[arr != np.array(None)]) == 1
     assert arr[0][0] is not None and isinstance(arr[0][0], Car)
     for _ in range(10):
-        road.push_car_out(0, Car(0, 0))
+        road.push_car_out(0, Car(Directions.BOTTOM, TurnDirection.LEFT))
 
     arr = np.array(road.out_lanes)
     assert len(arr[arr != np.array(None)]) == 1
     assert arr[0][0] is not None and isinstance(arr[0][0], Car)
-    road.push_car_out(1, Car(0, 0))
+    road.push_car_out(1, Car(Directions.BOTTOM, TurnDirection.LEFT))
     arr = np.array(road.out_lanes)
     assert len(arr[arr != np.array(None)]) == 2
     assert arr[0][0] is not None and isinstance(arr[0][0], Car) and arr[1][0] is not None and isinstance(arr[1][0], Car)
@@ -132,17 +131,17 @@ def test_car_pull_push_out():
 def test_car_pull_push_in():
     road = Road([[[None, None, None], [None, None, None], [None, None, None]],
                  [[None, None, None], [None, None, None], [None, None, None]]])
-    road.push_car_in(0, Car(0, 0))
+    road.push_car_in(0, Car(Directions.BOTTOM, TurnDirection.LEFT))
     arr = np.array(road.in_lanes)
     assert len(arr[arr != np.array(None)]) == 1
     assert arr[0][0] is not None and isinstance(arr[0][0], Car)
     for _ in range(10):
-        road.push_car_in(0, Car(0, 0))
+        road.push_car_in(0, Car(Directions.BOTTOM, TurnDirection.LEFT))
 
     arr = np.array(road.in_lanes)
     assert len(arr[arr != np.array(None)]) == 1
     assert arr[0][0] is not None and isinstance(arr[0][0], Car)
-    road.push_car_in(1, Car(0, 0))
+    road.push_car_in(1, Car(Directions.BOTTOM, TurnDirection.LEFT))
     arr = np.array(road.in_lanes)
     assert len(arr[arr != np.array(None)]) == 2
     assert arr[0][0] is not None and isinstance(arr[0][0], Car) and arr[1][0] is not None and isinstance(arr[1][0], Car)
@@ -156,9 +155,9 @@ def test_update_in_not_at_end():
             [None, None, None]
         ],
         [
-            [Car(0, 0), None, None],
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), None, None],
             [None, None, None],
-            [Car(2, 2), None, None]
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), None, None]
         ]
     ])
     road.update_in(0)
@@ -177,9 +176,9 @@ def test_update_in_middle():
             [None, None, None]
         ],
         [
-            [None, Car(0, 0), None],
+            [None, Car(Directions.BOTTOM, TurnDirection.LEFT), None],
             [None, None, None],
-            [None, Car(2, 2), None]
+            [None, Car(Directions.BOTTOM, TurnDirection.LEFT), None]
         ]
     ])
     road.update_in(0)
@@ -204,9 +203,9 @@ def test_update_in_two():
             [None, None, None]
         ],
         [
-            [Car(0, 0), Car(0, 0), None],
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), Car(Directions.BOTTOM, TurnDirection.LEFT), None],
             [None, None, None],
-            [Car(0, 0), Car(2, 2), None]
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), Car(Directions.BOTTOM, TurnDirection.LEFT), None]
         ]
     ])
     road.update_in(0)
@@ -232,9 +231,9 @@ def test_update_in_at_end():
             [None, None, None]
         ],
         [
-            [None, None, Car(0, 0)],
+            [None, None, Car(Directions.BOTTOM, TurnDirection.LEFT)],
             [None, None, None],
-            [None, None, Car(2, 2)]
+            [None, None, Car(Directions.BOTTOM, TurnDirection.LEFT)]
         ]
     ])
     road.update_in(0)
@@ -258,9 +257,9 @@ def test_update_in_at_end():
 def test_update_out_at_end():
     road = Road([
         [
-            [None, None, Car(0, 0)],
+            [None, None, Car(Directions.BOTTOM, TurnDirection.LEFT)],
             [None, None, None],
-            [None, None, Car(0, 0)]
+            [None, None, Car(Directions.BOTTOM, TurnDirection.LEFT)]
         ],
         [
             [None, None, None],
@@ -277,9 +276,9 @@ def test_update_out_at_end():
 def test_update_out_middle():
     road = Road([
         [
-            [None, Car(0, 0), None],
+            [None, Car(Directions.BOTTOM, TurnDirection.LEFT), None],
             [None, None, None],
-            [None, Car(0, 0), None]
+            [None, Car(Directions.BOTTOM, TurnDirection.LEFT), None]
         ],
         [
             [None, None, None],
@@ -298,7 +297,8 @@ def test_update_out_middle():
 def test_update_out_three():
     road = Road([
         [
-            [Car(0, 0), Car(1, 1), Car(0, 0)],
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), Car(Directions.TOP, TurnDirection.LEFT),
+             Car(Directions.BOTTOM, TurnDirection.LEFT)],
             [None, None, None],
             [None, None, None]
         ],
@@ -314,10 +314,10 @@ def test_update_out_three():
     assert road.out_lanes[0][0] is None
     assert road.out_lanes[0][1] is not None
     assert isinstance(road.out_lanes[0][1], Car)
-    assert road.out_lanes[0][1].source == 0
+    assert road.out_lanes[0][1].source == Directions.BOTTOM
     assert road.out_lanes[0][2] is not None
     assert isinstance(road.out_lanes[0][2], Car)
-    assert road.out_lanes[0][2].source == 1
+    assert road.out_lanes[0][2].source == Directions.TOP
 
 
 def test_pull_no_car():
@@ -327,8 +327,8 @@ def test_pull_no_car():
             [None, None, None],
         ],
         [
-            [Car(1, 1), Car(1, 1), None],
-            [Car(1, 1), Car(1, 1), None],
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), Car(Directions.BOTTOM, TurnDirection.LEFT), None],
+            [Car(Directions.BOTTOM, TurnDirection.LEFT), Car(Directions.BOTTOM, TurnDirection.LEFT), None],
         ]
     ])
     assert road.pull_car(0) is None
@@ -342,18 +342,19 @@ def test_pull_car():
             [None, None, None],
         ],
         [
-            [None, None, Car(1, 1)],
-            [None, None, Car(0, 0)],
+            [None, None, Car(Directions.BOTTOM, TurnDirection.LEFT)],
+            [None, None, Car(Directions.TOP, TurnDirection.LEFT)],
         ]
     ])
     car1 = road.pull_car(1)
     car0 = road.pull_car(0)
     assert car0 is not None
-    assert isinstance(car0,Car)
-    assert car0.source == 1
+    assert isinstance(car0, Car)
+    assert car0.source == Directions.BOTTOM
     assert car1 is not None
-    assert isinstance(car1,Car)
-    assert car1.source == 0
+    assert isinstance(car1, Car)
+    assert car1.source == Directions.TOP
+
 
 def test_waiting_car():
     road = Road([
@@ -362,7 +363,7 @@ def test_waiting_car():
             [None, None, None],
         ],
         [
-            [None, None, Car(1, 1)],
+            [None, None, Car(Directions.TOP, TurnDirection.LEFT)],
             [None, None, None],
         ]
     ])
