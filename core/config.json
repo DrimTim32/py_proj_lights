@@ -131,7 +131,11 @@
     }
   ],
   "roads_length": 16,
-  "norm": "euclidean",
-  "variance": "variance",
-  "importance": "log"
+  "simulation_data": {
+    "norm": "euclidean",
+    "variance": "variance",
+    "importance": "log",
+    "step_count": "500",
+    "simulation_count": "300"
+  }
 }

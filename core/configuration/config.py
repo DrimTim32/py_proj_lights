@@ -18,7 +18,9 @@ class Config:
         """
         self.__directions = directions
         self.__roads_length = roads_length
-        self.__simulation_data = simulation_data
+        self.__simulation_data = SimulationData(simulation_data["norm"], simulation_data['variance'],
+                                                simulation_data['importance'],
+                                                simulation_data['step_count'], simulation_data['simulation_count'])
 
     @staticmethod
     def from_config_file(file_name):
@@ -30,8 +32,7 @@ class Config:
         """
         file = open(file_name)
         data = json.load(file)
-        print(data)
-        return Config(data['directions'], data['roads_length'],data['simulation_data'])
+        return Config(data['directions'], data['roads_length'], data['simulation_data'])
 
     @property
     def directions_lanes(self):
@@ -60,7 +61,6 @@ class Config:
     def simulation_data(self):
         """
         :return: name of norm to be used in optimization
-        :rtype: str
+        :rtype: SimulationData
         """
         return self.__simulation_data
-

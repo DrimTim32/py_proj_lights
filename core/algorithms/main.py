@@ -3,7 +3,7 @@ import operator
 import time
 from math import log, sqrt
 
-from core.configuration import config
+from core.configuration.config import Config, SimulationData
 from core.data_structures.enums import Orientation
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
@@ -13,7 +13,7 @@ from core.simulation.lights_managers.lights_phase import LightsPhase, Directions
 
 def read_configuration(config_path):
     """Reads configuration from file"""
-    return config.Config.from_config_file(config_path)
+    return Config.from_config_file(config_path)
 
 
 class OptimalizerCreator:
@@ -32,14 +32,16 @@ class Optimizer:
 
     def simulate(self):
         simulation = Simulation(self.car_generator, self.lights_manager, self.config)
-        simulation.set_phases_durations(Optimizer.generate_start_lights(simulation.get_number_of_phases()))
-        N = 500
-        times, best_times, = [30] * 4, [30] * 4
+        phrases_count = simulation.get_number_of_phases()
+        simulation.set_phases_durations(Optimizer.generate_start_lights(phrases_count))
+        N = self.config.simulation_data.simulation_count
+        times = Optimizer.generate_start_lights(phrases_count)
+        best_times = Optimizer.generate_start_lights(phrases_count)
         best_norm = 99999999999
         best_cars, best_wait = 0, 0
 
 
-opt = Optimizer("../config.json")
+opt = Optimizer("../simple_config.json")
 opt.simulate()
 
 
