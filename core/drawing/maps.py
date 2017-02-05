@@ -208,6 +208,10 @@ class MapPainter:
         return self.__intersection.array
 
     def get_lights_painter(self):
+        """
+        :return: ligths_painter
+        :rtype: LightsPainter
+        """
         top, left, down, right = self.border_points
         return LightsPainter(top[1][1], left[1][1], down[1][1], right[1][1])
 

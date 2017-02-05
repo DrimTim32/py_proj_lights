@@ -1,14 +1,13 @@
-import sys
-from time import clock
-
-import pygame
+import operator
+import random
+import time
+from math import sin
 
 from core.configuration import config
+from core.data_structures.enums import Orientation
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import FixedLightsManager
-from core.simulation.data_collector import LanePhaseData
-from core.data_structures.enums import Orientation
+from core.simulation.lights_managers import LightsManager
 from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 
 
@@ -17,16 +16,7 @@ def read_configuration():
     return config.Config.from_config_file("Configuration/config.json")
 
 
-def entrypoint():
-    configuration = read_configuration()
-
-
-from statistics import variance
-from math import log, sqrt
-
-
 def norm(vector):
-    import numpy
     from numpy.linalg import norm
     return norm(vector)
 
@@ -37,14 +27,6 @@ def get_lights(times):
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, t2),
             LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, t3),
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, t4)]
-
-
-import random
-
-import operator
-import math
-from math import sin
-import time
 
 
 def randomize_time():
@@ -64,8 +46,9 @@ def calcule_function(car_count, wait_count):
 
 
 def main():
+    configuration = read_configuration()
     car_generator = CarProperGenerator
-    lights_manager = FixedLightsManager
+    lights_manager = LightsManager
     N = 500
     times, best_times, = [30] * 4, [30] * 4
     best_norm = 99999999999
@@ -81,11 +64,11 @@ def main():
         file.write("After first iteration\n")
         for z in range(N):
             vect = [0, 0, 0, 0]
-            game = Simulation(car_generator, lights_manager)
-            game.lights_manager.phases = get_lights(times)
+            game = Simulation(car_generator, lights_manager, config)
+            game.set_lights_phases(get_lights(times))
             for _ in range(300):
                 game.update()
-            data = game.get_current_data()
+            data = game.current_data
             car_sum = 0
             wait_sum = 0
             vector = [0, 0, 0, 0]
