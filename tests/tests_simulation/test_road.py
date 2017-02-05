@@ -184,7 +184,6 @@ def test_update_in_middle():
     road.update_in(0)
     road.update_in(1)
     road.update_in(2)
-    print(road.in_lanes)
     assert road.in_lanes[0][1] is None
     assert road.in_lanes[0][2] is not None
     assert isinstance(road.in_lanes[0][2], Car)
@@ -308,9 +307,7 @@ def test_update_out_three():
             [None, None, None]
         ]
     ])
-    print("Przed update", road.out_lanes)
     road.update_out()
-    print("po update", road.out_lanes)
     assert road.out_lanes[0][0] is None
     assert road.out_lanes[0][1] is not None
     assert isinstance(road.out_lanes[0][1], Car)

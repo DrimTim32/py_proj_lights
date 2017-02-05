@@ -39,5 +39,6 @@ class CarProperGenerator:
         none_prob = 1. - sum(probabilities)
         ret = choice(possibilities, 1, p=[none_prob] + probabilities)
         if direction == 0:
-            print([none_prob] + probabilities)
+            pass
+           # print([none_prob] + probabilities)
         return ret[0]

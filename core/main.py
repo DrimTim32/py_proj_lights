@@ -13,7 +13,7 @@ WINDOW_SIZE = (1000, 800)
 
 def read_configuration():
     """Reads configuration from file"""
-    return config.Config.from_config_file('core/config.json')
+    return config.Config.from_config_file('config.json')
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
 
     game = Simulation(car_generator, lights_manager, configuration)
     game_map = game.map
-    lights = game.map.get_lights_painter()
+    lights_painter = game.map.get_lights_painter()
 
     game_map.prepare(screen)
     while not done:
@@ -53,8 +53,7 @@ def main():
             game.update()
 
         game_map.draw(screen, game.points)
-
-        lights.draw_empty(screen)
+        lights_painter.draw(screen, game.get_lights())
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()

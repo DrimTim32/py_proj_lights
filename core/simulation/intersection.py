@@ -183,8 +183,6 @@ class Intersection:
         :return: none
         """
         orientation = self.__check_orientation()
-        if orientation is None:
-            return
         if orientation == Orientation.VERTICAL:
             self.__update_left_vertical()
         else:

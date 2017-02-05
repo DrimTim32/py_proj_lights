@@ -26,6 +26,8 @@ class Simulation:
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
+        # print(self.__lights_manager.current_phase)
+        # print(self.__data_collector.data)
 
     def __update_out(self):
         for direction_str in self.__roads.keys():
@@ -212,7 +214,7 @@ class Simulation:
                 lane_probabilities = direction_probabilities[-1]
                 for turn_direction in lane.keys():
                     lane_probabilities[turn_direction - 1] = lane[turn_direction][0]
-        print(probabilities)
+        #print(probabilities)
         return probabilities
 
     @staticmethod
