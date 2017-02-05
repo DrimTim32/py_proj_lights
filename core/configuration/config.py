@@ -1,3 +1,6 @@
+"""
+File containing Config class
+"""
 import json
 
 

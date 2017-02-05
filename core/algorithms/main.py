@@ -1,3 +1,8 @@
+import operator
+import random
+import time
+from math import sin
+
 from core.configuration import config
 from core.data_structures.enums import Orientation
 from core.simulation import Simulation
@@ -28,19 +33,12 @@ def get_lights(times):
             LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, t4)]
 
 
-import random
-
-import operator
-from math import sin
-import time
-
-
 def randomize_time():
     return random.randint(1, 7)
 
 
 def choose_wait_count(count1, count2):
-    return (count2 + count1)/2
+    return (count2 + count1) / 2
 
 
 def choose_car_count(count1, count2):
@@ -48,7 +46,7 @@ def choose_car_count(count1, count2):
 
 
 def calcule_function(car_count, wait_count):
-    return 1/(car_count*car_count) * sin(wait_count/1000)
+    return 1 / (car_count * car_count) * sin(wait_count / 1000)
 
 
 def main():
@@ -73,7 +71,7 @@ def main():
             game.lights_manager.phases = get_lights(times)
             for _ in range(300):
                 game.update()
-            data = game.get_current_data()
+            data = game.current_data
             car_sum = 0
             wait_sum = 0
             vector = [0, 0, 0, 0]

@@ -8,11 +8,14 @@ from core.simulation.road import RoadSizeVector, get_empty_road
 
 class Simulation:
     def __init__(self, car_generator, lights_manager):
-        self.__car_generator = car_generator()
-
         self.__data_collector = DataCollector()
 
-        self.lights_manager = lights_manager(Simulation.__create_lights_phases(), Simulation.__create_lanes_data())
+        self.__lanes_info = Simulation.__create_lanes_info()
+
+        self.__car_generator = car_generator(self.__lanes_info)
+
+        self.lights_manager = lights_manager(Simulation.__create_lights_phases(), self.__lanes_info)
+
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection()
 
         self.__map = create_map_painter(self.__intersection, self.__roads)
@@ -22,7 +25,12 @@ class Simulation:
         """Returns all points [top, left, bottom, right]"""
         return [self.top, self.left, self.bottom, self.right]
 
-    def get_current_data(self):
+    @property
+    def current_data(self):
+        """
+        :return: data collected by simulation
+        :rtype: dict[list[LanePhaseData]]
+        """
         return self.__data_collector.data
 
     def update(self):
@@ -31,8 +39,8 @@ class Simulation:
         self.__intersection.update()
         self.lights_manager.update()
         self.__update_in()
-        #print(self.__lights_manager.current_phase)
-        #print(self.__data_collector.data)
+        # print(self.__lights_manager.current_phase)
+        # print(self.__data_collector.data)
 
     def __update_out(self):
         for direction in self.__roads.keys():
@@ -104,7 +112,7 @@ class Simulation:
                 LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, 20)]
 
     @staticmethod
-    def __create_lanes_data(data=None):
+    def __create_lanes_info(data=None):
         return {"top": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
                 "left": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
                 "bottom": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
