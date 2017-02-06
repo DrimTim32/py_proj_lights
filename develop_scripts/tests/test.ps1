@@ -5,7 +5,7 @@ $files = ".eggs","py_proj_lights.egg-info",".cache"
 $dir = ".\"
 $commands ="test"
 
-$pythonScript = "setup.py"
+$pythonScript = "pytest ../../tests"
 if( -Not (Test-Path "$dir$pythonScript")){
    cd ..
    cd ..
