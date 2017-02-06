@@ -33,19 +33,19 @@ if($coverage -ne "no")
 elseif($version -eq 2)
 {
 	write-host "Testing python 2"
-	python2 -m $pythonScript $commands
+	python2 -m $pythonScript
 }
 elseif($version -eq 3)
 {
 	write-host "Testing python 3"
-	python -m $pythonScript $commands
+	python -m $pythonScript
 } 
 else
 {
 	write-host "Testing python 2"
-	python2 -m $pythonScript $commands
+	python2 -m $pythonScript
 	write-host "Testing python 3"
-	python -m $pythonScript  $commands
+	python -m $pythonScript
 }
 
 
