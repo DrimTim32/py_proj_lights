@@ -29,6 +29,7 @@ def draw_car_by_value(screen, position, value):
         color = (255, 0, 14)  # magenta
     if value == 3:
         color = (0, 0, 0)
+    print(color)
     draw_car(screen, position, color)
 
 

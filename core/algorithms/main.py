@@ -20,13 +20,7 @@ def read_configuration(config_path):
     return Config.from_config_file(config_path)
 
 
-def randomize_time():
-    return random.randint(1, 10)
-
-
 from collections import namedtuple
-
-Factors = namedtuple('Factors', 'B', 'C')
 
 
 class Optimizer:
@@ -42,22 +36,28 @@ class Optimizer:
         self.car_importance = algorithms.avg
         self.time_importance = algorithms.avg
         self.repetition_count = self.config.simulation_data.simulation_count
-        #self.time_factors = Factors()
+        self.max_possible_wait_time = self.config.simulation_data.step_count - self.config.roads_length
+        self.max_possible_car_count = self.config.simulation_data.step_count
+        self.init_values = Optimizer.max_lights_len // 2
+        self.max_random_change = self.init_values // 2
+
+    def randomize_time(self):
+        return random.randint(1, self.max_random_change)
 
     def car_equation(self, x):
-        return 1 - 0.5 * pow(e, (-5 * pow(e, -0.005 * x)))
+        return 1 - 1 * pow(e, (-5 * pow(e, -(5/self.config.simulation_data.step_count) * x)))
 
     def time_equation(self, x):
-        granica_wysycenia = 1
-        return granica_wysycenia / (1+math.exp(-()))
+        return 1 / (1 + math.exp(-(x - (self.config.simulation_data.step_count / 2))
+                                   / (self.config.simulation_data.step_count / 10)))
 
     def calcule_function(self, car_count, wait_count):
-        print(car_count, wait_count)
-        return self.car_equation(car_count) * self.time_equation(wait_count)
+        c = self.car_equation(car_count)
+        w = self.time_equation(wait_count)
+        return c - w
 
-    @staticmethod
-    def generate_start_lights(count):
-        return [20] * count
+    def generate_start_lights(self, count):
+        return [self.init_values] * count
 
     def get_start_report(self, lights):
         data = self.config.simulation_data
@@ -102,24 +102,21 @@ class Optimizer:
         report_string += "\taccomplished norm: {}\n".format(simulation_norm)
         return report_string
 
-    @staticmethod
-    def change_times(times, vect):
+    def change_times(self, times, vect):
         max_index, value = max(enumerate(vect), key=operator.itemgetter(1))
         min_index, value = min(enumerate(vect), key=operator.itemgetter(1))
-        times[max_index] -= randomize_time()
-        times[min_index] += randomize_time()
+        times[max_index] -= self.randomize_time()
+        times[min_index] += self.randomize_time()
         times[max_index] = max(Optimizer.min_lights_len, times[max_index])
         times[min_index] = min(times[min_index], Optimizer.max_lights_len)
         return times
 
     def simulate(self):
-        self.max_possible_wait_time = self.config.simulation_data.step_count - self.config.roads_length
-        self.max_possible_car_count = self.config.simulation_data.step_count
         simulation = Simulation(self.car_generator, self.lights_manager, self.config)
         phrases_count = simulation.get_number_of_phases()
-        times = Optimizer.generate_start_lights(phrases_count)
+        times = self.generate_start_lights(phrases_count)
         simulation.set_phases_durations(times)
-        best_times = Optimizer.generate_start_lights(phrases_count)
+        best_times = self.generate_start_lights(phrases_count)
 
         report_string = self.get_start_report(times)
         report_string += "[Initial data]\n"
@@ -128,27 +125,30 @@ class Optimizer:
         report_string += "[Data after optimalization]\n"
         best_norm = simulation_norm
         best_cars, best_wait = car_sum, wait_sum
-        times = Optimizer.change_times(times, vect)
-
+        times = self.change_times(times, vect)
+        better_count = 0
         count = int(self.config.simulation_data.simulation_count)
         for q in range(count):
             try:
                 simulation = Simulation(self.car_generator, self.lights_manager, self.config)
                 simulation.set_phases_durations(times)
                 simulation_norm, car_sum, wait_sum, vect = self.iterate_simulation(simulation, times)
+
                 if simulation_norm < best_norm:
                     best_norm = simulation_norm
                     best_cars = car_sum
                     best_wait = wait_sum
                     best_times = [t for t in times]
+                    better_count += 1
                 for i in range(len(best_times)):
                     times[i] = best_times[i]
-                times = Optimizer.change_times(times, vect)
+                times = self.change_times(times, vect)
                 print("\r {}/{} simulation loops done".format(q + 1, count), end="")
             except Exception as ex:
                 q -= 1
                 continue
         report_string += Optimizer.simulation_data_string(best_norm, best_cars, best_wait)
+        report_string += "[Additional data]\n\tNew norm was choosen {} times\n".format(better_count)
         print("")
         print(report_string)
         print("New times ", times)
