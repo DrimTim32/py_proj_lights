@@ -13,7 +13,7 @@ WINDOW_SIZE = (1000, 800)
 
 def read_configuration():
     """Reads configuration from file"""
-    return config.Config.from_config_file('core/config.json')
+    return config.Config.from_config_file('config.json')
 
 
 def main():
