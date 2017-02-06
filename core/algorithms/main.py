@@ -19,7 +19,7 @@ def read_configuration(config_path):
 
 
 def randomize_time():
-    return random.randint(1, 7)
+    return random.randint(1, 2)
 
 
 class Optimizer:
@@ -135,6 +135,7 @@ class Optimizer:
             times = Optimizer.change_times(times, vect)
             print("\r {}/{} simulation loops done".format(_, count), end="")
         report_string += Optimizer.simulation_data_string(best_norm, best_cars, best_wait)
+        print("")
         print(report_string)
         print("New times ", times)
 
