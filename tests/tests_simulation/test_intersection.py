@@ -14,11 +14,11 @@ def test_one_top_left_update():
     intersection = get_intersection()
     intersection.push_car(Directions.TOP, 0, Car(Directions.TOP, TurnDirection.LEFT))
     for q in range(10):
-        assert intersection[q][0] == 1
+        assert intersection[q][0] == 3
         intersection.update()
     assert intersection[9][0] != 1
     for q in range(8):
-        assert intersection[9][q + 1] == 1
+        assert intersection[9][q + 1] == 3
         intersection.update()
 
 
@@ -29,11 +29,11 @@ def test_multiple_top_left_update():
         intersection.push_car(Directions.TOP, i, Car(Directions.TOP, TurnDirection.LEFT))
     for i in range(6):
         for q in range(5):
-            assert intersection[i][q] == 1
+            assert intersection[i][q] == 3
         intersection.update()
 
     for q in range(4):
-        assert intersection[6][q] == 1
+        assert intersection[6][q] == 3
 
 
 def test_multiple_top_forward_update():
@@ -42,10 +42,10 @@ def test_multiple_top_forward_update():
         intersection.push_car(Directions.TOP, i, Car(Directions.TOP, TurnDirection.STRAIGHT))
     for i in range(9):
         for j in range(5):
-            assert intersection[i][j] == 1
+            assert intersection[i][j] == 2
         intersection.update()
     for j in range(5):
-        assert intersection[9][j] == 1
+        assert intersection[9][j] == 2
 
 
 # endregion
@@ -71,11 +71,11 @@ def test_multiple_left_forward_update():
         intersection.push_car(Directions.LEFT, i, Car(Directions.LEFT, TurnDirection.STRAIGHT))
     for i in range(9):
         for j in range(5, 10):
-            assert intersection[j][i] == 1
+            assert intersection[j][i] == 3
         intersection.update()
 
     for j in range(5, 10):
-        assert intersection[j][9] == 1
+        assert intersection[j][9] == 3
 
 
 def test_multiple_left_left_update():
@@ -85,12 +85,12 @@ def test_multiple_left_left_update():
 
     for i in range(6):
         for j in range(5, 10):
-            assert intersection[j][i] == 1
+            assert intersection[j][i] != -1
         intersection.update()
     for _ in range(4):
         intersection.update()
     for i in range(5):
-        assert intersection[2 * i][5 + i] == 1
+        assert intersection[2 * i][5 + i] != -1
 
 
 # endregion
@@ -102,10 +102,10 @@ def test_multiple_bottom_forward_update():
         intersection.push_car(Directions.BOTTOM, i, Car(Directions.BOTTOM, TurnDirection.STRAIGHT))
     for i in range(9):
         for q in range(9, 4, -1):
-            assert intersection[9 - i][q] == 1
+            assert intersection[9 - i][q] == 0
         intersection.update()
     for q in range(9, 5, -1):
-        assert intersection[0][q] == 1
+        assert intersection[0][q] == 0
 
 
 def test_multiple_bottom_left_update():
