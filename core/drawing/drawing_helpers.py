@@ -1,4 +1,5 @@
 import pygame
+
 from core.drawing.drawing_consts import BLACK, BLUE
 from core.drawing.drawing_consts import CAR_RADIUS
 
@@ -22,12 +23,14 @@ def draw_circle(screen, position, radius, color=BLACK):
 def draw_car_by_value(screen, position, value):
     color = (255, 255, 255)
     if value == 0:
-        color = (128, 0, 0)
+        color = (200, 0, 0)
     if value == 1:
-        color = (0, 128, 0)
+        color = (0, 200, 0)
     if value == 2:
-        color = (255, 0, 14)  # magenta
+        color = (0, 0, 200)  # magenta
     if value == 3:
+        color = (255, 0, 114)
+    if value == 4:
         color = (0, 0, 0)
     print(color)
     draw_car(screen, position, color)
