@@ -472,5 +472,4 @@ class Intersection:
                     out_array[i][j] = lower_val.destination if lower_val is not None else -1
                 if upper_val is not None and lower_val is not None:
                     out_array[i][j] = 4
-        print(out_array)
         return out_array

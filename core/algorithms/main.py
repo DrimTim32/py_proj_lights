@@ -1,18 +1,14 @@
-import random
-import operator
-import time
-from datetime import datetime
-from math import log, sqrt, sin, e
 import math
-import numpy as np
+import operator
+import random
+from datetime import datetime
+from math import e
 
-from core.configuration.config import Config, SimulationData
 import core.algorithms.algorithms as algorithms
-from core.data_structures.enums import Orientation
+from core.configuration.config import Config
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import LightsManager
-from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
 
 
 def read_configuration(config_path):
@@ -20,12 +16,9 @@ def read_configuration(config_path):
     return Config.from_config_file(config_path)
 
 
-from collections import namedtuple
-
-
 class Optimizer:
     min_lights_len = 2
-    max_lights_len = 120
+    max_lights_len = 64
 
     def __init__(self, config_path, car_generator=CarProperGenerator, lights_manager=LightsManager):
         self.config = read_configuration(config_path)
@@ -52,9 +45,9 @@ class Optimizer:
                                    / (self.config.simulation_data.step_count / 10)))
 
     def calcule_function(self, car_count, wait_count):
-        c = self.car_equation(car_count)
-        w = self.time_equation(wait_count)
-        return c - w
+        # c = self.car_equation(car_count)
+        #        w = self.time_equation(wait_count)
+        return car_count
 
     def generate_start_lights(self, count):
         return [self.init_values] * count
