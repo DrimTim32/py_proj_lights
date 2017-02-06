@@ -152,6 +152,7 @@ class Simulation:
             direction = directions_turns[direction_id]
             for lane in direction:
                 turns = Simulation.check_turns(lane)
+                print(turns)
                 phase = LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
                                     Simulation.__check_orientation(direction_id), 20)
                 is_new_phase = True
@@ -162,7 +163,7 @@ class Simulation:
                         break
                 if is_new_phase:
                     phases.append(phase)
-        #print(phases)
+        print(phases)
         return phases
 
     @staticmethod
