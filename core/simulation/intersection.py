@@ -462,8 +462,15 @@ class Intersection:
         """
         :return:Array of cars on intersection
         """
-        out_array = np.empty(np.array(self.__array_upper).shape)
+        out_array = np.full(np.array(self.__array_upper).shape, -1)
         for i in range(len(self.__array_upper)):
             for j in range(len(self.__array_upper[i])):
-                out_array[i][j] = (self.__array_upper[i][j] is not None) or (self.__array_lower[i][j] is not None)
-        return out_array.astype(int)
+                upper_val = self.__array_upper[i][j]
+                lower_val = self.__array_lower[i][j]
+                out_array[i][j] = upper_val.destination if upper_val is not None else -1
+                if out_array[i][j] == -1:
+                    out_array[i][j] = lower_val.destination if lower_val is not None else -1
+                if upper_val is not None and lower_val is not None:
+                    out_array[i][j] = 4
+        print(out_array)
+        return out_array

@@ -7,7 +7,7 @@ import pygame
 
 from core.data_structures import Vector
 from core.data_structures.points_structures import PointsQuadruple, RoadPointsGroup, PointsPair
-from core.drawing.drawing_consts import WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
+from core.drawing.drawing_consts import WHITE, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
 from core.drawing.drawing_helpers import draw_car_by_value, draw_line
 from core.drawing.lights_painter import LightsPainter
@@ -296,13 +296,13 @@ class MapPainter:
     @staticmethod
     def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
         for (lane_index, field_index) in line.out_indexes:
-            point = line.out_lanes[lane_index][field_index]
-            if line.out_lanes[lane_index][field_index] is not None and point != -1:
-                draw_car_by_value(screen, outside_dir(lane_index, field_index), point)
+            car = line.out_lanes[lane_index][field_index]
+            if line.out_lanes[lane_index][field_index] is not None and car != -1:
+                draw_car_by_value(screen, outside_dir(lane_index, field_index), car.destination)
         for (lane_index, field_index) in line.in_indexes:
-            point = line.in_lanes[lane_index][field_index]
-            if line.in_lanes[lane_index][field_index] is not None and point != -1:
-                draw_car_by_value(screen, inside_dir(lane_index, field_index), point)
+            car = line.in_lanes[lane_index][field_index]
+            if line.in_lanes[lane_index][field_index] is not None and car != -1:
+                draw_car_by_value(screen, inside_dir(lane_index, field_index), car.destination)
 
     @staticmethod
     def __draw_seals(screen, directions):
