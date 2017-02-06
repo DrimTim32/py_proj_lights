@@ -25,7 +25,7 @@ def avg(vector):
 
 
 metrics = {
-    "euclidean": metric_euclid,
+    "euclid": metric_euclid,
     "inf": metric_max,
     "-inf": metric_min
 }
