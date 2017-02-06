@@ -4,6 +4,7 @@ import pytest
 
 from core.configuration import config
 from core.configuration.config import SimulationData
+
 norm = "euclidean"
 variance = "variance"
 importance = "log"
@@ -142,14 +143,18 @@ file_json = """{
   }
 }"""
 
+
 def test_reading_from_file():
     text_file = open("test.json", "w")
     text_file.write(file_json)
     text_file.close()
     configuration = config.Config.from_config_file("test.json")
     assert configuration.roads_length == roads_length
-    assert isinstance(configuration.simulation_data,SimulationData)
+    assert isinstance(configuration.simulation_data, SimulationData)
     assert configuration.directions_lanes == {0: [2, 2], 1: [2, 2], 2: [2, 2], 3: [2, 2]}
-    assert configuration.directions_turns == {0: [{1: [0.1, False], 2: [0.01, False]}, {3: [0.01, True]}], 1: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, False]}], 2: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}], 3: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}]}
+    assert configuration.directions_turns == {0: [{1: [0.1, False], 2: [0.01, False]}, {3: [0.01, True]}],
+                                              1: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, False]}],
+                                              2: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}],
+                                              3: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}]}
 
     os.remove("test.json")
