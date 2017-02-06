@@ -8,4 +8,4 @@ def read_configuration(config_path):
 
 
 opt = Optimizer(Config.from_config_file("../config.json"))
-report, best_times = opt.simulate()
+report, best_times = opt.optimise()

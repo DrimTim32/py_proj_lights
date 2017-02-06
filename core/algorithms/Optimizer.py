@@ -2,23 +2,21 @@ import random
 import operator
 from datetime import datetime
 import math
-import core.algorithms.algorithms as algorithms
-from core.simulation import Simulation
-from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import LightsManager
-
+from simulation import Simulation
+from .algorithms import avg, get_norm
+from .algorithms_exceptions import OptimisationException
 
 class Optimizer:
     min_lights_len = 2
     max_lights_len = 64
 
-    def __init__(self, config, car_generator=CarProperGenerator, lights_manager=LightsManager):
+    def __init__(self, config, car_generator, lights_manager):
         self.config = config
         self.car_generator = car_generator
         self.lights_manager = lights_manager
-        self.norm = algorithms.get_norm(self.config.simulation_data.norm)
-        self.car_importance = algorithms.avg
-        self.time_importance = algorithms.avg
+        self.norm = get_norm(self.config.simulation_data.norm)
+        self.car_importance = avg
+        self.time_importance = avg
         self.repetition_count = self.config.simulation_data.simulation_count
         self.max_possible_wait_time = self.config.simulation_data.step_count - self.config.roads_length
         self.max_possible_car_count = self.config.simulation_data.step_count
@@ -93,7 +91,7 @@ class Optimizer:
         times[min_index] = min(times[min_index], Optimizer.max_lights_len)
         return times
 
-    def simulate(self):
+    def optimise(self):
         """
 
         :return: tuple(string,list[int])
@@ -106,6 +104,7 @@ class Optimizer:
 
         report_string = self.get_start_report(times)
         report_string += "[Initial data]\n"
+        print("Executing initial simulation",end="")
         simulation_norm, car_sum, wait_sum, vect = self.iterate_simulation(simulation, times)
         report_string += Optimizer.simulation_data_string(simulation_norm, car_sum, wait_sum)
         report_string += "[Data after optimalization]\n"
@@ -114,7 +113,13 @@ class Optimizer:
         times = self.change_times(times, vect)
         better_count = 0
         count = int(self.config.simulation_data.simulation_count)
+        bad_simulation = 0
+        last_exception = None
         for q in range(count):
+            if bad_simulation > 10:
+                raise OptimisationException(
+                    "Something wrong happend more than {} times, latest cought exception : {}".format(bad_simulation,
+                                                                                                      last_exception))
             try:
                 simulation = Simulation(self.car_generator, self.lights_manager, self.config)
                 simulation.set_phases_durations(times)
@@ -129,13 +134,12 @@ class Optimizer:
                 for i in range(len(best_times)):
                     times[i] = best_times[i]
                 times = self.change_times(times, vect)
-                print("\r {}/{} simulation loops done".format(q + 1, count), end="")
+                print("\r{0:.0f}% of optimisation done".format(((q + 1) / count)*100), end="")
             except Exception as ex:
+                last_exception = ex
+                bad_simulation += 1
                 q -= 1
                 continue
         report_string += Optimizer.simulation_data_string(best_norm, best_cars, best_wait)
         report_string += "[Additional data]\n\tNew norm was choosen {} times\n".format(better_count)
-        print("")
-        print(report_string)
-        print("New times ", times)
         return report_string, times
