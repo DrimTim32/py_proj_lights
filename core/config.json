@@ -34,7 +34,7 @@
     {
       "Id": 1,
       "InLanes": 2,
-      "OutLanes": 2,
+      "OutLanes": 4,
       "Lanes": [
         {
           "TurnDirections": [
