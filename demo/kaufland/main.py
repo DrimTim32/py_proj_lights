@@ -3,10 +3,10 @@ from time import clock
 
 import pygame
 
-from core.configuration import config
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
 from core.simulation.lights_managers import LightsManager
+from core.configuration import config
 
 WINDOW_SIZE = (1000, 800)
 

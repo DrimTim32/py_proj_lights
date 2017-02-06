@@ -3,7 +3,6 @@ import unittest
 
 from setuptools import setup, find_packages
 
-
 with open("requirements-tests.txt", 'r') as f:
     test_requirements = f.read().split('\n')
 with open("requirements.txt", 'r') as f:
