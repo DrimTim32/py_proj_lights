@@ -176,7 +176,6 @@ class Simulation:
                         break
                 if is_new_phase:
                     phases.append(phase)
-        print(phases)
         return phases
 
     @staticmethod
