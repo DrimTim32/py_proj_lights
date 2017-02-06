@@ -32,8 +32,24 @@ class LightsPhase:
         return str(self.right) + str(self.straight) + str(self.left) + str(self.left_separated) + str(self.orientation)
 
     def __eq__(self, other):
-        return (self.__right == other.right or self.__straight == other.straight) and self.__left == other.left and \
-               self.left_separated == other.left_separated and self.__orientation == other.orientation
+        return (self.__right == other.right or self.__straight == other.straight) and \
+               (self.__straight == other.straight or self.__left == other.left) and \
+               self.left_separated == other.left_separated and \
+               self.__orientation == other.orientation
+
+    def __add__(self, other):
+        return LightsPhase(DirectionsInfo(self.right or other.right,
+                                          self.straight or other.straight,
+                                          self.left or other.left,
+                                          self.left_separated or other.left_separated),
+                           self.orientation, self.duration)
+
+    def __iadd__(self, other):
+        self.__right = self.right or other.right
+        self.__straight = self.straight or other.straight
+        self.__left = self.left or other.left
+        self.__left_separated = self.left_separated or other.left_separated
+        return self
 
     @property
     def right(self):

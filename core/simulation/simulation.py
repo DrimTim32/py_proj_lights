@@ -155,12 +155,14 @@ class Simulation:
                 phase = LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
                                     Simulation.__check_orientation(direction_id), 20)
                 is_new_phase = True
-                for existing_phase in phases:
-                    if phase == existing_phase:
+                for existing_phase_id in range(len(phases)):
+                    if phase == phases[existing_phase_id]:
+                        phases[existing_phase_id] += phase
                         is_new_phase = False
                         break
                 if is_new_phase:
                     phases.append(phase)
+        print(phases)
         return phases
 
     @staticmethod

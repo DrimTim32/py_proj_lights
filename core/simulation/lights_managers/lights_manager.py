@@ -37,7 +37,7 @@ class LightsManager:
         lane = self.__lanes_info[direction][lane_index]
         if self.__current_phase == -1:
             return False
-        if LightsManager.__check_orientation(direction) == phase.orientation:
+        if LightsManager.__check_orientation(direction) != phase.orientation:
             return False
         if phase.right and lane.right:
             return True
