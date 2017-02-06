@@ -1,9 +1,3 @@
-import sys,os
-myPath = os.path.dirname(os.path.abspath(__file__))
-if "/" in sys.path[0]:
-    sys.path.insert(0, myPath + '/../core')
-else:
-    sys.path.insert(0, myPath + '\\..\\core')
 from data_structures.enums import Directions, TurnDirection
 from simulation.car import Car
 from simulation.intersection import Intersection, IntersectionProperties

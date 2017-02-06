@@ -12,3 +12,5 @@ branches:
     - master
 script:
     - python -m setup.py test
+env:
+    - PYTHONPATH=..\core\

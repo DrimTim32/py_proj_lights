@@ -1,9 +1,4 @@
-import sys,os
-myPath = os.path.dirname(os.path.abspath(__file__))
-if "/" in sys.path[0]:
-    sys.path.insert(0, myPath + '/../core')
-else:
-    sys.path.insert(0, myPath + '\\..\\core')
+import os
 from configuration import config
 from configuration.config import SimulationData
 
