@@ -3,7 +3,7 @@
     {
       "Id": 0,
       "InLanes": 2,
-      "OutLanes": 4,
+      "OutLanes": 2,
       "Lanes": [
         {
           "TurnDirections": [
@@ -34,7 +34,7 @@
     {
       "Id": 1,
       "InLanes": 2,
-      "OutLanes": 3,
+      "OutLanes": 2,
       "Lanes": [
         {
           "TurnDirections": [
@@ -63,7 +63,7 @@
     },
     {
       "Id": 2,
-      "InLanes": 3,
+      "InLanes": 2,
       "OutLanes": 2,
       "Lanes": [
         {
@@ -77,15 +77,6 @@
               "Direction": 2,
               "Probability": 0.01,
               "Safe": false
-            }
-          ]
-        },
-        {
-          "TurnDirections": [
-            {
-              "Direction": 3,
-              "Probability": 0.1,
-              "Safe": true
             }
           ]
         },
