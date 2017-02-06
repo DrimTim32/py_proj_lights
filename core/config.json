@@ -2,7 +2,7 @@
   "directions": [
     {
       "Id": 0,
-      "InLanes": 4,
+      "InLanes": 2,
       "OutLanes": 2,
       "Lanes": [
         {
@@ -18,35 +18,16 @@
           "TurnDirections": [
             {
               "Direction": 2,
-              "Probability": 0.06,
-              "Safe": false
-            }
-          ]
-        },
-        {
-          "TurnDirections": [
-            {
-              "Direction": 2,
-              "Probability": 0.1,
-              "Safe": false
-            }
-          ]
-        },
-        {
-          "TurnDirections": [
-            {
-              "Direction": 1,
-              "Probability": 0,
+              "Probability": 0.05,
               "Safe": false
             }
           ]
         }
-
       ]
     },
     {
       "Id": 1,
-      "InLanes": 2,
+      "InLanes": 3,
       "OutLanes": 2,
       "Lanes": [
         {
@@ -66,8 +47,17 @@
         {
           "TurnDirections": [
             {
-              "Direction": 3,
-              "Probability": 0,
+              "Direction": 2,
+              "Probability": 0.1,
+              "Safe": true
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 2,
+              "Probability": 0.1,
               "Safe": true
             }
           ]
@@ -82,11 +72,6 @@
         {
           "TurnDirections": [
             {
-              "Direction": 1,
-              "Probability": 0,
-              "Safe": false
-            },
-            {
               "Direction": 2,
               "Probability": 0,
               "Safe": false
@@ -96,8 +81,8 @@
         {
           "TurnDirections": [
             {
-              "Direction": 3,
-              "Probability": 0,
+              "Direction": 2,
+              "Probability": 0.07,
               "Safe": true
             }
           ]
@@ -126,8 +111,8 @@
         {
           "TurnDirections": [
             {
-              "Direction": 3,
-              "Probability": 0,
+              "Direction": 2,
+              "Probability": 0.1,
               "Safe": true
             }
           ]
