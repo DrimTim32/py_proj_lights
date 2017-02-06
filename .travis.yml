@@ -11,7 +11,7 @@ branches:
     - ania
     - master
 script:
-    - python setup install
+    - pip install -e .
     - python -m pytest ../tests
 env:
     - PYTHONPATH=..\core\

@@ -5,7 +5,7 @@ $files = ".eggs","py_proj_lights.egg-info",".cache"
 $dir = ".\"
 $commands ="test"
 
-$pythonScript = "pytest ../../tests"
+$pythonScript = "py.test"
 if( -Not (Test-Path "$dir$pythonScript")){
    cd ..
    cd ..
@@ -18,10 +18,10 @@ if($coverage -ne "no")
     write-host "Getting coverage "
     coverage erase
     if($version -eq 2){
-        python2 -m coverage run ./setup.py test
+        python2 -m coverage run pytest
     }
     elseif($version -eq 3){
-        python -m coverage run ./setup.py test
+        python -m coverage run pytest
     }
     else{
         python2 -m coverage run ./setup.py test
@@ -33,19 +33,19 @@ if($coverage -ne "no")
 elseif($version -eq 2)
 {
 	write-host "Testing python 2"
-	python2 $pythonScript $commands
+	python2 -m $pythonScript $commands
 }
 elseif($version -eq 3)
 {
 	write-host "Testing python 3"
-	python $pythonScript $commands
+	python -m $pythonScript $commands
 } 
 else
 {
 	write-host "Testing python 2"
-	python2 $pythonScript $commands
+	python2 -m $pythonScript $commands
 	write-host "Testing python 3"
-	python $pythonScript  $commands
+	python -m $pythonScript  $commands
 }
 
 
