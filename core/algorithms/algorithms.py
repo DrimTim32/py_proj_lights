@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.linalg as la
+import math
 
 
 def metric_euclid(vector):
@@ -22,6 +23,14 @@ def avg(vector):
     if len(vector) == 0:
         return 0
     return sum(vector) / len(vector)
+
+
+def logistic(x, top, var1, var2):
+    return top / (1 + math.exp(-(x - var1) / var2))
+
+
+def gompertz(x, top, var1, var2):
+    return top - top * math.exp((-var1 * math.exp(-var2 * x)))
 
 
 metrics = {
