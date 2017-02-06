@@ -12,6 +12,6 @@ branches:
     - master
 script:
     - pip install -e .
-    - python -m py.test
+    - python -m pytest
 env:
     - PYTHONPATH=..\core\

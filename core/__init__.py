@@ -6,7 +6,7 @@ import data_structures
 import configuration
 
 __all__ = [
-    'configuration',
+    'configuration'
     'algorithms',
     'drawing',
     'simulation',
