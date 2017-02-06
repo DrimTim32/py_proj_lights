@@ -1,9 +1,11 @@
 import random
 import operator
 import time
+from datetime import datetime
 from math import log, sqrt
 
 from core.configuration.config import Config, SimulationData
+import core.algorithms.algorithms as algorithms
 from core.data_structures.enums import Orientation
 from core.simulation import Simulation
 from core.simulation.generators import CarProperGenerator
@@ -26,19 +28,38 @@ class Optimizer:
         self.car_generator = car_generator
         self.lights_manager = lights_manager
 
+        self.norm = algorithms.norm(self.config.simulation_data.norm)
+
     @staticmethod
     def generate_start_lights(count):
         return [20] * count
 
+    @staticmethod
+    def get_start_report(data, lights):
+        report_string = "Report generated {:%d, %b %Y}".format(datetime.now())
+        report_string += "[Start Values]"
+        report_string += "\tsimulation count =" + str(data.simulation_count)
+        report_string += "\tgenerated lights =" + str(lights)
+
+        return report_string
+
     def simulate(self):
+        N = self.config.simulation_data.simulation_count
+        file.write("Main function: ")
+        file.write("1/log(car_count,100) * log(wait_count,1000)\n")
+        file.write("Car count choosing: sum\n")
+        file.write("Wait time count choosing: avg\n")
+        file.write("After first iteration\n")
+
         simulation = Simulation(self.car_generator, self.lights_manager, self.config)
         phrases_count = simulation.get_number_of_phases()
         simulation.set_phases_durations(Optimizer.generate_start_lights(phrases_count))
-        N = self.config.simulation_data.simulation_count
         times = Optimizer.generate_start_lights(phrases_count)
         best_times = Optimizer.generate_start_lights(phrases_count)
         best_norm = 99999999999
         best_cars, best_wait = 0, 0
+
+        report_string = self.get_start_report(N, times)
 
 
 opt = Optimizer("../simple_config.json")
