@@ -2,6 +2,7 @@
 import sys,os
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '\\..\\core')
+print(sys.path)
 from data_structures.enums import Directions, TurnDirection
 from simulation.car import Car
 
