@@ -47,10 +47,10 @@ class Optimizer:
         data = self.config.simulation_data
         report_string = "Report generated {:%d, %b %Y}\n".format(datetime.now())
         report_string += "[Start Values]\n"
-        report_string += "\tsimulation count =\n" + str(data.simulation_count)
-        report_string += "\twait time importance =\n" + str(data.wait_time_importance)
-        report_string += "\tcat count importance =\n" + str(data.car_importance)
-        report_string += "\tgenerated lights =\n" + str(lights)
+        report_string += "\tsimulation count = {} \n".format(str(data.simulation_count))
+        report_string += "\twait time importance = {} \n".format(str(data.wait_time_importance))
+        report_string += "\tcat count importance = {}\n".format(str(data.car_importance))
+        report_string += "\tgenerated lights = {} \n".format(str(lights))
         report_string += "\tsimulation was executed {} times\n".format(data.simulation_count)
         report_string += "\teach simulation contained {} steps\n".format(data.step_count)
         return report_string
@@ -118,22 +118,26 @@ class Optimizer:
         times = Optimizer.change_times(times, vect)
         print("")
         count = int(self.config.simulation_data.simulation_count)
-        for _ in range(count):
-            simulation = Simulation(self.car_generator, self.lights_manager, self.config)
-            simulation.set_phases_durations(times)
-            simulation_norm, car_sum, wait_sum, vect = self.iterate_simulation(simulation,
-                                                                               Optimizer.generate_start_lights(
-                                                                                   phrases_count))
-            if simulation_norm < best_norm:
-                best_norm = simulation_norm
-                best_cars = car_sum
-                best_wait = wait_sum
-                best_times = [t for t in times]
+        for q in range(count):
+            try: 
+                simulation = Simulation(self.car_generator, self.lights_manager, self.config)
+                simulation.set_phases_durations(times)
+                simulation_norm, car_sum, wait_sum, vect = self.iterate_simulation(simulation,
+                                                                                   Optimizer.generate_start_lights(
+                                                                                       phrases_count))
+                if simulation_norm < best_norm:
+                    best_norm = simulation_norm
+                    best_cars = car_sum
+                    best_wait = wait_sum
+                    best_times = [t for t in times]
 
-            for i in range(len(best_times)):
-                times[i] = best_times[i]
-            times = Optimizer.change_times(times, vect)
-            print("\r {}/{} simulation loops done".format(_, count), end="")
+                for i in range(len(best_times)):
+                    times[i] = best_times[i]
+                times = Optimizer.change_times(times, vect)
+                print("\r {}/{} simulation loops done".format(q+1, count), end="")
+            except Exception as ex:
+                q-=1
+                continue
         report_string += Optimizer.simulation_data_string(best_norm, best_cars, best_wait)
         print("")
         print(report_string)
