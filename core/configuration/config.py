@@ -20,7 +20,8 @@ class Config:
         self.__directions = directions
         self.__roads_length = roads_length
         self.__simulation_data = SimulationData(simulation_data["norm"],
-                                                simulation_data['step_count'], simulation_data['simulation_count'])
+                                                int(simulation_data['step_count']),
+                                                int(simulation_data['simulation_count']))
 
     @staticmethod
     def from_config_file(file_name):

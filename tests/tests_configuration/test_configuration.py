@@ -136,8 +136,6 @@ file_json = """{
   "roads_length": 16,
   "simulation_data": {
     "norm": "euclidean",
-    "wait_time_importance": "avg",
-    "car_importance": "sum",
     "step_count": "500",
     "simulation_count": "300"
   }

@@ -138,8 +138,6 @@
   "roads_length": 10,
   "simulation_data": {
     "norm": "euclidean",
-    "wait_time_importance": "avg",
-    "car_importance": "sum",
     "step_count": "2500",
     "simulation_count": "1000"
   }

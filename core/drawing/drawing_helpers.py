@@ -19,6 +19,19 @@ def draw_circle(screen, position, radius, color=BLACK):
     pygame.draw.circle(screen, color, [position.x, position.y], radius)
 
 
+def draw_car_by_value(screen, position, value):
+    color = (255, 255, 255)
+    if value == 0:
+        color = (128, 0, 0)
+    if value == 1:
+        color = (0, 128, 0)
+    if value == 2:
+        color = (255, 0, 14)  # magenta
+    if value == 3:
+        color = (0, 0, 0)
+    draw_car(screen, position, color)
+
+
 def draw_car(screen, position, color=BLUE):
     """
     Draws a car in selected color and position
