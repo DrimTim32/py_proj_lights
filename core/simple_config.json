@@ -8,12 +8,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.5,
+              "Probability": 0.1,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.12,
               "Safe": false
             }
           ]
@@ -22,7 +22,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 1,
+              "Probability": 0.04,
               "Safe": false
             }
           ]
@@ -38,12 +38,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.5,
+              "Probability": 0.05,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.05,
               "Safe": false
             }
           ]
@@ -52,7 +52,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 1,
+              "Probability": 0.01,
               "Safe": false
             }
           ]
@@ -68,12 +68,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.3,
+              "Probability": 0.05,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.07,
               "Safe": false
             }
           ]
@@ -82,7 +82,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 1,
+              "Probability": 0.1,
               "Safe": false
             }
           ]
@@ -98,12 +98,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.5,
+              "Probability": 0.03,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.5,
+              "Probability": 0.02,
               "Safe": false
             }
           ]
@@ -112,7 +112,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.3,
+              "Probability": 0.09,
               "Safe": false
             }
           ]
@@ -120,10 +120,10 @@
       ]
     }
   ],
-  "roads_length": 150,
+  "roads_length": 16,
   "simulation_data": {
     "norm": "euclidean",
     "step_count": "1000",
-    "simulation_count": "50"
+    "simulation_count": "100"
   }
 }

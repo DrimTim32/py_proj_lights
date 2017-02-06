@@ -2,6 +2,50 @@
   "directions": [
     {
       "Id": 0,
+      "InLanes": 4,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 2,
+              "Probability": 0.06,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 2,
+              "Probability": 0.1,
+              "Safe": false
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0,
+              "Safe": false
+            }
+          ]
+        }
+
+      ]
+    },
+    {
+      "Id": 1,
       "InLanes": 2,
       "OutLanes": 2,
       "Lanes": [
@@ -23,38 +67,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.1,
-              "Safe": true
-            }
-          ]
-        }
-
-      ]
-    },
-    {
-      "Id": 1,
-      "InLanes": 2,
-      "OutLanes": 4,
-      "Lanes": [
-        {
-          "TurnDirections": [
-            {
-              "Direction": 1,
-              "Probability": 0.01,
-              "Safe": false
-            },
-            {
-              "Direction": 2,
-              "Probability": 0.01,
-              "Safe": false
-            }
-          ]
-        },
-        {
-          "TurnDirections": [
-            {
-              "Direction": 3,
-              "Probability": 0.05,
+              "Probability": 0,
               "Safe": true
             }
           ]
@@ -70,12 +83,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.01,
+              "Probability": 0,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.01,
+              "Probability": 0,
               "Safe": false
             }
           ]
@@ -84,7 +97,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.1,
+              "Probability": 0,
               "Safe": true
             }
           ]
@@ -100,12 +113,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.01,
+              "Probability": 0,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.01,
+              "Probability": 0,
               "Safe": false
             }
           ]
@@ -114,7 +127,7 @@
           "TurnDirections": [
             {
               "Direction": 3,
-              "Probability": 0.1,
+              "Probability": 0,
               "Safe": true
             }
           ]
@@ -122,10 +135,12 @@
       ]
     }
   ],
-  "roads_length": 16,
+  "roads_length": 10,
   "simulation_data": {
     "norm": "euclidean",
-    "step_count": "500",
-    "simulation_count": "300"
+    "wait_time_importance": "avg",
+    "car_importance": "sum",
+    "step_count": "2500",
+    "simulation_count": "1000"
   }
 }

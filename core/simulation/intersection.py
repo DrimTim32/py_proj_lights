@@ -294,41 +294,55 @@ class Intersection:
         else:  # RIGHT
             self.__array_upper[lane_index][self.__width - 1] = car
 
-    def pull_car(self, direction, lane_index, offset=0):
+    def pull_car(self, direction, lane_index):
         """
         Removes car from intersection and returns it
         :param direction: direction in which car is going
         :param lane_index: lane in which car is going
-        :param offset: offset between lanes on intersection and lanes on road
         :type direction: Directions
         :type lane_index: int
-        :type offset: int
         :return: car
         :rtype: Car
         """
         ret = None
-        if direction == Directions.TOP and self.__check_pull_upper_top(lane_index - offset):
-            ret = self.__array_upper[0][self.__width - lane_index - 1 - offset]
-            self.__array_upper[0][self.__width - lane_index - 1 - offset] = None
-        elif direction == Directions.TOP and self.__check_pull_lower_top(lane_index - offset):
-            ret = self.__array_lower[0][self.__width - lane_index - 1 - offset]
-            self.__array_lower[0][self.__width - lane_index - 1 - offset] = None
+        if direction == Directions.TOP and self.__check_pull_upper_top(lane_index):
+            ret = self.__array_upper[0][self.__width - lane_index - 1]
+            self.__array_upper[0][self.__width - lane_index - 1] = None
+        elif direction == Directions.TOP and self.__check_pull_lower_top(lane_index):
+            ret = self.__array_lower[0][self.__width - lane_index - 1]
+            self.__array_lower[0][self.__width - lane_index - 1] = None
 
-        elif direction == Directions.LEFT and self.__check_pull_upper_left(lane_index + offset):
-            ret = self.__array_upper[lane_index + offset][0]
-            self.__array_upper[lane_index + offset][0] = None
-        elif direction == Directions.LEFT and self.__check_pull_lower_left(lane_index + offset):
-            ret = self.__array_lower[lane_index + offset][0]
-            self.__array_lower[lane_index + offset][0] = None
+        elif direction == Directions.LEFT and self.__check_pull_upper_left(lane_index):
+            ret = self.__array_upper[lane_index][0]
+            self.__array_upper[lane_index][0] = None
+        elif direction == Directions.LEFT and self.__check_pull_lower_left(lane_index):
+            ret = self.__array_lower[lane_index][0]
+            self.__array_lower[lane_index][0] = None
 
-        elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index + offset):
-            ret = self.__array_upper[self.__height - 1][lane_index + offset]
-            self.__array_upper[self.__height - 1][lane_index + offset] = None
+        elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index):
+            ret = self.__array_upper[self.__height - 1][lane_index]
+            self.__array_upper[self.__height - 1][lane_index] = None
 
-        elif direction == Directions.RIGHT and self.__check_pull_right(lane_index - offset):
-            ret = self.__array_upper[self.__height - 1 - lane_index - offset][self.__width - 1]
-            self.__array_upper[self.__height - 1 - lane_index - offset][self.__width - 1] = None
+        elif direction == Directions.RIGHT and self.__check_pull_right(lane_index):
+            ret = self.__array_upper[self.__height - 1 - lane_index][self.__width - 1]
+            self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
 
+        if ret is None and self.__vertical_diff > 0:
+            ret = self.__pull_offset_car_bottom(direction, lane_index)
+
+        return ret
+
+    def __pull_offset_car_bottom(self, direction, lane_index):
+        print('d')
+        ret = None
+        for offset in range(1, self.__vertical_diff + 1):
+            if direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index + offset):
+                ret = self.__array_upper[self.__height - 1][lane_index + offset]
+                if ret.turn_direction == TurnDirection.STRAIGHT:
+                    self.__array_upper[self.__height - 1][lane_index + offset] = None
+                else:
+                    ret = None
+                break
         return ret
 
     def __check_pull_upper_top(self, lane_index):
