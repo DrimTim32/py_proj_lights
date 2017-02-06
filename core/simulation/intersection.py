@@ -211,15 +211,13 @@ class Intersection:
                         self.__array_upper[row + 1][col] = on_field
                     self.__array_upper[row][col] = None
 
-        offset = self.__vertical_diff if self.__vertical_diff > 0 else 0
-
         for col in range(self.__width - 1, -1, -1):
             for row in range(self.__height):
                 on_field = self.__array_lower[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 1:
-                    in_lane_base = self.__height - self.__properties.left.out_lanes_count - row
-                    if col < self.__width - self.__properties.top.out_lanes_count - in_lane_base - offset:
+                    in_lane_base = self.__height - self.__properties.left.in_lanes_count - row
+                    if col < self.__width - self.__properties.top.out_lanes_count - in_lane_base:
                         self.__array_lower[row][col + 1] = on_field
                     else:
                         self.__array_lower[row - 1][col] = on_field
@@ -230,25 +228,30 @@ class Intersection:
         updates positions of cars turning left on  vertical light phase
         :return: none
         """
+
+        offset = self.__horizontal_diff - 1 if self.__horizontal_diff > 0 else 0
+
         for row in range(self.__height - 1, -1, -1):
             for col in range(self.__width - 1, -1, -1):
                 on_field = self.__array_upper[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 0:
                     in_lane_base = self.__properties.top.in_lanes_count - col - 1
-                    if row < self.__height - self.__properties.right.out_lanes_count + in_lane_base:
+                    if row < self.__height - self.__properties.right.out_lanes_count + in_lane_base - offset:
                         self.__array_upper[row + 1][col] = on_field
                     else:
                         self.__array_upper[row][col + 1] = on_field
                     self.__array_upper[row][col] = None
+
+        offset = self.__horizontal_diff if self.__horizontal_diff < 0 else 0
 
         for row in range(self.__height):
             for col in range(self.__width):
                 on_field = self.__array_lower[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 2:
-                    in_lane_base = self.__width - self.__properties.bottom.out_lanes_count - col
-                    if row >= self.__height - self.__properties.left.out_lanes_count + in_lane_base:
+                    in_lane_base = self.__width - self.__properties.bottom.in_lanes_count - col
+                    if row >= self.__height - self.__properties.left.in_lanes_count + in_lane_base + offset:
                         self.__array_lower[row - 1][col] = on_field
                     else:
                         self.__array_lower[row][col - 1] = on_field

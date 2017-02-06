@@ -52,7 +52,6 @@ class DataCollector:
                     i += 1
                 if i == len(phase):
                     DataCollector._add_new_dataset(phase, lane_identifier, car)
-                # print(phase)
                 break
 
     @staticmethod
