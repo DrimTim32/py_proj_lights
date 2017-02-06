@@ -1,6 +1,10 @@
 import sys,os
 myPath = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, myPath + '\\..\\core')
+if "/" in sys.path[0]:
+    sys.path.insert(0, myPath + '/../core')
+else:
+    sys.path.insert(0, myPath + '\\..\\core')
+
 from data_structures.enums import Directions, str_to_direction
 import pytest
 
