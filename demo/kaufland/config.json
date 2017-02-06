@@ -14,7 +14,7 @@
             },
             {
               "Direction": 2,
-              "Probability": 0.01,
+              "Probability": 0.04,
               "Safe": false
             }
           ]
@@ -86,7 +86,7 @@
             },
             {
               "Direction": 2,
-              "Probability": 0.01,
+              "Probability": 0.04,
               "Safe": false
             }
           ]

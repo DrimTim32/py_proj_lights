@@ -147,8 +147,8 @@ class Intersection:
         for row in range(self.__height - 1, -1, - 1):
             for col in range(self.__properties.top.in_lanes_count):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    # print(row, col)
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.BOTTOM:
                     self.__array_upper[row + 1][col] = on_field
                     self.__array_upper[row][col] = None
 
@@ -156,7 +156,8 @@ class Intersection:
         for row in range(self.__height):
             for col in range(self.__width - self.__properties.bottom.in_lanes_count, self.__width):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.TOP:
                     self.__array_upper[row - 1][col] = on_field
                     self.__array_upper[row][col] = None
 
@@ -169,7 +170,8 @@ class Intersection:
         for col in range(self.__width):
             for row in range(self.__properties.right.in_lanes_count):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.LEFT:
                     self.__array_upper[row][col - 1] = on_field
                     self.__array_upper[row][col] = None
 
@@ -177,7 +179,8 @@ class Intersection:
         for col in range(self.__width - 1, -1, -1):
             for row in range(self.__height - self.__properties.left.in_lanes_count, self.__height):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.RIGHT:
                     self.__array_upper[row][col + 1] = on_field
                     self.__array_upper[row][col] = None
 
@@ -307,82 +310,120 @@ class Intersection:
         ret = None
         if direction == Directions.TOP and self.__check_pull_upper_top(lane_index):
             ret = self.__array_upper[0][self.__width - lane_index - 1]
-            self.__array_upper[0][self.__width - lane_index - 1] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[0][self.__width - lane_index - 1] = None
+            else:
+                ret = None
+
         elif direction == Directions.TOP and self.__check_pull_lower_top(lane_index):
             ret = self.__array_lower[0][self.__width - lane_index - 1]
             self.__array_lower[0][self.__width - lane_index - 1] = None
 
         elif direction == Directions.LEFT and self.__check_pull_upper_left(lane_index):
             ret = self.__array_upper[lane_index][0]
-            self.__array_upper[lane_index][0] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[lane_index][0] = None
+            else:
+                ret = None
+
         elif direction == Directions.LEFT and self.__check_pull_lower_left(lane_index):
             ret = self.__array_lower[lane_index][0]
             self.__array_lower[lane_index][0] = None
 
         elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index):
             ret = self.__array_upper[self.__height - 1][lane_index]
-            self.__array_upper[self.__height - 1][lane_index] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[self.__height - 1][lane_index] = None
+            else:
+                ret = None
 
         elif direction == Directions.RIGHT and self.__check_pull_right(lane_index):
             ret = self.__array_upper[self.__height - 1 - lane_index][self.__width - 1]
-            self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
+            else:
+                ret = None
 
-        if ret is None and self.__vertical_diff > 0:
-            ret = self.__pull_offset_car_bottom(direction, lane_index)
+        if ret is None:
+            return self.__pull_from_straight(direction)
+        else:
+            return ret
 
-        if ret is None and self.__vertical_diff < 0:
-            ret = self.__pull_offset_car_top(direction, lane_index)
-
-        if ret is None and self.__horizontal_diff > 0:
-            ret = self.__pull_offset_car_right(direction, lane_index)
-
-        if ret is None and self.__horizontal_diff < 0:
-            ret = self.__pull_offset_car_left(direction, lane_index)
-
+    def __pull_from_straight(self, direction):
+        """
+        :param direction: direction
+        :return: pulled car
+        :rtype: Car
+        """
+        ret = None
+        if direction == Directions.BOTTOM:
+            ret = self.__pull_straight_car_bottom()
+        elif direction == Directions.TOP:
+            ret = self.__pull_straight_car_top()
+        elif direction == Directions.RIGHT:
+            ret = self.__pull_straight_car_right()
+        elif direction == Directions.LEFT:
+            ret = self.__pull_straight_car_left()
         return ret
 
-    def __pull_offset_car_bottom(self, direction, lane_index):
+    def __pull_straight_car_bottom(self):
+        """
+        :rtype: Car
+        """
         ret = None
-        for offset in range(1, self.__vertical_diff + 1):
-            if direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index + offset):
-                ret = self.__array_upper[self.__height - 1][lane_index + offset]
+        for i in range(self.__width):
+            if self.__check_pull_bottom(i):
+                ret = self.__array_upper[self.__height - 1][i]
                 if ret.turn_direction == TurnDirection.STRAIGHT:
-                    self.__array_upper[self.__height - 1][lane_index + offset] = None
+                    self.__array_upper[self.__height - 1][i] = None
+                    break
                 else:
-                    return None
+                    ret = None
         return ret
 
-    def __pull_offset_car_left(self, direction, lane_index):
+    def __pull_straight_car_left(self):
+        """
+        :rtype: Car
+        """
         ret = None
-        for offset in range(1, -self.__horizontal_diff + 1):
-            if direction == Directions.LEFT and self.__check_pull_upper_left(lane_index + offset):
-                ret = self.__array_upper[lane_index + offset][0]
+        for i in range(self.__height):
+            if self.__check_pull_upper_left(i):
+                ret = self.__array_upper[i][0]
                 if ret.turn_direction == TurnDirection.STRAIGHT:
-                    self.__array_upper[lane_index + offset][0] = None
+                    self.__array_upper[i][0] = None
+                    break
                 else:
-                    return None
+                    ret = None
         return ret
 
-    def __pull_offset_car_top(self, direction, lane_index):
+    def __pull_straight_car_top(self):
+        """
+        :rtype: Car
+        """
         ret = None
-        for offset in range(1, -self.__vertical_diff + 1):
-            if direction == Directions.TOP and self.__check_pull_upper_top(lane_index + offset):
-                ret = self.__array_upper[0][self.__width - lane_index - 1 - offset]
+        for i in range(self.__width):
+            if self.__check_pull_upper_top(i):
+                ret = self.__array_upper[0][self.__width - 1 - i]
                 if ret.turn_direction == TurnDirection.STRAIGHT:
-                    self.__array_upper[0][self.__width - lane_index - 1 - offset] = None
+                    self.__array_upper[0][self.__width - 1 - i] = None
+                    break
                 else:
-                    return None
+                    ret = None
         return ret
 
-    def __pull_offset_car_right(self, direction, lane_index):
+    def __pull_straight_car_right(self):
+        """
+        :rtype: Car
+        """
         ret = None
-        for offset in range(1, self.__horizontal_diff + 1):
-            if direction == Directions.RIGHT and self.__check_pull_right(lane_index + offset):
-                ret = self.__array_upper[self.__height - 1 - lane_index - offset][self.__width - 1]
+        for i in range(self.__height):
+            if self.__check_pull_right(i):
+                ret = self.__array_upper[self.__height - 1 - i][self.__width - 1]
                 if ret.turn_direction == TurnDirection.STRAIGHT:
-                    self.__array_upper[self.__height - 1 - lane_index - offset][self.__width - 1] = None
+                    self.__array_upper[self.__height - 1 - i][self.__width - 1] = None
+                    break
                 else:
-                    return None
+                    ret = None
         return ret
 
     def __check_pull_upper_top(self, lane_index):
