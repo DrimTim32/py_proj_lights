@@ -1,7 +1,10 @@
-from core.data_structures.enums import Directions, TurnDirection
-from core.simulation.car import Car
-from core.simulation.intersection import Intersection, IntersectionProperties
-from core.simulation.road import RoadSizeVector
+import sys,os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '\\..\\core')
+from data_structures.enums import Directions, TurnDirection
+from simulation.car import Car
+from simulation.intersection import Intersection, IntersectionProperties
+from simulation.road import RoadSizeVector
 
 
 def get_intersection():

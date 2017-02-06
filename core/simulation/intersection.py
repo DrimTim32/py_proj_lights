@@ -4,8 +4,8 @@ File containing Intersection class and supporting tools
 
 import numpy as np
 
-from core.data_structures.enums import Directions, TurnDirection, Orientation
-from core.simulation.car import Car
+from data_structures.enums import Directions, TurnDirection, Orientation
+from .car import Car
 
 
 class IntersectionProperties:

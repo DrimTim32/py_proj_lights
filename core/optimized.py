@@ -2,7 +2,6 @@ import sys
 from time import clock
 
 import pygame
-
 from configuration import config
 from simulation.generators.car_proper_generator import CarProperGenerator
 from simulation.lights_managers.lights_manager import LightsManager

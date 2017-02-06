@@ -1,9 +1,12 @@
+import sys,os
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '\\..\\core')
 import numpy as np
 import pytest
 
-from core.data_structures.enums import Directions, TurnDirection
-from core.simulation.car import Car
-from core.simulation.road import get_empty_road, RoadSizeVector, Road
+from data_structures.enums import Directions, TurnDirection
+from simulation.car import Car
+from simulation.road import get_empty_road, RoadSizeVector, Road
 
 empty_roads_data = [
     (RoadSizeVector(1, 1, 1), [[[None]], [[None]]]),

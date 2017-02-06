@@ -1,7 +1,7 @@
 import pygame
 
-from core.drawing.drawing_consts import BLACK, BLUE
-from core.drawing.drawing_consts import CAR_RADIUS
+from drawing.drawing_consts import BLACK, BLUE
+from drawing.drawing_consts import CAR_RADIUS
 
 
 def draw_line(screen, point1, point2, color=BLACK):

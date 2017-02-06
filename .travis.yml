@@ -11,4 +11,4 @@ branches:
     - ania
     - master
 script:
-    - python setup.py test
+    - python -m setup.py test
