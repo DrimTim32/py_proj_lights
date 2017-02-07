@@ -4,4 +4,9 @@ core
 .. toctree::
    :maxdepth: 4
 
-   core
+          algorithms
+          configuration
+          data_structures
+          drawing
+          optimised
+          simulation
