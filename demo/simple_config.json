@@ -122,7 +122,6 @@
   ],
   "roads_length": 32,
   "simulation_data": {
-    "norm": "euclid",
     "step_count": "2500",
     "simulation_count": "101"
   }

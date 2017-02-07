@@ -15,7 +15,7 @@ class Optimizer:
         self.config = config
         self.car_generator = car_generator
         self.lights_manager = lights_manager
-        self.norm = get_norm(self.config.simulation_data.norm)
+        self.norm = get_norm('euclid')
         self.car_importance = avg
         self.time_importance = avg
         self.repetition_count = self.config.simulation_data.simulation_count

@@ -5,7 +5,7 @@ import pygame
 from configuration import config
 from simulation.generators.car_proper_generator import CarProperGenerator
 from simulation.lights_managers.lights_manager import LightsManager
-from algorithms.Optimizer import Optimizer
+from algorithms.optimiser import Optimizer
 from simulation.simulation import Simulation
 
 WINDOW_SIZE = (1000, 800)

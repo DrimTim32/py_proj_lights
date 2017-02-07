@@ -1,5 +1,5 @@
 from core.configuration.config import Config
-from core.algorithms.Optimizer import Optimizer
+from core.algorithms.optimiser import Optimizer
 
 
 def read_configuration(config_path):
