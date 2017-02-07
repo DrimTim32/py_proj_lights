@@ -5,17 +5,15 @@ from collections import namedtuple
 
 import pygame
 
-from core.data_structures import Vector
-from core.drawing.drawing_consts import WHITE, RED, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
+from data_structures import Vector
+from data_structures.points_structures import PointsQuadruple, RoadPointsGroup, PointsPair
+from drawing.drawing_consts import WHITE, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
-from core.drawing.drawing_helpers import draw_car, draw_line
-from core.drawing.lights_painter import LightsPainter
+from drawing.drawing_helpers import draw_car_by_value, draw_line
+from drawing.lights_painter import LightsPainter
 
 # region named tuples
-PointsPair = namedtuple('PointsPair', ['start', 'end'])
-RoadPointsGroup = namedtuple('RoadPointsGroup', ['outside', 'inside'])
 MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
-PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])
 
 
 # endregion
@@ -208,6 +206,10 @@ class MapPainter:
         return self.__intersection.array
 
     def get_lights_painter(self):
+        """
+        :return: ligths_painter
+        :rtype: LightsPainter
+        """
         top, left, down, right = self.border_points
         return LightsPainter(top[1][1], left[1][1], down[1][1], right[1][1])
 
@@ -288,17 +290,19 @@ class MapPainter:
         for i in range(len(board)):
             for j in range(len(board[i])):
                 point = board[i][j]
-                if point is not None and point != 0:
-                    draw_car(screen, start_point + _MapVectorsCalculator.down_movement_vector(j, i))
+                if point is not None and point != -1:
+                    draw_car_by_value(screen, start_point + _MapVectorsCalculator.down_movement_vector(j, i), point)
 
     @staticmethod
     def __draw_cars_on_road(screen, outside_dir, inside_dir, line):
         for (lane_index, field_index) in line.out_indexes:
-            if line.out_lanes[lane_index][field_index] is not None and line.out_lanes[lane_index][field_index] != 0:
-                draw_car(screen, outside_dir(lane_index, field_index))
+            car = line.out_lanes[lane_index][field_index]
+            if line.out_lanes[lane_index][field_index] is not None and car != -1:
+                draw_car_by_value(screen, outside_dir(lane_index, field_index), car.destination)
         for (lane_index, field_index) in line.in_indexes:
-            if line.in_lanes[lane_index][field_index] is not None and line.in_lanes[lane_index][field_index] != 0:
-                draw_car(screen, inside_dir(lane_index, field_index), RED)
+            car = line.in_lanes[lane_index][field_index]
+            if line.in_lanes[lane_index][field_index] is not None and car != -1:
+                draw_car_by_value(screen, inside_dir(lane_index, field_index), car.destination)
 
     @staticmethod
     def __draw_seals(screen, directions):

@@ -2,3 +2,4 @@ pygame
 pytest-runner
 enum34
 numpy
+setuptools

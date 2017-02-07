@@ -11,4 +11,5 @@ branches:
     - ania
     - master
 script:
-    - python setup.py test
+    - pip install -e .
+    - python -m pytest

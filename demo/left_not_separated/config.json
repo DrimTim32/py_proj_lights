@@ -1,0 +1,121 @@
+{
+  "directions": [
+    {
+      "Id": 0,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.0,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.0,
+              "Safe": true
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 3,
+              "Probability": 0.0,
+              "Safe": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 1,
+      "InLanes": 1,
+      "OutLanes": 1,
+      "Lanes": [
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.0,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.35,
+              "Safe": false
+            },
+            {
+              "Direction": 3,
+              "Probability": 0.03,
+              "Safe": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "InLanes": 2,
+      "OutLanes": 2,
+      "Lanes": [
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.0,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.0,
+              "Safe": true
+            }
+          ]
+        },
+        {
+          "TurnDirections": [
+            {
+              "Direction": 3,
+              "Probability": 0.0,
+              "Safe": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Id": 3,
+      "InLanes": 1,
+      "OutLanes": 1,
+      "Lanes": [
+        {
+          "TurnDirections": [
+            {
+              "Direction": 1,
+              "Probability": 0.0,
+              "Safe": false
+            },
+            {
+              "Direction": 2,
+              "Probability": 0.025,
+              "Safe": false
+            },
+            {
+              "Direction": 3,
+              "Probability": 0.05,
+              "Safe": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roads_length": 18,
+  "simulation_data": {
+    "step_count": "3200",
+    "simulation_count": "100"
+  }
+}

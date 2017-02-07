@@ -17,6 +17,7 @@ sort = Miss
 
 exclude_lines =
     pragma: no cover
+
     #defensive assertions
     raise AssertionError
     raise NotImplementedError

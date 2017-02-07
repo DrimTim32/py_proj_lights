@@ -1,31 +1,32 @@
 import sys
 from time import clock
 
+if "core" not in sys.path[0]:
+    if "\\" in sys.path[0]:
+        sys.path.insert(0, '..\\..\\core')
+    else:
+        sys.path.insert(0, '../../core')
 import pygame
 
-from core.configuration import config
-from core.simulation import Simulation
-from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import FixedLightsManager
+from configuration import config
+from simulation import Simulation
+from simulation.generators import CarProperGenerator
+from simulation.lights_managers import LightsManager
 
 WINDOW_SIZE = (1000, 800)
 
 
 def read_configuration():
     """Reads configuration from file"""
-    return config.Config.from_config_file("Configuration/config.json")
-
-
-def entrypoint():
-    configuration = read_configuration()
+    return config.Config.from_config_file('config.json')
 
 
 def main():
-    #   try:
-    #        entrypoint()
-    #   except Exception as e:
-    #      print("{0}, message : {1}".format(sys.stderr, e))
-    #     return 2
+    # try:
+    #      entrypoint()
+    # except Exception as e:
+    #   print("{0}, message : {1}".format(sys.stderr, e))
+    #   return 2
 
     pygame.init()
 
@@ -34,13 +35,13 @@ def main():
     done = False
 
     # Generators
-
+    configuration = read_configuration()
     car_generator = CarProperGenerator
-    lights_manager = FixedLightsManager
+    lights_manager = LightsManager
 
-    game = Simulation(car_generator, lights_manager)
+    game = Simulation(car_generator, lights_manager, configuration)
     game_map = game.map
-    lights = game.map.get_lights_painter()
+    lights_painter = game.map.get_lights_painter()
 
     game_map.prepare(screen)
     while not done:
@@ -57,8 +58,7 @@ def main():
             game.update()
 
         game_map.draw(screen, game.points)
-
-        lights.draw_empty(screen)
+        lights_painter.draw(screen, game.get_lights())
 
         pygame.time.Clock().tick(60)
         pygame.display.flip()

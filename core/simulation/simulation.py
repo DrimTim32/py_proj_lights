@@ -1,26 +1,25 @@
-from core.drawing.maps import create_map_painter
-from core.simulation.data_collector import DataCollector
-from core.simulation.enums import str_to_direction, Orientation
-from core.simulation.intersection import Intersection, IntersectionProperties
-from core.simulation.lights_managers.lights_phase import LightsPhase, DirectionsInfo
-from core.simulation.road import RoadSizeVector, get_empty_road
+
+from drawing.maps import create_map_painter
+from data_structures import str_to_direction, Orientation, Directions
+from .data_collector import DataCollector
+from .intersection import Intersection, IntersectionProperties
+from .lights_managers.lights_phase import LightsPhase, DirectionsInfo
+from .road import RoadSizeVector, get_empty_road
 
 
 class Simulation:
-    def __init__(self, car_generator, lights_manager):
-        self.__car_generator = car_generator()
-
+    def __init__(self, car_generator, lights_manager, config):
         self.__data_collector = DataCollector()
 
-        self.__lights_manager = lights_manager(Simulation.__create_lights_phases(), Simulation.__create_lanes_data())
-        self.__roads, self.__intersection = Simulation.__create_roads_and_intersection()
+        self.__car_generator = car_generator(Simulation.___create_probability_info(config.directions_turns))
+
+        self.__lights_manager = lights_manager(Simulation.create_lights_phases(config.directions_turns),
+                                               Simulation.__create_lanes_info(config.directions_turns))
+
+        self.__roads, self.__intersection = Simulation.__create_roads_and_intersection(config.directions_lanes,
+                                                                                       config.roads_length)
 
         self.__map = create_map_painter(self.__intersection, self.__roads)
-
-    @property
-    def points(self):
-        """Returns all points [top, left, bottom, right]"""
-        return [self.top, self.left, self.bottom, self.right]
 
     def update(self):
         """Updates whole object"""
@@ -28,14 +27,16 @@ class Simulation:
         self.__intersection.update()
         self.__lights_manager.update()
         self.__update_in()
-        print(self.__lights_manager.current_phase)
+        # print(self.__lights_manager.current_phase)
+        # print(self.__data_collector.data)
 
     def __update_out(self):
-        for direction in self.__roads.keys():
-            road = self.__roads[direction]
+        for direction_str in self.__roads.keys():
+            direction = str_to_direction(direction_str)
+            road = self.__roads[direction_str]
             road.update_out()
             for lane_index in range(road.out_width):
-                road.push_car_out(lane_index, self.__intersection.pull_car(str_to_direction(direction), lane_index))
+                road.push_car_out(lane_index, self.__intersection.pull_car(direction, lane_index))
 
     def __update_in(self):
         for direction in self.__roads.keys():
@@ -43,12 +44,39 @@ class Simulation:
             for lane_index in range(road.in_width):
                 if self.__lights_manager.is_green(str_to_direction(direction), lane_index):
                     if road.has_waiting_car(lane_index):
-                        self.__intersection.push_car(str_to_direction(direction), lane_index, road.pull_car(lane_index))
+                        car = road.pull_car(lane_index)
+                        self.__data_collector.register(car, lane_index, self.__lights_manager.current_phase)
+                        self.__intersection.push_car(str_to_direction(direction), lane_index, car)
                 road.update_in(lane_index)
                 road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
 
-    def calculate_offset(self, direction):
-        pass
+    def get_number_of_phases(self):
+        """
+        :return:number of lights phases
+        :rtype: int
+        """
+        return len(self.__lights_manager.phases)
+
+    def set_phases_durations(self, new_durations):
+        """
+        sets new duration of lights phases
+        :param new_durations: new durations
+        :type new_durations: list[int]
+        :return: none
+        """
+        for phase_id in range(len(self.__lights_manager.phases)):
+            phase = self.__lights_manager.phases[phase_id]
+            phase.duration = new_durations[phase_id]
+
+    def get_lights(self):
+        lights = {Directions.TOP: [],
+                  Directions.LEFT: [],
+                  Directions.BOTTOM: [],
+                  Directions.RIGHT: []}
+        for direction in lights.keys():
+            for lane_index in range(self.__roads[direction.__str__()].in_width):
+                lights[direction].append(self.__lights_manager.is_green(direction, lane_index))
+        return lights
 
     @property
     def top(self):
@@ -72,34 +100,134 @@ class Simulation:
 
     @property
     def map(self):
+        """
+        :return:  map
+        :rtype: MapPainter
+        """
         return self.__map
 
-    @staticmethod
-    def __create_roads_and_intersection(direction=None):
-        directions = [
-            RoadSizeVector(16, 2, 2),  # top
-            RoadSizeVector(16, 2, 2),  # left
-            RoadSizeVector(16, 2, 2),  # bottom
-            RoadSizeVector(16, 2, 2)  # right
-        ]
+    @property
+    def points(self):
+        """Returns all points [top, left, bottom, right]"""
+        return [self.top, self.left, self.bottom, self.right]
 
-        roads = {"top": get_empty_road(directions[0]),
-                 "left": get_empty_road(directions[1]),
-                 "bottom": get_empty_road(directions[2]),
-                 "right": get_empty_road(directions[3])}
-
-        return roads, Intersection(IntersectionProperties(directions))
+    @property
+    def current_data(self):
+        """
+        :return: data collected by simulation
+        :rtype: dict[list[LanePhaseData]]
+        """
+        return self.__data_collector.data
 
     @staticmethod
-    def __create_lights_phases(phases=None):
-        return [LightsPhase(DirectionsInfo(True, True, False, False), Orientation.VERTICAL, 20),
-                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.VERTICAL, 20),
-                LightsPhase(DirectionsInfo(True, True, False, False), Orientation.HORIZONTAL, 20),
-                LightsPhase(DirectionsInfo(False, False, False, True), Orientation.HORIZONTAL, 20)]
+    def __create_roads_and_intersection(directions_lanes, roads_length):
+        """
+        :param directions_lanes: information about number of lanes
+        :param roads_length: roads length
+        :return: roads and intersection
+        :rtype: dict[str, Road], Intersection
+        """
+        directions_properties = [None, None, None, None]
+        for direction_id in directions_lanes.keys():
+            direction = directions_lanes[direction_id]
+            directions_properties[direction_id] = RoadSizeVector(roads_length,
+                                                                 direction[1],
+                                                                 direction[0])
+
+        roads = {"top": get_empty_road(directions_properties[0]),
+                 "left": get_empty_road(directions_properties[1]),
+                 "bottom": get_empty_road(directions_properties[2]),
+                 "right": get_empty_road(directions_properties[3])}
+
+        return roads, Intersection(IntersectionProperties(directions_properties))
 
     @staticmethod
-    def __create_lanes_data(data=None):
-        return {"top": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "left": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "bottom": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)],
-                "right": [DirectionsInfo(True, True, False, False), DirectionsInfo(False, False, False, True)]}
+    def create_lights_phases(directions_turns):
+        """
+        :param directions_turns: information about directions
+        :return: lights phases
+        :rtype: list[LightsPhase]
+        """
+        phases = []
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                turns = Simulation.check_turns(lane)
+                phase = LightsPhase(DirectionsInfo(turns[0], turns[1], turns[2], turns[3]),
+                                    Simulation.__check_orientation(direction_id), 20)
+                is_new_phase = True
+                for existing_phase_id in range(len(phases)):
+                    if phase == phases[existing_phase_id]:
+                        phases[existing_phase_id] += phase
+                        is_new_phase = False
+                        break
+                if is_new_phase:
+                    phases.append(phase)
+        # print(phases)
+        return phases
+
+    @staticmethod
+    def __create_lanes_info(directions_turns=None):
+        """
+        :param directions_turns: information about directions
+        :return: lanes info
+        :rtype: dict[Directions, list[DirectionsInfo]]
+        """
+        lanes_info = {Directions.TOP: [],
+                      Directions.LEFT: [],
+                      Directions.BOTTOM: [],
+                      Directions.RIGHT: []}
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                turns = Simulation.check_turns(lane)
+                lanes_info[Directions(direction_id)].append(
+                    DirectionsInfo(turns[0], turns[1], turns[2], turns[3]))
+        return lanes_info
+
+    @staticmethod
+    def check_turns(lane):
+        """
+        :param lane: lane data from config
+        :return: possible turn direction from lane
+        :rtype: list[bool]
+        """
+        turns = [False, False, False, False]
+        for turn_direction in lane.keys():
+            if turn_direction == 3 and lane[turn_direction][1]:
+                turns[3] = True
+            else:
+                turns[turn_direction - 1] = True
+        return turns
+
+    @staticmethod
+    def ___create_probability_info(directions_turns):
+        """
+        :param directions_turns: information about directions
+        :return: probabilities for car generation
+        :rtype: dict[Directions,list[list[float]]]
+        """
+        probabilities = {Directions.TOP: [],
+                         Directions.LEFT: [],
+                         Directions.BOTTOM: [],
+                         Directions.RIGHT: []}
+        for direction_id in directions_turns.keys():
+            direction = directions_turns[direction_id]
+            for lane in direction:
+                direction_probabilities = probabilities[Directions(direction_id)]
+                direction_probabilities.append([0, 0, 0])
+                lane_probabilities = direction_probabilities[-1]
+                for turn_direction in lane.keys():
+                    lane_probabilities[turn_direction - 1] = lane[turn_direction][0]
+        # print(probabilities)
+        return probabilities
+
+    @staticmethod
+    def __check_orientation(direction):
+        """
+        :param direction: checks orientation of given direction
+        :type direction: Direction
+        :return: orientation
+        :rtype: Orientation
+        """
+        return Orientation(direction % 2)

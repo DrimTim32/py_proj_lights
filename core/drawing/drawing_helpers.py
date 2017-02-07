@@ -1,6 +1,7 @@
 import pygame
-from core.drawing.drawing_consts import BLACK, BLUE
-from core.drawing.drawing_consts import CAR_RADIUS
+
+from drawing.drawing_consts import BLACK, BLUE
+from drawing.drawing_consts import CAR_RADIUS
 
 
 def draw_line(screen, point1, point2, color=BLACK):
@@ -17,6 +18,21 @@ def draw_circle(screen, position, radius, color=BLACK):
     :return: None
     """
     pygame.draw.circle(screen, color, [position.x, position.y], radius)
+
+
+def draw_car_by_value(screen, position, value):
+    color = (255, 255, 255)
+    if value == 0:
+        color = (200, 0, 0)
+    if value == 1:
+        color = (0, 200, 0)
+    if value == 2:
+        color = (0, 0, 200)  # magenta
+    if value == 3:
+        color = (255, 0, 114)
+    if value == 4:
+        color = (0, 0, 0)
+    draw_car(screen, position, color)
 
 
 def draw_car(screen, position, color=BLUE):

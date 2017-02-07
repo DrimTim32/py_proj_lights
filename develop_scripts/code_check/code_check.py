@@ -7,8 +7,8 @@ count = 0
 
 BASE_DIRECTORY = os.getcwd()
 EXTENDED = ""
-TYPE = "text" 
-excluded_directories = ["develop_scripts", "tests", "docs","demo"] 
+TYPE = "text"
+excluded_directories = ["develop_scripts", "tests", "docs", "demo"]
 excluded_files = ["__init__.py", "setup.py", "custom_assertions.py", "conftest.py"]
 
 expected_html_tags = ["<table>", "<html>"]
