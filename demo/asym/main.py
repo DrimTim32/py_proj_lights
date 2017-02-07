@@ -1,12 +1,17 @@
 import sys
 from time import clock
 
+if "core" not in sys.path[0]:
+    if "\\" in sys.path[0]:
+        sys.path.insert(0, '..\\..\\core')
+    else:
+        sys.path.insert(0, 'core')
 import pygame
 
-from core.configuration import config
-from core.simulation import Simulation
-from core.simulation.generators import CarProperGenerator
-from core.simulation.lights_managers import LightsManager
+from configuration import config
+from simulation import Simulation
+from simulation.generators import CarProperGenerator
+from simulation.lights_managers import LightsManager
 
 WINDOW_SIZE = (1000, 800)
 
