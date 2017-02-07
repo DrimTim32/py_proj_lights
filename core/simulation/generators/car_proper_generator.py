@@ -3,8 +3,8 @@ File containing CarProperGenerator class
 """
 from numpy.random import choice
 
-from core.data_structures.enums import TurnDirection
-from core.simulation import Car
+from data_structures.enums import TurnDirection
+from simulation import Car
 
 
 class CarProperGenerator:
@@ -39,5 +39,6 @@ class CarProperGenerator:
         none_prob = 1. - sum(probabilities)
         ret = choice(possibilities, 1, p=[none_prob] + probabilities)
         if direction == 0:
-            print([none_prob] + probabilities)
+            pass
+            # print([none_prob] + probabilities)
         return ret[0]

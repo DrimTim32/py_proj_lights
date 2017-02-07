@@ -13,7 +13,7 @@ source = core
 [report]
 show_missing = True
 
-sort = Cover
+sort = Miss
 
 exclude_lines =
     pragma: no cover

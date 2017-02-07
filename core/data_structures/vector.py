@@ -14,6 +14,9 @@ class Vector:
             raise ValueError("Second multiplication object must be an int")
         return Vector(self.x * other, self.y * other)
 
+    def __rmul__(self, other):
+        return self * other
+
     def __ne__(self, other):
         return not self == other
 

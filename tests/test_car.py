@@ -1,6 +1,9 @@
-from core.simulation.car import Car
+import sys
 
-from core.data_structures.enums import Directions, TurnDirection
+if "core" not in sys.path[0]:
+    sys.path.insert(0, 'core')
+from data_structures.enums import Directions, TurnDirection
+from simulation.car import Car
 
 
 def test_car_init():

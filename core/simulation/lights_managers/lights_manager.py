@@ -1,7 +1,7 @@
 """
 File containing  LightsManager class
 """
-from core.data_structures.enums import Orientation
+from data_structures.enums import Orientation
 
 
 class LightsManager:
@@ -9,7 +9,7 @@ class LightsManager:
     LightsManger class
     """
 
-    def __init__(self, phases, lanes_info=None):
+    def __init__(self, phases, lanes_info):
         """
         initializes LightsManager with lights phases and information about lanes on intersection
         :param phases: lights phases
@@ -19,9 +19,9 @@ class LightsManager:
         """
         self.__current_phase = -1
         self.__previous_phase = -1
-        self.__no_phase_time = 9
         self.__last_phase_change = 0
         self.__lanes_info = lanes_info
+        self.__no_phase_time = 2 * max([len(dir_lanes) for dir_lanes in self.__lanes_info.values()])
         self.phases = phases
 
     def is_green(self, direction, lane_index):
@@ -37,7 +37,7 @@ class LightsManager:
         lane = self.__lanes_info[direction][lane_index]
         if self.__current_phase == -1:
             return False
-        if LightsManager.__check_orientation(direction) == phase.orientation:
+        if LightsManager.__check_orientation(direction) != phase.orientation:
             return False
         if phase.right and lane.right:
             return True

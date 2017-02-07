@@ -1,5 +1,4 @@
-{
-  "directions": [
+{ "directions": [
     {
       "Id": 0,
       "InLanes": 2,
@@ -121,9 +120,9 @@
       ]
     }
   ],
-  "roads_length": 16,
+  "roads_length": 32,
   "simulation_data": {
-    "step_count": "300",
-    "simulation_count": "70"
+    "step_count": "2500",
+    "simulation_count": "101"
   }
 }

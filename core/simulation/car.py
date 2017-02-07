@@ -1,5 +1,5 @@
 """This file contains Car class"""
-from core.data_structures.enums import Directions
+from data_structures.enums import Directions
 
 
 class Car:

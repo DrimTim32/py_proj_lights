@@ -1,7 +1,11 @@
 """
-File containing Config class
+File containing Config class and SimulationData namedtuple
 """
+from collections import namedtuple
 import json
+
+SimulationData = namedtuple('SimulationData', ['step_count',
+                                               'simulation_count'])
 
 
 class Config:
@@ -9,12 +13,14 @@ class Config:
     Configuration class
     """
 
-    def __init__(self, directions, roads_length, norm, variance, importance):
+    def __init__(self, directions, roads_length, simulation_data):
+        """
+        :type simulation_data : SimulationData
+        """
         self.__directions = directions
         self.__roads_length = roads_length
-        self.__norm = norm
-        self.__variance = variance
-        self.__importance = importance
+        self.__simulation_data = SimulationData(int(simulation_data['step_count']),
+                                                int(simulation_data['simulation_count']))
 
     @staticmethod
     def from_config_file(file_name):
@@ -26,7 +32,7 @@ class Config:
         """
         file = open(file_name)
         data = json.load(file)
-        return Config(data['directions'], data['roads_length'], data['norm'], data['variance'], data['importance'])
+        return Config(data['directions'], data['roads_length'], data['simulation_data'])
 
     @property
     def directions_lanes(self):
@@ -52,25 +58,9 @@ class Config:
         return self.__roads_length
 
     @property
-    def norm(self):
+    def simulation_data(self):
         """
         :return: name of norm to be used in optimization
-        :rtype: str
+        :rtype: SimulationData
         """
-        return self.__norm
-
-    @property
-    def variance(self):
-        """
-        :return: name of variance to be used in optimization
-        :rtype: str
-        """
-        return self.__variance
-
-    @property
-    def importance(self):
-        """
-        :return: name of importance function
-        :rtype: str
-        """
-        return self.__importance
+        return self.__simulation_data

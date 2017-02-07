@@ -4,8 +4,8 @@ File containing Intersection class and supporting tools
 
 import numpy as np
 
-from core.data_structures.enums import Directions, TurnDirection, Orientation
-from core.simulation.car import Car
+from data_structures.enums import Directions, TurnDirection, Orientation
+from .car import Car
 
 
 class IntersectionProperties:
@@ -46,6 +46,10 @@ class Intersection:
         self.__width = properties.width
         self.__height = properties.height
         self.__properties = properties
+        self.__vertical_diff = (properties.top.in_lanes_count + properties.top.out_lanes_count) - (
+            properties.bottom.in_lanes_count + properties.bottom.out_lanes_count)
+        self.__horizontal_diff = (properties.left.in_lanes_count + properties.left.out_lanes_count) - (
+            properties.right.in_lanes_count + properties.right.out_lanes_count)
 
     def __getitem__(self, item):
         return self.array[item]
@@ -143,8 +147,8 @@ class Intersection:
         for row in range(self.__height - 1, -1, - 1):
             for col in range(self.__properties.top.in_lanes_count):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
-                    # print(row, col)
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.BOTTOM:
                     self.__array_upper[row + 1][col] = on_field
                     self.__array_upper[row][col] = None
 
@@ -152,7 +156,8 @@ class Intersection:
         for row in range(self.__height):
             for col in range(self.__width - self.__properties.bottom.in_lanes_count, self.__width):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.TOP:
                     self.__array_upper[row - 1][col] = on_field
                     self.__array_upper[row][col] = None
 
@@ -165,7 +170,8 @@ class Intersection:
         for col in range(self.__width):
             for row in range(self.__properties.right.in_lanes_count):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.LEFT:
                     self.__array_upper[row][col - 1] = on_field
                     self.__array_upper[row][col] = None
 
@@ -173,7 +179,8 @@ class Intersection:
         for col in range(self.__width - 1, -1, -1):
             for row in range(self.__height - self.__properties.left.in_lanes_count, self.__height):
                 on_field = self.__array_upper[row][col]
-                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT:
+                if isinstance(on_field, Car) and on_field.turn_direction == TurnDirection.STRAIGHT and \
+                                on_field.destination == Directions.RIGHT:
                     self.__array_upper[row][col + 1] = on_field
                     self.__array_upper[row][col] = None
 
@@ -183,8 +190,6 @@ class Intersection:
         :return: none
         """
         orientation = self.__check_orientation()
-        if orientation is None:
-            return
         if orientation == Orientation.VERTICAL:
             self.__update_left_vertical()
         else:
@@ -195,13 +200,14 @@ class Intersection:
         updates positions of cars turning left on  horizontal light phase
         :return: none
         """
+
         for col in range(self.__width):
             for row in range(self.__height - 1, -1, -1):
                 on_field = self.__array_upper[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 3:
                     in_lane_base = self.__properties.right.in_lanes_count - row
-                    if col > self.__width - self.__properties.bottom.in_lanes_count - in_lane_base:
+                    if col > self.__properties.bottom.out_lanes_count - in_lane_base:
                         self.__array_upper[row][col - 1] = on_field
                     else:
                         self.__array_upper[row + 1][col] = on_field
@@ -212,7 +218,7 @@ class Intersection:
                 on_field = self.__array_lower[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 1:
-                    in_lane_base = self.__height - self.__properties.left.out_lanes_count - row
+                    in_lane_base = self.__height - self.__properties.left.in_lanes_count - row
                     if col < self.__width - self.__properties.top.out_lanes_count - in_lane_base:
                         self.__array_lower[row][col + 1] = on_field
                     else:
@@ -224,6 +230,7 @@ class Intersection:
         updates positions of cars turning left on  vertical light phase
         :return: none
         """
+
         for row in range(self.__height - 1, -1, -1):
             for col in range(self.__width - 1, -1, -1):
                 on_field = self.__array_upper[row][col]
@@ -241,8 +248,8 @@ class Intersection:
                 on_field = self.__array_lower[row][col]
                 if isinstance(on_field,
                               Car) and on_field.turn_direction == TurnDirection.LEFT and on_field.source == 2:
-                    in_lane_base = self.__width - self.__properties.bottom.out_lanes_count - col
-                    if row >= self.__height - self.__properties.left.out_lanes_count + in_lane_base:
+                    in_lane_base = self.__width - self.__properties.bottom.in_lanes_count - col
+                    if row >= self.__properties.left.out_lanes_count + in_lane_base:
                         self.__array_lower[row - 1][col] = on_field
                     else:
                         self.__array_lower[row][col - 1] = on_field
@@ -290,41 +297,133 @@ class Intersection:
         else:  # RIGHT
             self.__array_upper[lane_index][self.__width - 1] = car
 
-    def pull_car(self, direction, lane_index, offset=0):
+    def pull_car(self, direction, lane_index):
         """
         Removes car from intersection and returns it
         :param direction: direction in which car is going
         :param lane_index: lane in which car is going
-        :param offset: offset between lanes on intersection and lanes on road
         :type direction: Directions
         :type lane_index: int
-        :type offset: int
         :return: car
         :rtype: Car
         """
         ret = None
         if direction == Directions.TOP and self.__check_pull_upper_top(lane_index):
             ret = self.__array_upper[0][self.__width - lane_index - 1]
-            self.__array_upper[0][self.__width - lane_index - 1] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[0][self.__width - lane_index - 1] = None
+            else:
+                ret = None
+
         elif direction == Directions.TOP and self.__check_pull_lower_top(lane_index):
             ret = self.__array_lower[0][self.__width - lane_index - 1]
             self.__array_lower[0][self.__width - lane_index - 1] = None
 
         elif direction == Directions.LEFT and self.__check_pull_upper_left(lane_index):
             ret = self.__array_upper[lane_index][0]
-            self.__array_upper[lane_index][0] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[lane_index][0] = None
+            else:
+                ret = None
+
         elif direction == Directions.LEFT and self.__check_pull_lower_left(lane_index):
             ret = self.__array_lower[lane_index][0]
             self.__array_lower[lane_index][0] = None
 
         elif direction == Directions.BOTTOM and self.__check_pull_bottom(lane_index):
             ret = self.__array_upper[self.__height - 1][lane_index]
-            self.__array_upper[self.__height - 1][lane_index] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[self.__height - 1][lane_index] = None
+            else:
+                ret = None
 
         elif direction == Directions.RIGHT and self.__check_pull_right(lane_index):
             ret = self.__array_upper[self.__height - 1 - lane_index][self.__width - 1]
-            self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
+            if ret.turn_direction != TurnDirection.STRAIGHT:
+                self.__array_upper[self.__height - 1 - lane_index][self.__width - 1] = None
+            else:
+                ret = None
 
+        if ret is None:
+            return self.__pull_from_straight(direction)
+        else:
+            return ret
+
+    def __pull_from_straight(self, direction):
+        """
+        :param direction: direction
+        :return: pulled car
+        :rtype: Car
+        """
+        ret = None
+        if direction == Directions.BOTTOM:
+            ret = self.__pull_straight_car_bottom()
+        elif direction == Directions.TOP:
+            ret = self.__pull_straight_car_top()
+        elif direction == Directions.RIGHT:
+            ret = self.__pull_straight_car_right()
+        elif direction == Directions.LEFT:
+            ret = self.__pull_straight_car_left()
+        return ret
+
+    def __pull_straight_car_bottom(self):
+        """
+        :rtype: Car
+        """
+        ret = None
+        for i in range(self.__width):
+            if self.__check_pull_bottom(i):
+                ret = self.__array_upper[self.__height - 1][i]
+                if ret.turn_direction == TurnDirection.STRAIGHT:
+                    self.__array_upper[self.__height - 1][i] = None
+                    break
+                else:
+                    ret = None
+        return ret
+
+    def __pull_straight_car_left(self):
+        """
+        :rtype: Car
+        """
+        ret = None
+        for i in range(self.__height):
+            if self.__check_pull_upper_left(i):
+                ret = self.__array_upper[i][0]
+                if ret.turn_direction == TurnDirection.STRAIGHT:
+                    self.__array_upper[i][0] = None
+                    break
+                else:
+                    ret = None
+        return ret
+
+    def __pull_straight_car_top(self):
+        """
+        :rtype: Car
+        """
+        ret = None
+        for i in range(self.__width):
+            if self.__check_pull_upper_top(i):
+                ret = self.__array_upper[0][self.__width - 1 - i]
+                if ret.turn_direction == TurnDirection.STRAIGHT:
+                    self.__array_upper[0][self.__width - 1 - i] = None
+                    break
+                else:
+                    ret = None
+        return ret
+
+    def __pull_straight_car_right(self):
+        """
+        :rtype: Car
+        """
+        ret = None
+        for i in range(self.__height):
+            if self.__check_pull_right(i):
+                ret = self.__array_upper[self.__height - 1 - i][self.__width - 1]
+                if ret.turn_direction == TurnDirection.STRAIGHT:
+                    self.__array_upper[self.__height - 1 - i][self.__width - 1] = None
+                    break
+                else:
+                    ret = None
         return ret
 
     def __check_pull_upper_top(self, lane_index):
@@ -404,8 +503,14 @@ class Intersection:
         """
         :return:Array of cars on intersection
         """
-        out_array = np.empty(np.array(self.__array_upper).shape)
+        out_array = np.full(np.array(self.__array_upper).shape, -1)
         for i in range(len(self.__array_upper)):
             for j in range(len(self.__array_upper[i])):
-                out_array[i][j] = (self.__array_upper[i][j] is not None) or (self.__array_lower[i][j] is not None)
-        return out_array.astype(int)
+                upper_val = self.__array_upper[i][j]
+                lower_val = self.__array_lower[i][j]
+                out_array[i][j] = upper_val.destination if upper_val is not None else -1
+                if out_array[i][j] == -1:
+                    out_array[i][j] = lower_val.destination if lower_val is not None else -1
+                if upper_val is not None and lower_val is not None:
+                    out_array[i][j] = 4
+        return out_array
