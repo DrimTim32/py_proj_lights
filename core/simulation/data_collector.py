@@ -4,13 +4,23 @@ File containing DataCollector class and supporting tools
 
 
 class LanePhaseData:
+    """
+    LanePhaseData class
+    """
+
     def __init__(self, lane_identifier):
+        """
+        :param lane_identifier: unique lane hash
+        """
         self.car_count = 0
         self.lane_identifier = lane_identifier
         self.total_waiting_time = 0
 
     @property
     def average_waiting_time(self):
+        """
+        :return: average waiting time
+        """
         return self.total_waiting_time / self.car_count
 
     def __repr__(self):

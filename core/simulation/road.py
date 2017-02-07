@@ -171,3 +171,15 @@ class Road:
         for i in range(len(self.in_lanes)):
             for j in range(len(self.in_lanes[i])):
                 yield (i, j)
+
+    def first_waiting_car_turn(self, lane_index):
+        """
+        :param lane_index: index of lane
+        :return: turn direction of first care on lane
+        :rtype: TurnDirection
+        """
+        car = self.in_lanes[lane_index][-1]
+        if car is None:
+            return None
+        else:
+            return car.turn_direction
