@@ -1,3 +1,4 @@
+"""This file contain all enums"""
 from enum import IntEnum
 
 
