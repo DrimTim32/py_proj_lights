@@ -1,6 +1,6 @@
 """This file contains simulation class"""
+from data_structures import str_to_direction, Orientation, Directions, TurnDirection
 from drawing.maps import create_map_painter
-from data_structures import str_to_direction, Orientation, Directions
 from .data_collector import DataCollector
 from .intersection import Intersection, IntersectionProperties
 from .lights_managers.lights_phase import LightsPhase, DirectionsInfo
@@ -104,9 +104,18 @@ class Simulation:
             time = int(weight * phase_time)
             op_time = int(op_weight * phase_time)
             if direction in [0, 1]:
-                return self.__lights_manager.in_phase_time <= time and is_green
+                my_turn = self.__lights_manager.in_phase_time <= time
             else:
-                return self.__lights_manager.in_phase_time > op_time and is_green
+                my_turn = self.__lights_manager.in_phase_time > op_time
+
+            if my_turn:
+                return my_turn and is_green
+            else:
+                turn = self.__roads[direction.__str__()].first_waiting_car_turn(lane_index)
+                if turn is None:
+                    return is_green
+                else:
+                    return is_green and turn == TurnDirection.RIGHT
 
     @property
     def top(self):

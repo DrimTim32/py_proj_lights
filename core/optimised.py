@@ -3,10 +3,11 @@ import sys
 from time import clock
 
 import pygame
+
+from algorithms.optimiser import Optimiser
 from configuration import config
 from simulation.generators.car_proper_generator import CarProperGenerator
 from simulation.lights_managers.lights_manager import LightsManager
-from algorithms.optimiser import Optimiser
 from simulation.simulation import Simulation
 
 WINDOW_SIZE = (1000, 800)

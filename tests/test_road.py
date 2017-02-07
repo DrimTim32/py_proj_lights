@@ -1,5 +1,6 @@
 """This file contains tests for road class"""
 import sys
+
 import numpy as np
 import pytest
 
