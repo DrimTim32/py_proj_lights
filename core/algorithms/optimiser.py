@@ -8,7 +8,7 @@ from collections import namedtuple
 from datetime import datetime
 
 from simulation import Simulation
-from .algorithms import avg, get_norm, negative_gompertz, logistic
+from .algorithms import avg, get_norm, negative_gompertz, logistic,curves_valuator
 from .algorithms_exceptions import OptimisationException
 
 SimulationData = namedtuple('SimulationData', ['norm', 'car_sum', 'wait_sum', 'vect'], False)  # pylint: disable=C0103
@@ -65,7 +65,7 @@ class Optimiser:
         :type wait_count: float
         :rtype: float
         """
-        return self.__car_equation(car_count) + self.__time_equation(wait_count)
+        return curves_valuator(self.__car_equation(car_count),self.__time_equation(wait_count))
 
     def __generate_start_lights(self, count):
         """

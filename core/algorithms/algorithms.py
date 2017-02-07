@@ -54,6 +54,9 @@ def negative_gompertz(x_0, asymptote, inflection, rate):
     """
     return 1 - asymptote * math.exp((-inflection * math.exp(-rate * x_0)))
 
+def curves_valuator(car_value,time_value):
+    """Valuates two variables"""
+    return car_value + time_value
 
 def get_norm(name):
     """Returns norm by string"""
