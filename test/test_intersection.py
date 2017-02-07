@@ -133,16 +133,16 @@ def test_pull_car():
     intersection = get_intersection()
     # top
     for i in range(5):
-        intersection.push_car(Directions.TOP, 5 + i, Car(Directions.BOTTOM, TurnDirection.STRAIGHT))
+        intersection.push_car(Directions.TOP, 5 + i, Car(Directions.LEFT, TurnDirection.LEFT))
     # bottom
     for i in range(5):
-        intersection.push_car(Directions.BOTTOM, 5 + i, Car(Directions.TOP, TurnDirection.STRAIGHT))
+        intersection.push_car(Directions.BOTTOM, 5 + i, Car(Directions.LEFT, TurnDirection.RIGHT))
     # left
     for i in range(5):
-        intersection.push_car(Directions.LEFT, 5 + i, Car(Directions.RIGHT, TurnDirection.STRAIGHT))
+        intersection.push_car(Directions.LEFT, 5 + i, Car(Directions.BOTTOM, TurnDirection.LEFT))
     # right
     for i in range(5):
-        intersection.push_car(Directions.RIGHT, 5 + i, Car(Directions.LEFT, TurnDirection.STRAIGHT))
+        intersection.push_car(Directions.RIGHT, 5 + i, Car(Directions.TOP, TurnDirection.LEFT))
 
     for i in range(5):
         assert intersection.pull_car(Directions.LEFT, i) is not None
@@ -152,6 +152,5 @@ def test_pull_car():
 
         assert intersection.pull_car(Directions.BOTTOM, i) is not None
         assert intersection.pull_car(Directions.BOTTOM, i) is None
-
         assert intersection.pull_car(Directions.RIGHT, i) is not None
-        assert intersection.pull_car(Directions.RIGHT, 5 + i) is None
+        assert intersection.pull_car(Directions.RIGHT, i) is None
