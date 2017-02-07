@@ -3,8 +3,8 @@ File containing CarProperGenerator class
 """
 from numpy.random import choice
 
-from core.data_structures.enums import TurnDirection
-from core.simulation import Car
+from data_structures.enums import TurnDirection
+from simulation import Car
 
 
 class CarProperGenerator:

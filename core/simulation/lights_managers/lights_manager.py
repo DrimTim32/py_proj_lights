@@ -1,7 +1,7 @@
 """
 File containing  LightsManager class
 """
-from core.data_structures.enums import Orientation
+from data_structures.enums import Orientation
 
 
 class LightsManager:

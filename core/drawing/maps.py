@@ -5,12 +5,12 @@ from collections import namedtuple
 
 import pygame
 
-from core.data_structures import Vector
-from core.data_structures.points_structures import PointsQuadruple, RoadPointsGroup, PointsPair
-from core.drawing.drawing_consts import WHITE, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
+from data_structures import Vector
+from data_structures.points_structures import PointsQuadruple, RoadPointsGroup, PointsPair
+from drawing.drawing_consts import WHITE, CAR_OFFSET, CAR_RADIUS, CONST_OFFSET, \
     LENGTH_MULTIPLIER, WIDTH_MULTIPLIER
-from core.drawing.drawing_helpers import draw_car_by_value, draw_line
-from core.drawing.lights_painter import LightsPainter
+from drawing.drawing_helpers import draw_car_by_value, draw_line
+from drawing.lights_painter import LightsPainter
 
 # region named tuples
 MaxOffset = namedtuple('MaxOffset', ['x', 'y'])
