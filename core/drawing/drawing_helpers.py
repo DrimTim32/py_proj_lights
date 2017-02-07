@@ -1,3 +1,4 @@
+"""This file contains helper methods for drawing"""
 import pygame
 
 from drawing.drawing_consts import BLACK, BLUE

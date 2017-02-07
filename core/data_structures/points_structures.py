@@ -1,3 +1,4 @@
+"""This file contains point structures used in the project"""
 from collections import namedtuple
 
 PointsQuadruple = namedtuple('PointsQuadruple', ['top', 'left', 'down', 'right'])

@@ -1,5 +1,6 @@
-from data_structures import str_to_direction, Orientation, Directions
+"""This file contains simulation class"""
 from drawing.maps import create_map_painter
+from data_structures import str_to_direction, Orientation, Directions
 from .data_collector import DataCollector
 from .intersection import Intersection, IntersectionProperties
 from .lights_managers.lights_phase import LightsPhase, DirectionsInfo
@@ -192,6 +193,7 @@ class Simulation:
                         break
                 if is_new_phase:
                     phases.append(phase)
+        # print(phases)
         return phases
 
     @staticmethod

@@ -1,3 +1,6 @@
+"""
+This file contains CarFixedGenerator class
+"""
 import random
 
 from data_structures.enums import TurnDirection
