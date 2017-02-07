@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-import unittest
-
 from setuptools import setup, find_packages
 
 with open("requirements-tests.txt", 'r') as f:
@@ -14,7 +11,7 @@ setup(
     packages=find_packages(),
     url='https://github.com/DrimTim32/py_proj_lights',
     license='MIT',
-    author='gese anna, soból bartek, malinowski marcin',
+    author='gese anna, sobol bartek, malinowski marcin',
     author_email='',
     description='',
     setup_requires=requirements,

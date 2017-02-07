@@ -13,5 +13,3 @@ branches:
 script:
     - pip install -e .
     - python -m pytest
-env:
-    - PYTHONPATH=..\core\

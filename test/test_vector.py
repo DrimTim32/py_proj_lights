@@ -1,13 +1,15 @@
-import sys, os
 import pytest
+import sys, os
 
 myPath = os.path.dirname(os.path.abspath(__file__))
-if "/" in sys.path[0]:
-    sys.path.insert(0, myPath + '/../core')
-else:
-    sys.path.insert(0, myPath + '\\..\\core')
 
-from core.data_structures import Vector
+if "core" not in sys.path[0]:
+    if "\\" in sys.path[0]:
+        sys.path.insert(0, 'core')
+    else:
+        sys.path.insert(0, 'core')
+
+from data_structures import Vector
 
 
 @pytest.mark.parametrize("a", (0, 10, 15))
