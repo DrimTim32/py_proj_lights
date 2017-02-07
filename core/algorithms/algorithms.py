@@ -58,7 +58,7 @@ def get_norm(name):
     """Returns norm by string"""
     if name in _metrics.keys():
         return _metrics[name]
-    raise ValueError("Name '{}' does not stand for any known metric", name)
+    raise ValueError("Name '{}' does not stand for any known norm", name)
 
 
 _metrics = {

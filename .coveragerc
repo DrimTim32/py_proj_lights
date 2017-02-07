@@ -4,8 +4,9 @@ branch = True
 omit =
     tests/*
     *\__init__.py
-    conftest.py
+    core\optimised.py
     setup.py
+    optimiser.py
 
 data_file = docs/coverage/.coverage
 source = core

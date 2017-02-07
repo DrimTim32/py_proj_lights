@@ -55,6 +55,7 @@ class Config:
 
     @property
     def roads_length(self):
+        """Returns road lengths"""
         return self.__roads_length
 
     @property
