@@ -1,13 +1,12 @@
 """This file contains tests for optimiser and connected algorithms"""
 
-import pytest
 import sys
+
+import pytest
 
 if "core" not in sys.path[0]:
     sys.path.insert(0, 'core')
 from algorithms.algorithms import get_norm, logistic, negative_gompertz
-
-from configuration.config import Config, SimulationData
 
 
 def test_norms():

@@ -3,15 +3,13 @@ import sys
 import unittest
 
 if sys.version_info[0] >= 3:
-    import unittest.mock as mock
-    from unittest.mock import PropertyMock, patch
+    from unittest.mock import patch
 else:
-    import mock
-    from mock import PropertyMock, patch
+    from mock import patch
 
 if "core" not in sys.path[0]:
     sys.path.insert(0, 'core')
-from drawing.drawing_helpers import draw_car_by_value, draw_car
+from drawing.drawing_helpers import draw_car_by_value
 
 
 class MockingTestTestCase(unittest.TestCase):

@@ -1,8 +1,8 @@
 """
 File containing Config class and SimulationData namedtuple
 """
-from collections import namedtuple
 import json
+from collections import namedtuple
 
 SimulationData = namedtuple('SimulationData', ['step_count',
                                                'simulation_count'])

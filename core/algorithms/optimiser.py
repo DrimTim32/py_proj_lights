@@ -1,10 +1,12 @@
 """This file contains optimiser class"""
 from __future__ import print_function
-import random
+
 import operator
+import random
 import sys
-from datetime import datetime
 from collections import namedtuple
+from datetime import datetime
+
 from simulation import Simulation
 from .algorithms import avg, get_norm, negative_gompertz, logistic
 from .algorithms_exceptions import OptimisationException
