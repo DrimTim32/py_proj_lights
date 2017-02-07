@@ -4,7 +4,7 @@ File containing Config class and SimulationData namedtuple
 from collections import namedtuple
 import json
 
-SimulationData = namedtuple('SimulationData', ['norm','step_count',
+SimulationData = namedtuple('SimulationData', ['step_count',
                                                'simulation_count'])
 
 
@@ -19,8 +19,7 @@ class Config:
         """
         self.__directions = directions
         self.__roads_length = roads_length
-        self.__simulation_data = SimulationData(simulation_data["norm"],
-                                                int(simulation_data['step_count']),
+        self.__simulation_data = SimulationData(int(simulation_data['step_count']),
                                                 int(simulation_data['simulation_count']))
 
     @staticmethod

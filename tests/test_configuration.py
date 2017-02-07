@@ -143,10 +143,10 @@ file_json = """{
 
 
 def test_reading_from_file():
-    text_file = open("test.json", "w")
+    text_file = open("tests.json", "w")
     text_file.write(file_json)
     text_file.close()
-    configuration = config.Config.from_config_file("test.json")
+    configuration = config.Config.from_config_file("tests.json")
     assert configuration.roads_length == roads_length
     assert isinstance(configuration.simulation_data, SimulationData)
     assert configuration.directions_lanes == {0: [2, 2], 1: [2, 2], 2: [2, 2], 3: [2, 2]}
@@ -155,4 +155,4 @@ def test_reading_from_file():
                                               2: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}],
                                               3: [{1: [0.01, False], 2: [0.01, False]}, {3: [0.01, True]}]}
 
-    os.remove("test.json")
+    os.remove("tests.json")
