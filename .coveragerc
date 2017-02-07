@@ -5,6 +5,8 @@ omit =
     tests/*
     *\__init__.py
     core/optimised.py
+    core/drawing/maps.py
+    core/algorithms/optimiser.py
     setup.py
     optimiser.py
 
