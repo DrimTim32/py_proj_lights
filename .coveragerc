@@ -2,7 +2,7 @@
 [run]
 branch = True
 omit =
-    test/*
+    tests/*
     *\__init__.py
     conftest.py
     setup.py

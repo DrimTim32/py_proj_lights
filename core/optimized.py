@@ -5,7 +5,7 @@ import pygame
 from configuration import config
 from simulation.generators.car_proper_generator import CarProperGenerator
 from simulation.lights_managers.lights_manager import LightsManager
-from algorithms.optimiser import Optimizer
+from algorithms.optimiser import Optimiser
 from simulation.simulation import Simulation
 
 WINDOW_SIZE = (1000, 800)
@@ -26,7 +26,7 @@ def entry_point(path):
     car_generator = CarProperGenerator
     lights_manager = LightsManager
 
-    optimizer = Optimizer(configuration, car_generator, lights_manager)
+    optimizer = Optimiser(configuration, car_generator, lights_manager)
     print("Starting optimization.")
     report_string, times = optimizer.optimise()
     print("")
