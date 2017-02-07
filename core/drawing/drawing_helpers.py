@@ -1,3 +1,4 @@
+"""This file contains helper methods for drawing"""
 import pygame
 
 from drawing.drawing_consts import BLACK, BLUE
@@ -21,6 +22,13 @@ def draw_circle(screen, position, radius, color=BLACK):
 
 
 def draw_car_by_value(screen, position, value):
+    """
+    Draws car based on value
+    :param screen: screen where to draw a car
+    :param position: position of a car
+    :param value: value of car (is being converted to color)
+    :return: None
+    """
     color = (255, 255, 255)
     if value == 0:
         color = (200, 0, 0)

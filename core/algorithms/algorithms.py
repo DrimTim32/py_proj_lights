@@ -1,5 +1,6 @@
 """This file contains algorithms used in optimizer"""
 import math
+
 import numpy as np
 import numpy.linalg as la
 
@@ -53,15 +54,18 @@ def negative_gompertz(x_0, asymptote, inflection, rate):
     """
     return 1 - asymptote * math.exp((-inflection * math.exp(-rate * x_0)))
 
+def curves_valuator(car_value,time_value):
+    """Valuates two variables"""
+    return car_value + time_value
 
 def get_norm(name):
     """Returns norm by string"""
     if name in _metrics.keys():
         return _metrics[name]
-    raise ValueError("Name '{}' does not stand for any known metric", name)
+    raise ValueError("Name '{}' does not stand for any known norm", name)
 
 
-_metrics = {
+_metrics = { # pylint: disable=C0103
     "euclid": metric_euclid,
     "inf": norm_max,
     "-inf": norm_min

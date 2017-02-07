@@ -1,7 +1,10 @@
-import pytest
+"""This file contains """
 import sys
+
+import pytest
+
 if "core" not in sys.path[0]:
-        sys.path.insert(0, 'core')
+    sys.path.insert(0, 'core')
 from data_structures.enums import Directions, str_to_direction
 
 data = [

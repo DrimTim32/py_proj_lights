@@ -1,15 +1,17 @@
 """This file contains optimiser class"""
 from __future__ import print_function
-import random
+
 import operator
+import random
 import sys
-from datetime import datetime
 from collections import namedtuple
+from datetime import datetime
+
 from simulation import Simulation
-from .algorithms import avg, get_norm, negative_gompertz, logistic
+from .algorithms import avg, get_norm, negative_gompertz, logistic,curves_valuator
 from .algorithms_exceptions import OptimisationException
 
-SimulationData = namedtuple('SimulationData', ['norm', 'car_sum', 'wait_sum', 'vect'], False) # pylint: disable-msg=C0103
+SimulationData = namedtuple('SimulationData', ['norm', 'car_sum', 'wait_sum', 'vect'], False)  # pylint: disable=C0103
 
 
 class Optimiser:
@@ -28,14 +30,14 @@ class Optimiser:
         self.init_values = Optimiser.max_lights_len // 2
         self.max_random_change = self.init_values // 2
 
-    def randomize_time_change(self):
+    def __randomize_time_change(self):
         """
         Randomizes time change
         :rtype: int
         """
         return random.randint(1, self.max_random_change)
 
-    def car_equation(self, point):
+    def __car_equation(self, point):
         """
         Returns car curve value
         :param point: point where curve should be calculated
@@ -44,7 +46,7 @@ class Optimiser:
         """
         return negative_gompertz(point, 1.0, 5.0, 5.0 / self.config.simulation_data.step_count)
 
-    def time_equation(self, point):
+    def __time_equation(self, point):
         """
         Returns time curve value
         :param point: point where curve should be calculated
@@ -54,7 +56,7 @@ class Optimiser:
         return logistic(point, 1.0, (self.config.simulation_data.step_count / 2.0),
                         (self.config.simulation_data.step_count / 10.0))
 
-    def calcule_function(self, car_count, wait_count):
+    def __calcule_function(self, car_count, wait_count):
         """
         Calculates characteristic function
         :param car_count: car count value
@@ -63,9 +65,9 @@ class Optimiser:
         :type wait_count: float
         :rtype: float
         """
-        return self.car_equation(car_count) + self.time_equation(wait_count)
+        return curves_valuator(self.__car_equation(car_count),self.__time_equation(wait_count))
 
-    def generate_start_lights(self, count):
+    def __generate_start_lights(self, count):
         """
         Generates start lights
         :param count: count of lights
@@ -74,7 +76,7 @@ class Optimiser:
         """
         return [self.init_values] * count
 
-    def get_start_report(self, lights):
+    def __get_start_report(self, lights):
         """
         Generates start report
         :param lights: lights values list
@@ -90,7 +92,7 @@ class Optimiser:
         report_string += "\teach simulation contained {} steps\n".format(data.step_count)
         return report_string
 
-    def iterate_simulation(self, simulation, lights):
+    def __iterate_simulation(self, simulation, lights):
         """
         Simulates one simulation
         :param simulation: simulation object
@@ -116,14 +118,14 @@ class Optimiser:
                 wait_count_list = []
             car_count = avg(car_count_list)
             wait_count = avg(wait_count_list)
-            vector[phase_no] = self.calcule_function(car_count, wait_count)
+            vector[phase_no] = self.__calcule_function(car_count, wait_count)
             vect[phase_no] += vector[phase_no]
             car_sum += sum(car_count_list)
             wait_sum += sum([data.total_waiting_time for data in phase_data])
         return SimulationData(self.norm(vector), car_sum, wait_sum, vect)
 
     @staticmethod
-    def simulation_data_string(simulation_data):
+    def __simulation_data_string(simulation_data):
         """
         Generates string from simulation data
         :param simulation_data: simulation data
@@ -136,7 +138,7 @@ class Optimiser:
         report_string += "\taccomplished norm: {}\n".format(simulation_data.norm)
         return report_string
 
-    def change_times(self, times, vect):
+    def __change_times(self, times, vect):
         """
         Changes times based on vector
         :param times: light times
@@ -147,8 +149,8 @@ class Optimiser:
         """
         max_index = max(enumerate(vect), key=operator.itemgetter(1))[0]
         min_index = min(enumerate(vect), key=operator.itemgetter(1))[0]
-        times[max_index] -= self.randomize_time_change()
-        times[min_index] += self.randomize_time_change()
+        times[max_index] -= self.__randomize_time_change()
+        times[min_index] += self.__randomize_time_change()
         times[max_index] = max(Optimiser.min_lights_len, times[max_index])
         times[min_index] = min(times[min_index], Optimiser.max_lights_len)
         return times
@@ -164,24 +166,24 @@ class Optimiser:
         last_exception = None
 
         simulation = Simulation(self.car_generator, self.lights_manager, self.config)
-        times = self.generate_start_lights(simulation.get_number_of_phases())
-        best_times = self.generate_start_lights(simulation.get_number_of_phases())
+        times = self.__generate_start_lights(simulation.get_number_of_phases())
+        best_times = self.__generate_start_lights(simulation.get_number_of_phases())
 
         simulation.set_phases_durations(times)
-        report_string = self.get_start_report(times)
+        report_string = self.__get_start_report(times)
         report_string += "[Initial data]\n"
         if sys.version_info[0] != 3:
             print("Data about progress is not aviable in python < 3.3 because of flush performance")
         print("Executing initial simulation", end="\r")
         print("" + "" * 50)
-        simulation_data = self.iterate_simulation(simulation, times)
+        simulation_data = self.__iterate_simulation(simulation, times)
 
-        report_string += Optimiser.simulation_data_string(simulation_data)
+        report_string += Optimiser.__simulation_data_string(simulation_data)
         report_string += "[Data after optimalization]\n"
         best_simulation_data = SimulationData(
             simulation_data.norm, simulation_data.car_sum, simulation_data.wait_sum,
             simulation_data.vect)  # type: SimulationData
-        times = self.change_times(times, simulation_data.vect)
+        times = self.__change_times(times, simulation_data.vect)
 
         count = int(self.config.simulation_data.simulation_count)
 
@@ -193,23 +195,23 @@ class Optimiser:
             try:
                 simulation = Simulation(self.car_generator, self.lights_manager, self.config)
                 simulation.set_phases_durations(times)
-                current_simulation_data = self.iterate_simulation(simulation, times)
+                current_simulation_data = self.__iterate_simulation(simulation, times)
 
                 if current_simulation_data.norm < best_simulation_data.norm:
                     best_simulation_data = SimulationData(
-                        current_simulation_data.norm, current_simulation_data.car_sum, current_simulation_data.wait_sum,
-                        current_simulation_data.vect)
+                        current_simulation_data.norm, current_simulation_data.car_sum, current_simulation_data.wait_sum
+                        , current_simulation_data.vect)
                     best_times = [t for t in times]
                     better_count += 1
                 for j in range(len(best_times)):
                     times[j] = best_times[j]
-                times = self.change_times(times, best_simulation_data.vect)
+                times = self.__change_times(times, best_simulation_data.vect)
                 print("\r{0:.0f}% of optimisation done".format(((i + 1) / count) * 100), end="")
             except Exception as ex:
                 last_exception = ex
                 bad_simulation += 1
                 i -= 1
                 continue
-        report_string += Optimiser.simulation_data_string(best_simulation_data)
+        report_string += Optimiser.__simulation_data_string(best_simulation_data)
         report_string += "[Additional data]\n\tNew norm was choosen {} times\n".format(better_count)
         return report_string, times

@@ -1,4 +1,4 @@
-"""This file contains Position class"""
+"""This file contains Vector class"""
 
 
 class Vector:
