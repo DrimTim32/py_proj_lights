@@ -1,5 +1,6 @@
 """This file contains algorithms used in optimizer"""
 import math
+
 import numpy as np
 import numpy.linalg as la
 
