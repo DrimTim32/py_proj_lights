@@ -1,11 +1,9 @@
-import sys,os
+import sys
 import numpy as np
 import pytest
+
 if "core" not in sys.path[0]:
-    if "\\" in sys.path[0]:
-        sys.path.insert(0, 'core')
-    else:
-        sys.path.insert(0, 'core')
+    sys.path.insert(0, 'core')
 from data_structures import Directions, TurnDirection
 from simulation.car import Car
 from simulation.road import get_empty_road, RoadSizeVector, Road
