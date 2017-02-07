@@ -11,7 +11,15 @@ else:
 
 if "core" not in sys.path[0]:
     sys.path.insert(0, 'core')
+from simulation import Intersection, IntersectionProperties, RoadSizeVector
 from drawing.drawing_helpers import draw_car_by_value, draw_car
+from drawing.maps import create_map_painter
+
+
+def get_intersection_with_road():
+    road = [RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5), RoadSizeVector(10, 5, 5)]
+    properties = IntersectionProperties(road)
+    return Intersection(properties), road
 
 
 class MockingTestTestCase(unittest.TestCase):
@@ -31,3 +39,8 @@ class MockingTestTestCase(unittest.TestCase):
         draw_car.assert_any_call(None, 4, (0, 0, 200))
         draw_car.assert_any_call(None, 5, (255, 0, 114))
         draw_car.assert_any_call(None, 6, (0, 0, 0))
+
+
+def test_create_map_painter():
+    intersection, road = get_intersection_with_road()
+    #create_map_painter(intersection, road)
