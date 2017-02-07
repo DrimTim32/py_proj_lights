@@ -14,6 +14,7 @@ WINDOW_SIZE = (1000, 800)
 
 
 def read_configuration(path):
+    """Reads configuration from file in path"""
     return config.Config.from_config_file(path)
 
 
@@ -69,6 +70,7 @@ def entry_point(path):
 
 
 def main():
+    """This is main method for this file"""
     path = "config.json"
     if len(sys.argv) < 2:
         print("Configuration file is not provided, using default.")
@@ -77,8 +79,8 @@ def main():
     entry_point(path)
     try:
         pass
-    except Exception as e:
-        print("{0}, message : {1}".format(sys.stderr, e))
+    except Exception as exc:
+        print("{0}, message : {1}".format(sys.stderr, exc))
         return 2
 
 
