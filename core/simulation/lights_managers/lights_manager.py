@@ -85,3 +85,11 @@ class LightsManager:
         :rtype: int
         """
         return self.__current_phase
+
+    @property
+    def in_phase_time(self):
+        """
+        :return: time from beginning of the current phase
+        :rtype: int
+        """
+        return self.__last_phase_change
