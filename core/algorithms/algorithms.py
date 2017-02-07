@@ -62,7 +62,7 @@ def get_norm(name):
     raise ValueError("Name '{}' does not stand for any known norm", name)
 
 
-_metrics = {
+_metrics = { # pylint: disable=C0103
     "euclid": metric_euclid,
     "inf": norm_max,
     "-inf": norm_min

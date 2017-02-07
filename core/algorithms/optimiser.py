@@ -11,7 +11,7 @@ from simulation import Simulation
 from .algorithms import avg, get_norm, negative_gompertz, logistic
 from .algorithms_exceptions import OptimisationException
 
-SimulationData = namedtuple('SimulationData', ['norm', 'car_sum', 'wait_sum', 'vect'], False) # pylint: disable-msg=C0103
+SimulationData = namedtuple('SimulationData', ['norm', 'car_sum', 'wait_sum', 'vect'], False)  # pylint: disable=C0103
 
 
 class Optimiser:
@@ -199,8 +199,8 @@ class Optimiser:
 
                 if current_simulation_data.norm < best_simulation_data.norm:
                     best_simulation_data = SimulationData(
-                        current_simulation_data.norm, current_simulation_data.car_sum, current_simulation_data.wait_sum,
-                        current_simulation_data.vect)
+                        current_simulation_data.norm, current_simulation_data.car_sum, current_simulation_data.wait_sum
+                        , current_simulation_data.vect)
                     best_times = [t for t in times]
                     better_count += 1
                 for j in range(len(best_times)):

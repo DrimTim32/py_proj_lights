@@ -28,6 +28,7 @@ class LanePhaseData:
 
 
 class DataCollector:
+    """This class represent data collercotr used in simulation"""
     def __init__(self):
         """
 
