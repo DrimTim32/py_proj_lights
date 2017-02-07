@@ -22,6 +22,10 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
+# if "core" not in sys.path[0]:
+
+sys.path.insert(0, '../core')
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
