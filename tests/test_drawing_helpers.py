@@ -24,3 +24,9 @@ class MockingTestTestCase(unittest.TestCase):
         draw_car_by_value(None, 30, 3)
         calls = draw_car.mock_calls
         assert len(calls) == 5
+        print(calls)
+        draw_car.assert_any_call(None, 30, (255, 255, 255))
+        draw_car.assert_any_call(None, 30, (200, 0, 0))
+        draw_car.assert_any_call(None, 30, (0, 200, 0))
+        draw_car.assert_any_call(None, 30, (0, 0, 200))
+        draw_car.assert_any_call(None, 30, (255, 0, 114))
