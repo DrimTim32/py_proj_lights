@@ -6,11 +6,9 @@ $dir = ".\"
 $commands ="test"
 
 $pythonScript = "setup.py"
-
 if( -Not (Test-Path "$dir$pythonScript")){
    cd ..
    cd ..
-
 }
 write-host "Starting tests..."
 
