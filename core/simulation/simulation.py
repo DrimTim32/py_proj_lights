@@ -1,4 +1,4 @@
-
+"""This file contains simulation class"""
 from drawing.maps import create_map_painter
 from data_structures import str_to_direction, Orientation, Directions
 from .data_collector import DataCollector

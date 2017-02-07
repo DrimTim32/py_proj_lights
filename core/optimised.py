@@ -1,3 +1,4 @@
+"""This file contains main example of the project"""
 import sys
 from time import clock
 

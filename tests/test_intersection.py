@@ -1,3 +1,4 @@
+"""This file contains tests for intersection"""
 import sys
 
 if "core" not in sys.path[0]:
