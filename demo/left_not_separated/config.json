@@ -39,12 +39,12 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.0,
+              "Probability": 0.03,
               "Safe": false
             },
             {
               "Direction": 2,
-              "Probability": 0.35,
+              "Probability": 0.03,
               "Safe": false
             },
             {
@@ -95,7 +95,7 @@
           "TurnDirections": [
             {
               "Direction": 1,
-              "Probability": 0.0,
+              "Probability": 0.02,
               "Safe": false
             },
             {

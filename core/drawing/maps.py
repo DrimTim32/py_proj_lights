@@ -203,6 +203,7 @@ class MapPainter:
 
     @property
     def board(self):
+        """Returns intersection array"""
         return self.__intersection.array
 
     def get_lights_painter(self):
@@ -220,7 +221,7 @@ class MapPainter:
         :param roads:
         :return:
         """
-        screen.fill(WHITE)  # TODO : remove
+        screen.fill(WHITE)
 
         top, left, down, right = self.border_points
         self.__draw_borders(screen, [top, left, down, right])

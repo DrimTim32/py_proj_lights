@@ -1,7 +1,9 @@
 """This file contains test for configuration class"""
-import os,sys
+import os
+import sys
+
 if "core" not in sys.path[0]:
-        sys.path.insert(0, 'core')
+    sys.path.insert(0, 'core')
 
 from configuration import config
 from configuration.config import SimulationData

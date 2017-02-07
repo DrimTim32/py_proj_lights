@@ -1,6 +1,6 @@
 """This file contains simulation class"""
+from data_structures import str_to_direction, Orientation, Directions, TurnDirection
 from drawing.maps import create_map_painter
-from data_structures import str_to_direction, Orientation, Directions
 from .data_collector import DataCollector
 from .intersection import Intersection, IntersectionProperties
 from .lights_managers.lights_phase import LightsPhase, DirectionsInfo
@@ -8,13 +8,20 @@ from .road import RoadSizeVector, get_empty_road
 
 
 class Simulation:
+    """
+    Simulation class
+    """
     def __init__(self, car_generator, lights_manager, config):
         self.__data_collector = DataCollector()
 
-        self.__car_generator = car_generator(Simulation.___create_probability_info(config.directions_turns))
+        self.__probabilities = Simulation.___create_probability_info(config.directions_turns)
+
+        self.__lanes_info = Simulation.__create_lanes_info(config.directions_turns)
+
+        self.__car_generator = car_generator(self.__probabilities)
 
         self.__lights_manager = lights_manager(Simulation.create_lights_phases(config.directions_turns),
-                                               Simulation.__create_lanes_info(config.directions_turns))
+                                               self.__lanes_info)
 
         self.__roads, self.__intersection = Simulation.__create_roads_and_intersection(config.directions_lanes,
                                                                                        config.roads_length)
@@ -22,7 +29,9 @@ class Simulation:
         self.__map = create_map_painter(self.__intersection, self.__roads)
 
     def update(self):
-        """Updates whole object"""
+        """
+        Updates simulation state
+        """
         self.__update_out()
         self.__intersection.update()
         self.__lights_manager.update()
@@ -39,16 +48,17 @@ class Simulation:
                 road.push_car_out(lane_index, self.__intersection.pull_car(direction, lane_index))
 
     def __update_in(self):
-        for direction in self.__roads.keys():
-            road = self.__roads[direction]
+        for direction_str in self.__roads.keys():
+            road = self.__roads[direction_str]
+            direction = str_to_direction(direction_str)
             for lane_index in range(road.in_width):
-                if self.__lights_manager.is_green(str_to_direction(direction), lane_index):
+                if self.__is_safe_passage(direction, lane_index):
                     if road.has_waiting_car(lane_index):
                         car = road.pull_car(lane_index)
                         self.__data_collector.register(car, lane_index, self.__lights_manager.current_phase)
-                        self.__intersection.push_car(str_to_direction(direction), lane_index, car)
+                        self.__intersection.push_car(direction, lane_index, car)
                 road.update_in(lane_index)
-                road.push_car_in(lane_index, self.__car_generator.generate(str_to_direction(direction), lane_index))
+                road.push_car_in(lane_index, self.__car_generator.generate(direction, lane_index))
 
     def get_number_of_phases(self):
         """
@@ -69,6 +79,10 @@ class Simulation:
             phase.duration = new_durations[phase_id]
 
     def get_lights(self):
+        """
+        :return: light for all directions
+        :rtype: dict[Directions, list[bool]]
+        """
         lights = {Directions.TOP: [],
                   Directions.LEFT: [],
                   Directions.BOTTOM: [],
@@ -77,6 +91,40 @@ class Simulation:
             for lane_index in range(self.__roads[direction.__str__()].in_width):
                 lights[direction].append(self.__lights_manager.is_green(direction, lane_index))
         return lights
+
+    def __is_safe_passage(self, direction, lane_index):
+        is_green = self.__lights_manager.is_green(direction, lane_index)
+        current_phase = self.__lights_manager.phases[self.__lights_manager.current_phase]
+        if not current_phase.left:
+            return is_green
+        if current_phase.left and not self.__lanes_info[direction][lane_index].left:
+            return is_green
+        else:
+            phase_time = current_phase.duration
+            op_dir = Directions((direction + 2) % 4)
+            weight = sum(self.__probabilities[direction][lane_index])
+            op_weight = 0
+            for lane_index in range(len(self.__lanes_info[op_dir])):
+                if self.__lanes_info[op_dir][lane_index].left:
+                    op_weight += sum(self.__probabilities[op_dir][lane_index])
+            w_sum = weight + op_weight
+            weight = weight / w_sum
+            op_weight = op_weight / w_sum
+            time = int(weight * phase_time)
+            op_time = int(op_weight * phase_time)
+            if direction in [0, 1]:
+                my_turn = self.__lights_manager.in_phase_time <= time
+            else:
+                my_turn = self.__lights_manager.in_phase_time > op_time
+
+            if my_turn:
+                return my_turn and is_green
+            else:
+                turn = self.__roads[direction.__str__()].first_waiting_car_turn(lane_index)
+                if turn is None:
+                    return is_green
+                else:
+                    return is_green and turn == TurnDirection.RIGHT
 
     @property
     def top(self):

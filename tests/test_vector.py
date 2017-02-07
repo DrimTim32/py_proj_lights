@@ -1,6 +1,7 @@
 """This file contains tests for vector class"""
-import pytest
 import sys
+
+import pytest
 
 if "core" not in sys.path[0]:
     sys.path.insert(0, 'core')
