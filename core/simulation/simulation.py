@@ -8,6 +8,9 @@ from .road import RoadSizeVector, get_empty_road
 
 
 class Simulation:
+    """
+    Simulation class
+    """
     def __init__(self, car_generator, lights_manager, config):
         self.__data_collector = DataCollector()
 
@@ -26,7 +29,9 @@ class Simulation:
         self.__map = create_map_painter(self.__intersection, self.__roads)
 
     def update(self):
-        """Updates whole object"""
+        """
+        Updates simulation state
+        """
         self.__update_out()
         self.__intersection.update()
         self.__lights_manager.update()
@@ -74,6 +79,10 @@ class Simulation:
             phase.duration = new_durations[phase_id]
 
     def get_lights(self):
+        """
+        :return: light for all directions
+        :rtype: dict[Directions, list[bool]]
+        """
         lights = {Directions.TOP: [],
                   Directions.LEFT: [],
                   Directions.BOTTOM: [],
