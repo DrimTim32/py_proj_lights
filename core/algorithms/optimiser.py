@@ -1,5 +1,5 @@
 """This file contains optimiser class"""
-from __future__ import print_function
+from __future__ import print_function, division
 
 import operator
 import random
